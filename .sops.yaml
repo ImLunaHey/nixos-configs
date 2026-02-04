@@ -1,0 +1,10 @@
+keys:
+  - &luna age1amshxsjls4ma6u76mhd632228r4kz7kykmh72nvv4m590u8h8sdswe42l6
+  - &nova age1kkwcc0eezy07yzxpunc74usxal9vpfcg6g8f0fehpdalslptef6s0lt0cp
+
+creation_rules:
+  - path_regex: secrets/secrets.yaml$
+    key_groups:
+      - age:
+          - *luna
+          - *nova
