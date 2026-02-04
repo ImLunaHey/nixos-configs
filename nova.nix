@@ -5,10 +5,15 @@
   networking.hostName = "nova";
   networking.networkmanager.enable = true;
 
-  # Sops secrets
-  sops.secrets = {
-    tailscale_key = {};
-    pihole_password = {};
+  # Sops configuration
+  sops = {
+    defaultSopsFile = ./secrets/secrets.yaml;
+    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    
+    secrets = {
+      tailscale_key = {};
+      pihole_password = {};
+    };
   };
 
   # Firewall
@@ -39,7 +44,7 @@
     extraPackages = with pkgs; [
       intel-media-driver
       intel-vaapi-driver
-      libva-vdpau-driver  # Changed from vaapiVdpau
+      libva-vdpau-driver
       libvdpau-va-gl
     ];
   };
