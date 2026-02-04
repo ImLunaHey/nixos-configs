@@ -92,7 +92,6 @@
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
           "--group-add=video"
-          "--group-add=render"
         ];
         dependsOn = [ "tailscale" ];
       };
@@ -114,15 +113,6 @@
         ];
       };
 
-      watchtower = {
-        image = "containrrr/watchtower:latest";
-        volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
-        environment = {
-          WATCHTOWER_CLEANUP = "true";
-          WATCHTOWER_INCLUDE_STOPPED = "true";
-          WATCHTOWER_SCHEDULE = "0 0 4 * * *";
-        };
-      };
     };
   };
 
