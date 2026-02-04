@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   # Hostname
   networking.hostName = "nova";
@@ -16,12 +15,31 @@
     };
   };
 
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "both";
+    authKeyFile = config.sops.secrets.tailscale_key.path;
+  };
+
   # Firewall
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 22 80 8096 ];  # SSH, Pi-hole, Jellyfin
     allowedUDPPorts = [ 53 ];  # DNS
     trustedInterfaces = [ "tailscale0" ];
+    checkReversePath = "loose";
+  };
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "prohibit-password";
+      PasswordAuthentication = false;
+    };
+    listenAddresses = [
+      { addr = "0.0.0.0"; port = 22; }
+      { addr = "[::]"; port = 22; }
+    ];
   };
 
   # Boot loader
@@ -57,7 +75,6 @@
     "d /var/lib/pihole 0755 root root -"
     "d /var/lib/pihole/pihole 0755 root root -"
     "d /var/lib/pihole/dnsmasq 0755 root root -"
-    "d /var/lib/tailscale 0755 root root -"
   ];
 
   # Containers
@@ -65,23 +82,6 @@
     backend = "docker";
     
     containers = {
-      tailscale = {
-        image = "tailscale/tailscale:latest";
-        hostname = "nova-tailscale";
-        environmentFiles = [ config.sops.secrets.tailscale_key.path ];
-        environment = {
-          TS_STATE_DIR = "/var/lib/tailscale";
-        };
-        volumes = [
-          "/var/lib/tailscale:/var/lib/tailscale"
-          "/dev/net/tun:/dev/net/tun"
-        ];
-        extraOptions = [
-          "--cap-add=NET_ADMIN"
-          "--cap-add=SYS_MODULE"
-        ];
-      };
-
       jellyfin = {
         image = "jellyfin/jellyfin:latest";
         ports = [ "8096:8096" ];
@@ -93,7 +93,6 @@
           "--device=/dev/dri:/dev/dri"
           "--group-add=video"
         ];
-        dependsOn = [ "tailscale" ];
       };
       
       pihole = {
@@ -112,7 +111,6 @@
           "/var/lib/pihole/dnsmasq:/etc/dnsmasq.d"
         ];
       };
-
     };
   };
 
