@@ -15,6 +15,8 @@
     
     secrets = {
       tailscale_key = {};
+      makemkv_key = {};
+      omdb_api_key = {};
     };
   };
 
@@ -65,13 +67,23 @@
     };
   };
 
-  # Create directories for ARM
+  # Create directories for ARM with correct ownership
   systemd.tmpfiles.rules = [
     "d /mnt/media 0755 root root -"
     "d /mnt/media/config 0755 1000 1000 -"
     "d /mnt/media/logs 0755 1000 1000 -"
     "d /mnt/media/completed 0755 1000 1000 -"
   ];
+
+  # Generate ARM config with secrets substituted
+  system.activationScripts.arm-config = ''
+    ${pkgs.gnused}/bin/sed \
+      -e "s|@MAKEMKV_KEY@|$(cat ${config.sops.secrets.makemkv_key.path})|g" \
+      -e "s|@OMDB_API_KEY@|$(cat ${config.sops.secrets.omdb_api_key.path})|g" \
+      ${./arm-config/arm.yaml} > /mnt/media/config/arm.yaml
+    chown 1000:1000 /mnt/media/config/arm.yaml
+    chmod 644 /mnt/media/config/arm.yaml
+  '';
 
   # Automatic Ripping Machine container
   virtualisation.oci-containers = {
