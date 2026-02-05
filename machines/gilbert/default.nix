@@ -1,5 +1,9 @@
 { config, pkgs, ... }:
 {
+  imports = [
+    ./hardware-configuration.nix
+  ];
+
   # Hostname
   networking.hostName = "gilbert";
   networking.networkmanager.enable = true;
