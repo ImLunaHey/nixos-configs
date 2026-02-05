@@ -25,6 +25,13 @@
     authKeyFile = config.sops.secrets.tailscale_key.path;
   };
 
+  # Mount NFS share from gilbert
+  fileSystems."/mnt/media" = {
+    device = "gilbert:/mnt/media/completed";
+    fsType = "nfs";
+    options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+  };
+
   # Firewall
   networking.firewall = {
     enable = true;
@@ -73,6 +80,7 @@
 
   # Create directories
   systemd.tmpfiles.rules = [
+    "d /mnt/media 0755 root root -"
     "d /var/lib/jellyfin 0755 root root -"
     "d /var/lib/jellyfin/config 0755 root root -"
     "d /var/lib/jellyfin/cache 0755 root root -"
@@ -92,6 +100,8 @@
         volumes = [
           "/var/lib/jellyfin/config:/config"
           "/var/lib/jellyfin/cache:/cache"
+          "/mnt/media/movies:/media/movies:ro"
+          "/mnt/media/tv:/media/tv:ro"
         ];
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
