@@ -33,10 +33,19 @@
     options = [ "defaults" ];
   };
 
+  # NFS server to share media with nova
+  services.nfs.server = {
+    enable = true;
+    exports = ''
+      /mnt/media/completed nova(rw,sync,no_subtree_check,no_root_squash)
+    '';
+  };
+
   # Firewall
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 8080 ];  # SSH, ARM web UI
+    allowedTCPPorts = [ 22 8080 2049 ];  # SSH, ARM web UI, NFS
+    allowedUDPPorts = [ 2049 ];  # NFS
     trustedInterfaces = [ "tailscale0" ];
     checkReversePath = "loose";
   };
