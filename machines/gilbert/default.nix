@@ -8,6 +8,8 @@
   networking.hostName = "gilbert";
   networking.networkmanager.enable = true;
 
+  boot.kernelModules = [ "sg" ];
+
   # Sops configuration
   sops = {
     defaultSopsFile = ../../secrets/secrets.yaml;
@@ -111,7 +113,9 @@
           "/mnt/media/completed:/home/arm/media"
         ];
         extraOptions = [
-          "--privileged"  # Needed for optical drive access
+          "--privileged"
+          "--device=/dev/sr0:/dev/sr0"
+          "--device=/dev/sg0:/dev/sg0"
         ];
       };
     };
