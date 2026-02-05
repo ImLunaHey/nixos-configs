@@ -1,7 +1,7 @@
 {
   description = "Luna's NixOS configurations";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";  # Changed from 24.05
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -14,8 +14,16 @@
         system = "x86_64-linux";
         modules = [
           ./common.nix
-          ./nova.nix
-          ./hardware/nova-hardware.nix
+          ./machines/nova
+          sops-nix.nixosModules.sops
+        ];
+      };
+      
+      gilbert = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./common.nix
+          ./machines/gilbert
           sops-nix.nixosModules.sops
         ];
       };
