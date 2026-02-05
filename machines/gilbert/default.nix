@@ -68,9 +68,9 @@
   # Create directories for ARM
   systemd.tmpfiles.rules = [
     "d /mnt/media 0755 root root -"
-    "d /mnt/media/config 0755 root root -"
-    "d /mnt/media/logs 0755 root root -"
-    "d /mnt/media/completed 0755 root root -"
+    "d /mnt/media/config 0755 1000 1000 -"
+    "d /mnt/media/logs 0755 1000 1000 -"
+    "d /mnt/media/completed 0755 1000 1000 -"
   ];
 
   # Automatic Ripping Machine container
