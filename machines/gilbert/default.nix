@@ -209,7 +209,6 @@
           "--device=/dev/dri/renderD129:/dev/dri/renderD129"
           "--device=/dev/dri/card2:/dev/dri/card2"
           "--group-add=video"
-          "--group-add=render"
         ];
       };
     };
