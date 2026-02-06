@@ -118,6 +118,9 @@
       arm = {
         image = "automaticrippingmachine/automatic-ripping-machine:latest";
         ports = [ "8080:8080" ];
+        environment = {
+          LIBVA_DRIVER_NAME = "iHD";
+        };
         volumes = [
           "/mnt/media/config:/etc/arm/config"
           "/mnt/media/logs:/home/arm/logs"
@@ -128,7 +131,8 @@
           "--privileged"
           "--device=/dev/sr0:/dev/sr0"
           "--device=/dev/sg0:/dev/sg0"
-          "--device=/dev/dri:/dev/dri"
+          "--device=/dev/dri/renderD129:/dev/dri/renderD129"
+          "--device=/dev/dri/card2:/dev/dri/card2"
           "--group-add=video"
           "--group-add=render"
         ];
