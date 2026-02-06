@@ -34,25 +34,13 @@
           cat > /tmp/Dockerfile.arm << 'EOF'
       FROM automaticrippingmachine/automatic-ripping-machine:latest
 
-      # Compile and install libva 2.20+ from source
+      # Upgrade to Ubuntu 24.04
       RUN apt-get update && \
-          DEBIAN_FRONTEND=noninteractive apt-get install -y \
-          build-essential meson pkg-config libdrm-dev \
-          intel-media-va-driver-non-free && \
-          cd /tmp && \
-          wget https://github.com/intel/libva/archive/refs/tags/2.22.0.tar.gz && \
-          tar xf 2.22.0.tar.gz && \
-          cd libva-2.22.0 && \
-          meson setup build --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu && \
-          meson compile -C build && \
-          meson install -C build && \
-          cd /lib/x86_64-linux-gnu/ && \
-          ln -sf libva.so.2.2200.0 libva.so.2 && \
-          ln -sf libva-drm.so.2.2200.0 libva-drm.so.2 && \
-          ldconfig && \
-          cd / && rm -rf /tmp/libva-2.22.0 /tmp/2.22.0.tar.gz && \
-          apt-get remove -y build-essential meson pkg-config && \
-          apt-get autoremove -y && \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-release-upgrader-core && \
+          sed -i 's/Prompt=lts/Prompt=normal/' /etc/update-manager/release-upgrades && \
+          DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive && \
+          apt-get update && \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y intel-media-va-driver-non-free && \
           rm -rf /var/lib/apt/lists/*
 
       ENV LIBVA_DRIVER_NAME=iHD
