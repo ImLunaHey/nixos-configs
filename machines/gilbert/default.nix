@@ -14,44 +14,87 @@
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver  # iHD driver for 6th gen+ Skylake
+      intel-media-driver # iHD driver for 6th gen+ Skylake
       intel-gmmlib
     ];
   };
 
   systemd.services.build-arm-intel-image = {
-  description = "Build ARM Docker image with Intel drivers";
-  wantedBy = [ "multi-user.target" ];
-  before = [ "docker-arm.service" ];
-  
-  serviceConfig = {
-    Type = "oneshot";
-    RemainAfterExit = true;
+    description = "Build ARM Docker image with Ubuntu 24.04 and Intel QuickSync support";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "docker-arm.service" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+
+    script = ''
+          if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
+            cat > /tmp/Dockerfile.arm << 'EOF'
+      FROM ubuntu:24.04
+
+      # Install dependencies
+      RUN apt-get update && \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y \
+          python3 python3-pip git \
+          abcde flac imagemagick glyrc cdparanoia \
+          at curl wget \
+          python3-dev \
+          libcurl4-openssl-dev \
+          libssl-dev \
+          libdvd-pkg lsdvd \
+          libavcodec-extra \
+          handbrake-cli \
+          makemkv-bin makemkv-oss \
+          ccextractor \
+          intel-media-va-driver-non-free \
+          && rm -rf /var/lib/apt/lists/*
+
+      # Install runit for service management
+      RUN apt-get update && \
+          DEBIAN_FRONTEND=noninteractive apt-get install -y runit && \
+          rm -rf /var/lib/apt/lists/*
+
+      # Copy ARM source
+      COPY . /opt/arm/
+
+      # Setup directories
+      RUN mkdir -m 0777 -p /home/arm /home/arm/config \
+          /mnt/dev/sr0 /mnt/dev/sr1 /mnt/dev/sr2 /mnt/dev/sr3
+
+      # Setup fstab
+      RUN echo "/dev/sr0  /mnt/dev/sr0  udf,iso9660  defaults,users,utf8,ro  0  0" >> /etc/fstab
+
+      # Setup ARM services
+      RUN mkdir -p /etc/service/armui /etc/my_init.d
+
+      EXPOSE 8080
+      WORKDIR /home/arm
+      CMD ["/sbin/my_init"]
+      EOF
+
+            # Clone ARM repo to get the source
+            cd /tmp
+            rm -rf automatic-ripping-machine
+            ${pkgs.git}/bin/git clone https://github.com/automatic-ripping-machine/automatic-ripping-machine.git
+            cd automatic-ripping-machine
+            
+            ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm .
+            rm -rf /tmp/automatic-ripping-machine /tmp/Dockerfile.arm
+          fi
+    '';
   };
-  
-  script = ''
-    if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
-      cat > /tmp/Dockerfile.arm << 'EOF'
-FROM automaticrippingmachine/automatic-ripping-machine:latest
-RUN apt-get update && \
-    apt-get install -y intel-media-va-driver-non-free && \
-    rm -rf /var/lib/apt/lists/*
-EOF
-      ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
-      rm /tmp/Dockerfile.arm
-    fi
-  '';
-};
 
   # Sops configuration
   sops = {
     defaultSopsFile = ../../secrets/secrets.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-    
+
     secrets = {
-      tailscale_key = {};
-      makemkv_key = {};
-      omdb_api_key = {};
+      tailscale_key = { };
+      makemkv_key = { };
+      omdb_api_key = { };
     };
   };
 
@@ -79,8 +122,12 @@ EOF
   # Firewall
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 8080 2049 ];  # SSH, ARM web UI, NFS
-    allowedUDPPorts = [ 2049 ];  # NFS
+    allowedTCPPorts = [
+      22
+      8080
+      2049
+    ]; # SSH, ARM web UI, NFS
+    allowedUDPPorts = [ 2049 ]; # NFS
     trustedInterfaces = [ "tailscale0" ];
     checkReversePath = "loose";
   };
@@ -92,8 +139,14 @@ EOF
       PasswordAuthentication = false;
     };
     listenAddresses = [
-      { addr = "0.0.0.0"; port = 22; }
-      { addr = "[::]"; port = 22; }
+      {
+        addr = "0.0.0.0";
+        port = 22;
+      }
+      {
+        addr = "[::]";
+        port = 22;
+      }
     ];
   };
 
@@ -138,11 +191,14 @@ EOF
   # Automatic Ripping Machine container
   virtualisation.oci-containers = {
     backend = "docker";
-    
+
     containers = {
       arm = {
         image = "arm-intel:latest";
         ports = [ "8080:8080" ];
+        environment = {
+          LIBVA_DRIVER_NAME = "iHD";
+        };
         volumes = [
           "/mnt/media/config:/etc/arm/config"
           "/mnt/media/logs:/home/arm/logs"
