@@ -15,6 +15,7 @@
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver  # iHD driver for 6th gen+ Skylake
+      intel-gmmlib
     ];
   };
 
