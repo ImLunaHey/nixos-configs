@@ -47,12 +47,13 @@
 
       # Install ARM dependencies + Intel drivers + HandBrake
       RUN apt-get update && \
-          apt-get install -y \
-          python3 python3-pip git runit systemd \
-          intel-media-va-driver-non-free \
-          abcde flac imagemagick cdparanoia \
-          libdvd-pkg lsdvd at wget curl \
-          && rm -rf /var/lib/apt/lists/*
+        apt-get install -y \
+        python3 python3-pip git runit systemd \
+        intel-media-va-driver-non-free \
+        abcde flac imagemagick cdparanoia \
+        libdvd-pkg lsdvd at wget curl \
+        libnuma1 \
+        && rm -rf /var/lib/apt/lists/*
 
       EXPOSE 8080
 
