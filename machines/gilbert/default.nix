@@ -118,6 +118,7 @@
           "--privileged"
           "--device=/dev/sr0:/dev/sr0"
           "--device=/dev/sg0:/dev/sg0"
+          "--device=/dev/dri:/dev/dri"
         ];
       };
     };

@@ -15,7 +15,7 @@ MAXLENGTH: 99999
 MANUAL_WAIT: true
 MANUAL_WAIT_TIME: 60
 DATE_FORMAT: "%m-%d-%Y %H:%M:%S"
-ALLOW_DUPLICATES: false
+ALLOW_DUPLICATES: true
 MAX_CONCURRENT_TRANSCODES: 0
 MAX_CONCURRENT_MAKEMKVINFO: 0
 DATA_RIP_PARAMETERS: ""
@@ -54,8 +54,8 @@ DEST_EXT: "mkv"
 HANDBRAKE_CLI: "HandBrakeCLI"
 HANDBRAKE_LOCAL: "HandBrakeCLI"
 MAINFEATURE: false
-HB_ARGS_DVD: "--encoder x265 --encoder-preset medium --quality 22 --all-audio --subtitle scan -F"
-HB_ARGS_BD: "--encoder x265 --encoder-preset medium --quality 22 --all-audio --subtitle scan -F --subtitle-burned --audio-lang-list eng"
+HB_ARGS_DVD: "--encoder qsv_h265 --encoder-preset quality --quality 20 --all-audio --subtitle scan -F"
+HB_ARGS_BD: "--encoder qsv_h265 --encoder-preset quality --quality 20 --all-audio --subtitle scan -F --subtitle-burned --audio-lang-list eng"
 FFMPEG_CLI: "FFMPEG"
 FFMPEG_LOCAL: "FFMPEG"
 FFMPEG_PRE_FILE_ARGS: "None"
