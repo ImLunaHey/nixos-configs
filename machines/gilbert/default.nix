@@ -10,6 +10,14 @@
 
   boot.kernelModules = [ "sg" ];
 
+  # Enable Intel GPU drivers for 6th gen Skylake
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver  # iHD driver for 6th gen+ Skylake
+    ];
+  };
+
   # Sops configuration
   sops = {
     defaultSopsFile = ../../secrets/secrets.yaml;
@@ -119,6 +127,8 @@
           "--device=/dev/sr0:/dev/sr0"
           "--device=/dev/sg0:/dev/sg0"
           "--device=/dev/dri:/dev/dri"
+          "--group-add=video"
+          "--group-add=render"
         ];
       };
     };
