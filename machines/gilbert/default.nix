@@ -121,7 +121,7 @@
         ports = [ "8080:8080" ];
         environment = {
           LIBVA_DRIVER_NAME = "iHD";
-          LIBVA_DRIVERS_PATH = "/run/opengl-driver/lib/dri";
+          LD_LIBRARY_PATH = "/nix-glibc:/nix-gcc:/usr/lib/x86_64-linux-gnu";
         };
         volumes = [
           "/mnt/media/config:/etc/arm/config"
@@ -129,6 +129,9 @@
           "/mnt/media:/home/arm/media"
           "/mnt/media/db:/home/arm/db"
           "${pkgs.intel-media-driver}/lib/dri/iHD_drv_video.so:/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so:ro"
+          "${pkgs.intel-gmmlib}/lib/libigdgmm.so.12:/usr/lib/x86_64-linux-gnu/libigdgmm.so.12:ro"
+          "${pkgs.glibc}/lib:/nix-glibc:ro"
+          "${pkgs.stdenv.cc.cc.lib}/lib:/nix-gcc:ro"
         ];
         extraOptions = [
           "--privileged"
