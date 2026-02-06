@@ -34,54 +34,39 @@
             cat > /tmp/Dockerfile.arm << 'EOF'
       FROM ubuntu:24.04
 
-      # Install dependencies
-      RUN apt-get update && \
-          DEBIAN_FRONTEND=noninteractive apt-get install -y \
-          python3 python3-pip git \
-          abcde flac imagemagick glyrc cdparanoia \
-          at curl wget \
-          python3-dev \
-          libcurl4-openssl-dev \
-          libssl-dev \
-          libdvd-pkg lsdvd \
-          libavcodec-extra \
-          handbrake-cli \
-          makemkv-bin makemkv-oss \
-          ccextractor \
-          intel-media-va-driver-non-free \
+      ENV DEBIAN_FRONTEND=noninteractive
+
+      # Install base system packages
+      RUN apt-get update && apt-get install -y \
+          software-properties-common \
           && rm -rf /var/lib/apt/lists/*
 
-      # Install runit for service management
-      RUN apt-get update && \
-          DEBIAN_FRONTEND=noninteractive apt-get install -y runit && \
-          rm -rf /var/lib/apt/lists/*
+      # Add universe repo for additional packages
+      RUN add-apt-repository universe && \
+          add-apt-repository multiverse
 
-      # Copy ARM source
-      COPY . /opt/arm/
+      # Install ARM dependencies (subset that exists in 24.04)
+      RUN apt-get update && apt-get install -y \
+          python3 python3-pip git \
+          handbrake-cli \
+          intel-media-va-driver-non-free \
+          abcde flac imagemagick cdparanoia \
+          libdvd-pkg lsdvd \
+          at wget curl \
+          && rm -rf /var/lib/apt/lists/*
 
-      # Setup directories
-      RUN mkdir -m 0777 -p /home/arm /home/arm/config \
-          /mnt/dev/sr0 /mnt/dev/sr1 /mnt/dev/sr2 /mnt/dev/sr3
+      WORKDIR /opt/arm
+      RUN git clone https://github.com/automatic-ripping-machine/automatic-ripping-machine.git .
 
-      # Setup fstab
-      RUN echo "/dev/sr0  /mnt/dev/sr0  udf,iso9660  defaults,users,utf8,ro  0  0" >> /etc/fstab
-
-      # Setup ARM services
-      RUN mkdir -p /etc/service/armui /etc/my_init.d
+      # Install Python dependencies
+      RUN pip3 install --break-system-packages -r requirements.txt
 
       EXPOSE 8080
-      WORKDIR /home/arm
-      CMD ["/sbin/my_init"]
+      CMD ["python3", "arm/ripper/main.py"]
       EOF
-
-            # Clone ARM repo to get the source
-            cd /tmp
-            rm -rf automatic-ripping-machine
-            ${pkgs.git}/bin/git clone https://github.com/automatic-ripping-machine/automatic-ripping-machine.git
-            cd automatic-ripping-machine
             
-            ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm .
-            rm -rf /tmp/automatic-ripping-machine /tmp/Dockerfile.arm
+            ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
+            rm /tmp/Dockerfile.arm
           fi
     '';
   };
