@@ -41,11 +41,14 @@
 
       ENV DEBIAN_FRONTEND=noninteractive
 
+      # Copy HandBrake from ARM dependencies image which has QSV support
+      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /usr/local/bin/HandBrakeCLI /usr/local/bin/HandBrakeCLI
+      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /usr/lib/x86_64-linux-gnu/libmfx* /usr/lib/x86_64-linux-gnu/
+
       # Install ARM dependencies + Intel drivers + HandBrake
       RUN apt-get update && \
           apt-get install -y \
           python3 python3-pip git runit systemd \
-          handbrake-cli \
           intel-media-va-driver-non-free \
           abcde flac imagemagick cdparanoia \
           libdvd-pkg lsdvd at wget curl \
