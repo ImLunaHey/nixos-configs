@@ -32,54 +32,32 @@
     script = ''
         if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
           cat > /tmp/Dockerfile.arm << 'EOF'
-      ###########################################################
-      # Setup with Ubuntu 24.04 dependencies
-      FROM ubuntu:24.04 AS base
-      LABEL org.opencontainers.image.source=https://github.com/automatic-ripping-machine/automatic-ripping-machine
-      LABEL org.opencontainers.image.license=MIT
-      LABEL org.opencontainers.image.description='Automatic Ripping Machine for fully automated Blu-ray, DVD and audio disc ripping with Intel QuickSync support.'
+      FROM automaticrippingmachine/automatic-ripping-machine:latest
 
-      ENV DEBIAN_FRONTEND=noninteractive
-
-      # Copy HandBrake from ARM dependencies image which has QSV support
-      # Copy HandBrake and ALL its dependencies from ARM image
-      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /usr/local/bin/HandBrakeCLI /usr/local/bin/HandBrakeCLI
-      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
-      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
-
-      # Install ARM dependencies + Intel drivers + HandBrake
+      # Compile and install libva 2.20+ from source
       RUN apt-get update && \
-        apt-get install -y \
-        python3 python3-pip git runit systemd \
-        intel-media-va-driver-non-free \
-        abcde flac imagemagick cdparanoia \
-        libdvd-pkg lsdvd at wget curl \
-        libnuma1 \
-        && rm -rf /var/lib/apt/lists/*
-
-      EXPOSE 8080
-
-      # Setup folders and fstab
-      RUN mkdir -m 0777 -p /home/arm /home/arm/config \
-          /mnt/dev/sr0 /mnt/dev/sr1 /mnt/dev/sr2 /mnt/dev/sr3 && \
-          echo "/dev/sr0  /mnt/dev/sr0  udf,iso9660  defaults,users,utf8,ro  0  0" >> /etc/fstab
-
-      # Remove SSH
-      RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh || true
-
-      # Add ARMui service
-      RUN mkdir -p /etc/service/armui /etc/my_init.d
-
-      ###########################################################
-      # Final image
-      FROM base AS automatic-ripping-machine
-
-      WORKDIR /opt/arm
-      RUN git clone https://github.com/automatic-ripping-machine/automatic-ripping-machine.git . && \
-          git config --global --add safe.directory /opt/arm
+          DEBIAN_FRONTEND=noninteractive apt-get install -y \
+          build-essential meson pkg-config libdrm-dev \
+          intel-media-va-driver-non-free && \
+          cd /tmp && \
+          wget https://github.com/intel/libva/archive/refs/tags/2.22.0.tar.gz && \
+          tar xf 2.22.0.tar.gz && \
+          cd libva-2.22.0 && \
+          meson setup build --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu && \
+          meson compile -C build && \
+          meson install -C build && \
+          cd /lib/x86_64-linux-gnu/ && \
+          ln -sf libva.so.2.2200.0 libva.so.2 && \
+          ln -sf libva-drm.so.2.2200.0 libva-drm.so.2 && \
+          ldconfig && \
+          cd / && rm -rf /tmp/libva-2.22.0 /tmp/2.22.0.tar.gz && \
+          apt-get remove -y build-essential meson pkg-config && \
+          apt-get autoremove -y && \
+          rm -rf /var/lib/apt/lists/*
 
       ENV LIBVA_DRIVER_NAME=iHD
-      CMD ["/bin/bash", "-c", "while true; do sleep 3600; done"]
+      EXPOSE 8080
+      CMD ["/sbin/my_init"]
       WORKDIR /home/arm
       EOF
           
