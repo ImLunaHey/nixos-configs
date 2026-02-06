@@ -73,7 +73,7 @@
           git config --global --add safe.directory /opt/arm
 
       ENV LIBVA_DRIVER_NAME=iHD
-      CMD ["/sbin/my_init"]
+      CMD ["/bin/bash", "-c", "while true; do sleep 3600; done"]
       WORKDIR /home/arm
       EOF
           
