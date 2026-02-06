@@ -6,7 +6,10 @@
 
   # Hostname
   networking.hostName = "nova";
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    dns = "none";
+  };
 
   # Sops configuration
   sops = {
