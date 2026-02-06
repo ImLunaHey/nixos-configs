@@ -84,6 +84,8 @@
     "d /mnt/media/config 0755 1000 1000 -"
     "d /mnt/media/logs 0755 1000 1000 -"
     "d /mnt/media/completed 0755 1000 1000 -"
+    "d /mnt/media/raw 0755 1000 1000 -"
+    "d /mnt/media/transcode 0755 1000 1000 -"
   ];
 
   # Generate ARM config with secrets substituted
@@ -110,7 +112,7 @@
         volumes = [
           "/mnt/media/config:/etc/arm/config"
           "/mnt/media/logs:/home/arm/logs"
-          "/mnt/media/completed:/home/arm/media"
+          "/mnt/media:/home/arm/media"
         ];
         extraOptions = [
           "--privileged"
