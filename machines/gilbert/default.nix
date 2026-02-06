@@ -42,8 +42,10 @@
       ENV DEBIAN_FRONTEND=noninteractive
 
       # Copy HandBrake from ARM dependencies image which has QSV support
+      # Copy HandBrake and ALL its dependencies from ARM image
       COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /usr/local/bin/HandBrakeCLI /usr/local/bin/HandBrakeCLI
-      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /usr/lib/x86_64-linux-gnu/libmfx* /usr/lib/x86_64-linux-gnu/
+      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /usr/lib/x86_64-linux-gnu/ /usr/lib/x86_64-linux-gnu/
+      COPY --from=automaticrippingmachine/arm-dependencies:1.6.2 /lib/x86_64-linux-gnu/ /lib/x86_64-linux-gnu/
 
       # Install ARM dependencies + Intel drivers + HandBrake
       RUN apt-get update && \
