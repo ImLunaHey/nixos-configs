@@ -34,16 +34,30 @@
           cat > /tmp/Dockerfile.arm << 'EOF'
       FROM automaticrippingmachine/automatic-ripping-machine:latest
 
-      # Upgrade to Ubuntu 24.04
+      ENV DEBIAN_FRONTEND=noninteractive
+      ENV NEEDRESTART_MODE=a
+
+      # Update all packages first
       RUN apt-get update && \
-          DEBIAN_FRONTEND=noninteractive apt-get install -y ubuntu-release-upgrader-core && \
+          apt-get upgrade -y && \
+          apt-get dist-upgrade -y
+
+      # Upgrade to Ubuntu 24.04
+      RUN apt-get install -y ubuntu-release-upgrader-core && \
           sed -i 's/Prompt=lts/Prompt=normal/' /etc/update-manager/release-upgrades && \
-          DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive && \
-          apt-get update && \
-          DEBIAN_FRONTEND=noninteractive apt-get install -y intel-media-va-driver-non-free && \
+          echo 'DPkg::options { "--force-confdef"; "--force-confold"; }' >> /etc/apt/apt.conf.d/local && \
+          do-release-upgrade -f DistUpgradeViewNonInteractive
+
+      # Install Intel drivers and old libraries
+      RUN apt-get update && \
+          apt-get install -y intel-media-va-driver-non-free && \
+          cd /tmp && \
+          wget http://archive.ubuntu.com/ubuntu/pool/universe/x/x264/libx264-163_0.163.3060+git5db6aa6-2build1_amd64.deb && \
+          dpkg -i libx264-163_0.163.3060+git5db6aa6-2build1_amd64.deb && \
           rm -rf /var/lib/apt/lists/*
 
       ENV LIBVA_DRIVER_NAME=iHD
+      ENV LIBVA_DRI_DEVICE=/dev/dri/renderD129
       EXPOSE 8080
       CMD ["/sbin/my_init"]
       WORKDIR /home/arm
