@@ -49,7 +49,7 @@
       WORKDIR /home/arm
       EOF
           
-          ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
+          ${pkgs.docker}/bin/docker build --no-cache -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
           rm /tmp/Dockerfile.arm
         fi
     '';
