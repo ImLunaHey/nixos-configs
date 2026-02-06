@@ -23,6 +23,7 @@
     enable = true;
     useRoutingFeatures = "both";
     authKeyFile = config.sops.secrets.tailscale_key.path;
+    extraUpFlags = [ "--accept-dns=true" ];
   };
 
   # Mount NFS share from gilbert
