@@ -30,44 +30,56 @@
     };
 
     script = ''
-          if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
-            cat > /tmp/Dockerfile.arm << 'EOF'
-      FROM ubuntu:24.04
+        if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
+          cat > /tmp/Dockerfile.arm << 'EOF'
+      ###########################################################
+      # Setup with Ubuntu 24.04 dependencies
+      FROM ubuntu:24.04 AS base
+      LABEL org.opencontainers.image.source=https://github.com/automatic-ripping-machine/automatic-ripping-machine
+      LABEL org.opencontainers.image.license=MIT
+      LABEL org.opencontainers.image.description='Automatic Ripping Machine for fully automated Blu-ray, DVD and audio disc ripping with Intel QuickSync support.'
 
       ENV DEBIAN_FRONTEND=noninteractive
 
-      # Install base system packages
-      RUN apt-get update && apt-get install -y \
-          software-properties-common \
-          && rm -rf /var/lib/apt/lists/*
-
-      # Add universe repo for additional packages
-      RUN add-apt-repository universe && \
-          add-apt-repository multiverse
-
-      # Install ARM dependencies (subset that exists in 24.04)
-      RUN apt-get update && apt-get install -y \
-          python3 python3-pip git \
+      # Install ARM dependencies + Intel drivers + HandBrake
+      RUN apt-get update && \
+          apt-get install -y \
+          python3 python3-pip git runit systemd \
           handbrake-cli \
           intel-media-va-driver-non-free \
           abcde flac imagemagick cdparanoia \
-          libdvd-pkg lsdvd \
-          at wget curl \
+          libdvd-pkg lsdvd at wget curl \
           && rm -rf /var/lib/apt/lists/*
 
-      WORKDIR /opt/arm
-      RUN git clone https://github.com/automatic-ripping-machine/automatic-ripping-machine.git .
-
-      # Install Python dependencies
-      RUN pip3 install --break-system-packages -r requirements.txt
-
       EXPOSE 8080
-      CMD ["python3", "arm/ripper/main.py"]
+
+      # Setup folders and fstab
+      RUN mkdir -m 0777 -p /home/arm /home/arm/config \
+          /mnt/dev/sr0 /mnt/dev/sr1 /mnt/dev/sr2 /mnt/dev/sr3 && \
+          echo "/dev/sr0  /mnt/dev/sr0  udf,iso9660  defaults,users,utf8,ro  0  0" >> /etc/fstab
+
+      # Remove SSH
+      RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh || true
+
+      # Add ARMui service
+      RUN mkdir -p /etc/service/armui /etc/my_init.d
+
+      ###########################################################
+      # Final image
+      FROM base AS automatic-ripping-machine
+
+      WORKDIR /opt/arm
+      RUN git clone https://github.com/automatic-ripping-machine/automatic-ripping-machine.git . && \
+          git config --global --add safe.directory /opt/arm
+
+      ENV LIBVA_DRIVER_NAME=iHD
+      CMD ["/sbin/my_init"]
+      WORKDIR /home/arm
       EOF
-            
-            ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
-            rm /tmp/Dockerfile.arm
-          fi
+          
+          ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
+          rm /tmp/Dockerfile.arm
+        fi
     '';
   };
 
