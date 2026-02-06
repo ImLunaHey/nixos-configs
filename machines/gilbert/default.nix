@@ -19,6 +19,30 @@
     ];
   };
 
+  systemd.services.build-arm-intel-image = {
+  description = "Build ARM Docker image with Intel drivers";
+  wantedBy = [ "multi-user.target" ];
+  before = [ "docker-arm.service" ];
+  
+  serviceConfig = {
+    Type = "oneshot";
+    RemainAfterExit = true;
+  };
+  
+  script = ''
+    if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
+      cat > /tmp/Dockerfile.arm << 'EOF'
+FROM automaticrippingmachine/automatic-ripping-machine:latest
+RUN apt-get update && \
+    apt-get install -y intel-media-va-driver-non-free && \
+    rm -rf /var/lib/apt/lists/*
+EOF
+      ${pkgs.docker}/bin/docker build -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
+      rm /tmp/Dockerfile.arm
+    fi
+  '';
+};
+
   # Sops configuration
   sops = {
     defaultSopsFile = ../../secrets/secrets.yaml;
@@ -117,21 +141,13 @@
     
     containers = {
       arm = {
-        image = "automaticrippingmachine/automatic-ripping-machine:latest";
+        image = "arm-intel:latest";
         ports = [ "8080:8080" ];
-        environment = {
-          LIBVA_DRIVER_NAME = "iHD";
-          LD_LIBRARY_PATH = "/nix-glibc:/nix-gcc:/usr/lib/x86_64-linux-gnu";
-        };
         volumes = [
           "/mnt/media/config:/etc/arm/config"
           "/mnt/media/logs:/home/arm/logs"
           "/mnt/media:/home/arm/media"
           "/mnt/media/db:/home/arm/db"
-          "${pkgs.intel-media-driver}/lib/dri/iHD_drv_video.so:/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so:ro"
-          "${pkgs.intel-gmmlib}/lib/libigdgmm.so.12:/usr/lib/x86_64-linux-gnu/libigdgmm.so.12:ro"
-          "${pkgs.glibc}/lib:/nix-glibc:ro"
-          "${pkgs.stdenv.cc.cc.lib}/lib:/nix-gcc:ro"
         ];
         extraOptions = [
           "--privileged"
