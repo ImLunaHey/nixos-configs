@@ -127,7 +127,7 @@
           "/mnt/media/logs:/home/arm/logs"
           "/mnt/media:/home/arm/media"
           "/mnt/media/db:/home/arm/db"
-          "/run/opengl-driver:/run/opengl-driver:ro"
+          "${pkgs.intel-media-driver}/lib/dri/iHD_drv_video.so:/usr/lib/x86_64-linux-gnu/dri/iHD_drv_video.so:ro"
         ];
         extraOptions = [
           "--privileged"
