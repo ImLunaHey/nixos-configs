@@ -30,8 +30,8 @@
     };
 
     script = ''
-        if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
-          cat > /tmp/Dockerfile.arm << 'EOF'
+          if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
+            cat > /tmp/Dockerfile.arm << 'EOF'
       FROM automaticrippingmachine/automatic-ripping-machine:latest
 
       ENV DEBIAN_FRONTEND=noninteractive
@@ -48,13 +48,19 @@
           echo 'DPkg::options { "--force-confdef"; "--force-confold"; }' >> /etc/apt/apt.conf.d/local && \
           do-release-upgrade -f DistUpgradeViewNonInteractive
 
-      # Install Intel drivers and old libraries
+      # Install Intel drivers, MFX libraries, HandBrake, and dependencies
       RUN apt-get update && \
-          apt-get install -y intel-media-va-driver-non-free && \
-          cd /tmp && \
+          apt-get install -y \
+          intel-media-va-driver-non-free \
+          libmfx1 libmfx-dev \
+          handbrake-cli \
+          libvpx9 libmp3lame0 libopus0 libnuma1 \
+          && cd /tmp && \
           wget http://archive.ubuntu.com/ubuntu/pool/universe/x/x264/libx264-163_0.163.3060+git5db6aa6-2build1_amd64.deb && \
           dpkg -i libx264-163_0.163.3060+git5db6aa6-2build1_amd64.deb && \
-          rm -rf /var/lib/apt/lists/*
+          rm -rf /var/lib/apt/lists/* && \
+          mv /usr/local/bin/HandBrakeCLI /usr/local/bin/HandBrakeCLI.old && \
+          ln -s /usr/bin/HandBrakeCLI /usr/local/bin/HandBrakeCLI
 
       ENV LIBVA_DRIVER_NAME=iHD
       ENV LIBVA_DRI_DEVICE=/dev/dri/renderD129
@@ -62,10 +68,10 @@
       CMD ["/sbin/my_init"]
       WORKDIR /home/arm
       EOF
-          
-          ${pkgs.docker}/bin/docker build --no-cache -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
-          rm /tmp/Dockerfile.arm
-        fi
+            
+            ${pkgs.docker}/bin/docker build --no-cache -t arm-intel:latest -f /tmp/Dockerfile.arm /tmp
+            rm /tmp/Dockerfile.arm
+          fi
     '';
   };
 
