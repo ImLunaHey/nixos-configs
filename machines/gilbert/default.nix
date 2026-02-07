@@ -48,9 +48,8 @@
           echo 'DPkg::options { "--force-confdef"; "--force-confold"; }' >> /etc/apt/apt.conf.d/local && \
           do-release-upgrade -f DistUpgradeViewNonInteractive
 
-      # Reinstall ARM Python dependencies
-      RUN cd /opt/arm && \
-          pip3 install --break-system-packages -r arm-dependencies/requirements.txt
+      # Reinstall ARM Python dependencies (with debug)
+      RUN pip3 install --break-system-packages bcrypt argparse colorama flake8 waitress
 
       # Install Intel drivers, MFX libraries, HandBrake, and dependencies
       RUN apt-get update && \
