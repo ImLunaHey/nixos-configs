@@ -48,8 +48,13 @@
           echo 'DPkg::options { "--force-confdef"; "--force-confold"; }' >> /etc/apt/apt.conf.d/local && \
           do-release-upgrade -f DistUpgradeViewNonInteractive
 
-      # Reinstall ARM Python dependencies (with debug)
-      RUN pip3 install --break-system-packages bcrypt argparse colorama flake8 waitress
+      # Reinstall ARM Python dependencies
+      RUN pip3 install --break-system-packages \
+          bcrypt requests argparse colorama flake8 waitress \
+          flask flask-cors flask-login flask-migrate flask-sqlalchemy flask-wtf \
+          apprise alembic sqlalchemy psutil pydvdid python-magic pyudev pyyaml \
+          xmltodict eyed3 musicbrainzngs discid prettytable werkzeug wtforms \
+          netifaces
 
       # Install Intel drivers, MFX libraries, HandBrake, and dependencies
       RUN apt-get update && \
