@@ -49,7 +49,7 @@
           do-release-upgrade -f DistUpgradeViewNonInteractive
 
       # Reinstall ARM Python dependencies
-      RUN pip3 install --break-system-packages \
+      RUN pip3 install --break-system-packages --ignore-installed \
           bcrypt requests argparse colorama flake8 waitress \
           flask flask-cors flask-login flask-migrate flask-sqlalchemy flask-wtf \
           apprise alembic sqlalchemy psutil pydvdid python-magic pyudev pyyaml \
