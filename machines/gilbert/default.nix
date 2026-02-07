@@ -52,6 +52,20 @@
       RUN cp /opt/arm/scripts/docker/custom_udev /etc/init.d/udev && \
           chmod +x /etc/init.d/udev
 
+      # Install MakeMKV from source since the latest version in Ubuntu 24.04 is too old
+      RUN cd /tmp && \
+          wget https://www.makemkv.com/download/makemkv-bin-1.18.3.tar.gz && \
+          wget https://www.makemkv.com/download/makemkv-oss-1.18.3.tar.gz && \
+          tar xzf makemkv-bin-1.18.3.tar.gz && \
+          tar xzf makemkv-oss-1.18.3.tar.gz && \
+          apt-get update && \
+          apt-get install -y build-essential pkg-config libc6-dev libssl-dev libexpat1-dev libavcodec-dev libgl1-mesa-dev qtbase5-dev zlib1g-dev && \
+          cd makemkv-oss-1.18.3 && ./configure && make && make install && \
+          cd ../makemkv-bin-1.18.3 && mkdir -p tmp && touch tmp/eula_accepted && make && make install && \
+          mv /usr/local/bin/makemkvcon /usr/local/bin/makemkvcon.old && \
+          mv /usr/local/lib/libmakemkv.so.1 /usr/local/lib/libmakemkv.so.1.old && \
+          mv /usr/local/lib/libdriveio.so.0 /usr/local/lib/libdriveio.so.0.old
+
       # Reinstall ARM Python dependencies
       RUN pip3 install --break-system-packages --ignore-installed \
           bcrypt requests argparse colorama flake8 waitress \
