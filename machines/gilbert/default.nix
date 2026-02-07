@@ -50,7 +50,7 @@
 
       # Reinstall ARM Python dependencies
       RUN cd /opt/arm && \
-          pip3 install --break-system-packages -r requirements.txt
+          pip3 install --break-system-packages -r arm-dependencies/requirements.txt
 
       # Install Intel drivers, MFX libraries, HandBrake, and dependencies
       RUN apt-get update && \
