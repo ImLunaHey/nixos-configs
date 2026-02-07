@@ -54,7 +54,7 @@ DEST_EXT: "mkv"
 HANDBRAKE_CLI: "HandBrakeCLI"
 HANDBRAKE_LOCAL: "HandBrakeCLI"
 MAINFEATURE: false
-HB_ARGS_DVD: "--encoder qsv_h265 --encoder-preset quality --quality 20 --all-audio --subtitle scan -F"
+HB_ARGS_DVD: "--encoder x265_10bit --encoder-preset medium --quality 18 --all-audio --subtitle scan -F"
 HB_ARGS_BD: "--encoder qsv_h265 --encoder-preset quality --quality 20 --all-audio --subtitle scan -F --subtitle-burned --audio-lang-list eng"
 FFMPEG_CLI: "FFMPEG"
 FFMPEG_LOCAL: "FFMPEG"
