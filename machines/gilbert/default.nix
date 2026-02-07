@@ -48,6 +48,10 @@
           echo 'DPkg::options { "--force-confdef"; "--force-confold"; }' >> /etc/apt/apt.conf.d/local && \
           do-release-upgrade -f DistUpgradeViewNonInteractive
 
+      # Restore custom udev that gets deleted during Ubuntu upgrade
+      RUN cp /opt/arm/scripts/docker/custom_udev /etc/init.d/udev && \
+          chmod +x /etc/init.d/udev
+
       # Reinstall ARM Python dependencies
       RUN pip3 install --break-system-packages --ignore-installed \
           bcrypt requests argparse colorama flake8 waitress \
