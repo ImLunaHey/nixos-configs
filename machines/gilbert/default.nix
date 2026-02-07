@@ -130,7 +130,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/media/completed nova(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/media/completed nova(rw,sync,no_subtree_check,no_root_squash) lunas-macbook-pro(rw,sync,no_subtree_check,no_root_squash)
     '';
   };
 
@@ -185,8 +185,12 @@
     "d /mnt/media/config 0755 1000 1000 -"
     "d /mnt/media/logs 0755 1000 1000 -"
     "d /mnt/media/completed 0755 1000 1000 -"
+    "d /mnt/media/completed/movies 0755 1000 1000 -"
+    "d /mnt/media/completed/tv 0755 1000 1000 -"
     "d /mnt/media/raw 0755 1000 1000 -"
     "d /mnt/media/transcode 0755 1000 1000 -"
+    "d /mnt/media/transcode/movies 0755 1000 1000 -"
+    "d /mnt/media/transcode/tv 0755 1000 1000 -"
     "d /mnt/media/db 0755 1000 1000 -"
   ];
 
