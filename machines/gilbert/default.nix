@@ -7,6 +7,7 @@
     ./services.nix
     ./containers.nix
     ./storage.nix
+    ./minecraft.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
