@@ -86,7 +86,7 @@ in
           's/enable-rcon=false/enable-rcon=true/' \
           /srv/minecraft/atm10/server.properties
         ${pkgs.gnused}/bin/sed -i \
-          "s/rcon.password=/rcon.password=$(cat ${config.sops.secrets.rcon_password.path})/" \
+          "s/rcon\.password=.*/rcon.password=$(cat ${config.sops.secrets.rcon_password.path})/" \
           /srv/minecraft/atm10/server.properties
       fi
     '';
