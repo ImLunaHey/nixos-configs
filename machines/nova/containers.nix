@@ -37,6 +37,7 @@
         environment = {
           TZ = "Europe/London";
           FTLCONF_dns_listeningMode = "all";
+          FTLCONF_dns_rateLimit_count = "0";
         };
         volumes = [
           "/var/lib/pihole/pihole:/etc/pihole"
