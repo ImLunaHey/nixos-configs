@@ -7,7 +7,10 @@
       tailscale_key = { };
       makemkv_key = { };
       omdb_api_key = { };
-      rcon_password = { };
+      rcon_password = {
+        mode = "0440";
+        group = "minecraft";
+      };
     };
   };
 
