@@ -59,6 +59,9 @@ in
           cd /srv/minecraft/atm10
           ${pkgs.jdk21}/bin/java -jar neoforge-21.1.211-installer.jar -installServer
         fi
+
+        # Write eula.txt
+        echo "eula=true" > /srv/minecraft/atm10/eula.txt
       '';
 
       ExecStart = "${pkgs.jdk21}/bin/java @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.211/unix_args.txt nogui";
