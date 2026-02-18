@@ -31,6 +31,8 @@
         ports = [
           "192.168.0.10:53:53/tcp"
           "192.168.0.10:53:53/udp"
+          "100.106.184.73:53:53/tcp"
+          "100.106.184.73:53:53/udp"
           "80:80/tcp"
         ];
         environmentFiles = [ config.sops.secrets.pihole_password.path ];
