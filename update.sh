@@ -7,5 +7,8 @@ if [[ ! " ${VALID_HOSTS[@]} " =~ " ${HOST} " ]]; then
   exit 1
 fi
 
+echo "Pulling latest config..."
+git pull
+
 echo "Updating $HOST..."
 nixos-rebuild switch --flake ".#$HOST"
