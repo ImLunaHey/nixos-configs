@@ -90,10 +90,8 @@ in
     '';
   };
 
-  environment.systemPackages = [ pkgs.jdk21 pkgs.mcrcon ];
-
   networking.firewall.allowedTCPPorts = [ 25565 ];
   networking.firewall.allowedUDPPorts = [ 25565 ];
 
-  environment.systemPackages = [ pkgs.jdk21 ];
+  environment.systemPackages = [ pkgs.jdk21 pkgs.mcrcon ];
 }
