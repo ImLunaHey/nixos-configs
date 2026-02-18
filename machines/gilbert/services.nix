@@ -10,24 +10,6 @@
     };
   };
 
-  services.tailscale = {
-    enable = true;
-    useRoutingFeatures = "both";
-    authKeyFile = config.sops.secrets.tailscale_key.path;
-  };
-
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "prohibit-password";
-      PasswordAuthentication = false;
-    };
-    listenAddresses = [
-      { addr = "0.0.0.0"; port = 22; }
-      { addr = "[::]"; port = 22; }
-    ];
-  };
-
   system.activationScripts.arm-config = {
     deps = [ "setupSecrets" ];
     text = ''

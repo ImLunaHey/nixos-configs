@@ -15,13 +15,20 @@
 
   # Basic packages
   environment.systemPackages = with pkgs; [
-    vim
+    nano
+    tree
     git
-    htop
     btop
     wget
     curl
   ];
+
+  # Tailscale
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "both";
+    authKeyFile = config.sops.secrets.tailscale_key.path;
+  };
 
   # SSH
   services.openssh = {
@@ -30,10 +37,17 @@
       PasswordAuthentication = false;
       PermitRootLogin = "prohibit-password";
     };
+    listenAddresses = [
+      { addr = "0.0.0.0"; port = 22; }
+      { addr = "[::]"; port = 22; }
+    ];
   };
 
   # Import SSH keys from GitHub
-  users.users.root.openssh.authorizedKeys.keys = [
-    # We'll add these manually for now
+  users.users.root.openssh.authorizedKeys.keyFiles = [
+    (builtins.fetchurl {
+      url = "https://github.com/ImLunaHey.keys";
+      sha256 = "1j5g3jxalsgdi42a4na3pvdbhdmmvlkpdqjhfw2b80g4hbas6n4f";
+    })
   ];
 }
