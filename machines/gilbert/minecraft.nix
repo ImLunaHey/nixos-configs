@@ -65,7 +65,9 @@ in
       '';
 
       ExecStart = "${pkgs.jdk21}/bin/java @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.211/unix_args.txt nogui";
-      ExecStop = "${pkgs.mcrcon}/bin/mcrcon -H localhost -P 25575 -p \"$(cat ${config.sops.secrets.rcon_password.path})\" stop";
+      ExecStop = pkgs.writeShellScript "atm10-stop" ''
+        ${pkgs.mcrcon}/bin/mcrcon -H localhost -P 25575 -p "$(cat ${config.sops.secrets.rcon_password.path})" stop
+      '';
       Restart = "on-failure";
       RestartSec = "30s";
       OOMScoreAdjust = -500;
