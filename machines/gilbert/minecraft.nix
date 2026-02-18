@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   atm10ServerPack = pkgs.stdenv.mkDerivation {
@@ -65,6 +65,7 @@ in
       '';
 
       ExecStart = "${pkgs.jdk21}/bin/java @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.211/unix_args.txt nogui";
+      ExecStop = "${pkgs.mcrcon}/bin/mcrcon -H localhost -P 25575 -p \"$(cat ${config.sops.secrets.rcon_password.path})\" stop";
       Restart = "on-failure";
       RestartSec = "30s";
       OOMScoreAdjust = -500;
@@ -74,6 +75,22 @@ in
       JAVA_HOME = "${pkgs.jdk21}";
     };
   };
+
+  system.activationScripts.minecraft-config = {
+    deps = [ "setupSecrets" ];
+    text = ''
+      if [ -f /srv/minecraft/atm10/server.properties ]; then
+        ${pkgs.gnused}/bin/sed -i \
+          's/enable-rcon=false/enable-rcon=true/' \
+          /srv/minecraft/atm10/server.properties
+        ${pkgs.gnused}/bin/sed -i \
+          "s/rcon.password=/rcon.password=$(cat ${config.sops.secrets.rcon_password.path})/" \
+          /srv/minecraft/atm10/server.properties
+      fi
+    '';
+  };
+
+  environment.systemPackages = [ pkgs.jdk21 pkgs.mcrcon ];
 
   networking.firewall.allowedTCPPorts = [ 25565 ];
   networking.firewall.allowedUDPPorts = [ 25565 ];

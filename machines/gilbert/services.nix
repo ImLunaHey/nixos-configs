@@ -7,6 +7,7 @@
       tailscale_key = { };
       makemkv_key = { };
       omdb_api_key = { };
+      rcon_password = { };
     };
   };
 
