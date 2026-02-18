@@ -6,10 +6,13 @@
 
   # Hostname
   networking.hostName = "nova";
-  networking.networkmanager = {
-    enable = true;
-    dns = "none";
-  };
+  networking.networkmanager.enable = false;
+  networking.interfaces.enp1s0.ipv4.addresses = [{
+    address = "192.168.0.10";
+    prefixLength = 24;
+  }];
+  networking.defaultGateway = "192.168.0.1";
+  networking.nameservers = [ "1.1.1.1" ];
 
   # Sops configuration
   sops = {
@@ -116,8 +119,8 @@
       pihole = {
         image = "pihole/pihole:latest";
         ports = [
-          "53:53/tcp"
-          "53:53/udp"
+          "192.168.0.10:53:53/tcp"
+          "192.168.0.10:53:53/udp"
           "80:80/tcp"
         ];
         environmentFiles = [ config.sops.secrets.pihole_password.path ];
