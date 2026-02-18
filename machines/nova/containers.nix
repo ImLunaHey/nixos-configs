@@ -36,6 +36,7 @@
         environmentFiles = [ config.sops.secrets.pihole_password.path ];
         environment = {
           TZ = "Europe/London";
+          FTLCONF_dns_listeningMode = "all";
         };
         volumes = [
           "/var/lib/pihole/pihole:/etc/pihole"
