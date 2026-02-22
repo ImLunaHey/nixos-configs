@@ -15,7 +15,7 @@
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
-        reverse_proxy localhost:8008
+        reverse_proxy 127.0.0.1:8008
       '';
     };
     virtualHosts."jellyfin.flaked.org" = {
@@ -25,7 +25,7 @@
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
-        reverse_proxy localhost:8096
+        reverse_proxy 127.0.0.1:8096
       '';
     };
     virtualHosts."pihole.flaked.org" = {
@@ -35,7 +35,7 @@
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
-        reverse_proxy localhost:80
+        reverse_proxy 127.0.0.1:80
       '';
     };
   };
