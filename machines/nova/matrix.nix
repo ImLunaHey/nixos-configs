@@ -4,6 +4,8 @@
     owner = "matrix-synapse";
   };
 
+  sops.secrets.cloudflare_api_token = {};
+
   services.matrix-synapse = {
     enable = true;
     settings = {
@@ -30,7 +32,6 @@
       plugins = [ "github.com/caddy-dns/cloudflare@v0.2.3" ];
       hash = "sha256-bJO2RIa6hYsoVl3y2L86EM34Dfkm2tlcEsXn2+COgzo=";
     };
-    environmentFile = config.sops.secrets.cloudflare_api_token.path;
     virtualHosts."nova.flaked.org" = {
       extraConfig = ''
         tls {
@@ -41,4 +42,6 @@
       '';
     };
   };
+
+  systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.cloudflare_api_token.path;
 }
