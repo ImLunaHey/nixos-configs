@@ -25,4 +25,13 @@
       registration_shared_secret_path = config.sops.secrets.matrix_registration_secret.path;
     };
   };
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "matrix-synapse" ];
+    ensureUsers = [{
+      name = "matrix-synapse";
+      ensureDBOwnership = true;
+    }];
+  };
 }
