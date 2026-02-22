@@ -8,7 +8,7 @@
       plugins = [ "github.com/caddy-dns/cloudflare@v0.2.3" ];
       hash = "sha256-bJO2RIa6hYsoVl3y2L86EM34Dfkm2tlcEsXn2+COgzo=";
     };
-    virtualHosts."nova.flaked.org" = {
+    virtualHosts."matrix.flaked.org" = {
       extraConfig = ''
         bind 100.106.184.73
         tls {

@@ -7,8 +7,8 @@
   services.matrix-synapse = {
     enable = true;
     settings = {
-      server_name = "nova.flaked.org";
-      public_baseurl = "https://nova.flaked.org";
+      server_name = "matrix.flaked.org";
+      public_baseurl = "https://matrix.flaked.org";
       listeners = [{
         port = 8008;
         bind_addresses = [ "127.0.0.1" ];
