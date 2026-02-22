@@ -14,6 +14,9 @@
     containers = {
       jellyfin = {
         image = "jellyfin/jellyfin:latest";
+        ports = [
+          "127.0.0.1:8096:8096"
+        ];
         volumes = [
           "/var/lib/jellyfin/config:/config"
           "/var/lib/jellyfin/cache:/cache"
