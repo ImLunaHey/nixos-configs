@@ -34,6 +34,7 @@
     };
     virtualHosts."nova.flaked.org" = {
       extraConfig = ''
+        bind 100.106.184.73
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
