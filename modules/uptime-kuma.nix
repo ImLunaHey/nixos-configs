@@ -4,8 +4,7 @@ with lib;
 
 let
   cfg = config.services.uptime-kuma-sync;
-  
-  # Derive monitors from Caddy virtual hosts
+
   caddyMonitors = mapAttrsToList (name: _: {
     inherit name;
     url = "https://${name}";
@@ -14,31 +13,35 @@ let
 
   monitorsJson = builtins.toJSON caddyMonitors;
 
+  pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ]);
+
   syncScript = pkgs.writeShellScript "uptime-kuma-sync" ''
     API_KEY=$(cat ${config.sops.secrets.uptime_kuma_api_key.path})
-    BASE_URL="http://127.0.0.1:3001"
+    ${pythonEnv}/bin/python3 ${pkgs.writeText "sync.py" ''
+import json
+import os
+import sys
+from uptime_kuma_api import UptimeKumaApi, MonitorType
 
-    # Get existing monitors
-    EXISTING=$(${pkgs.curl}/bin/curl -s -H "Authorization: Bearer $API_KEY" \
-      "$BASE_URL/api/monitors")
+monitors = json.loads('''${monitorsJson}''')
+api_key = os.environ.get("API_KEY")
 
-    # Sync monitors from Nix config
-    echo '${monitorsJson}' | ${pkgs.jq}/bin/jq -c '.[]' | while read monitor; do
-      NAME=$(echo $monitor | ${pkgs.jq}/bin/jq -r '.name')
-      URL=$(echo $monitor | ${pkgs.jq}/bin/jq -r '.url')
-      
-      # Check if monitor already exists
-      EXISTS=$(echo $EXISTING | ${pkgs.jq}/bin/jq -r ".[] | select(.name == \"$NAME\") | .id")
-      
-      if [ -z "$EXISTS" ]; then
-        echo "Adding monitor: $NAME"
-        ${pkgs.curl}/bin/curl -s -X POST \
-          -H "Authorization: Bearer $API_KEY" \
-          -H "Content-Type: application/json" \
-          -d "{\"name\":\"$NAME\",\"url\":\"$URL\",\"type\":\"http\"}" \
-          "$BASE_URL/api/monitors"
-      fi
-    done
+with UptimeKumaApi("http://127.0.0.1:3001") as api:
+    api.login_by_token(api_key)
+    existing = {m["name"]: m for m in api.get_monitors()}
+
+    for monitor in monitors:
+        if monitor["name"] not in existing:
+            print(f"Adding monitor: {monitor['name']}")
+            api.add_monitor(
+                type=MonitorType.HTTP,
+                name=monitor["name"],
+                url=monitor["url"],
+            )
+        else:
+            print(f"Monitor already exists: {monitor['name']}")
+    ''}
+    export API_KEY
   '';
 in
 {
