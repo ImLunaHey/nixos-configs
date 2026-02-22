@@ -6,9 +6,9 @@
     secrets = {
       tailscale_key = {};
       pihole_password = {};
-    };
-    matrix_registration_secret = {
-      owner = "matrix-synapse";
+      matrix_registration_secret = {
+        owner = "matrix-synapse";
+      };
     };
   };
 }
