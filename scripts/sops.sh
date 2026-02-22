@@ -3,7 +3,7 @@ SOPS_FILE="secrets/secrets.yaml"
 SOPS_AGE_KEY_FILE="${HOME}/.config/sops/age/keys.txt"
 
 run_sops() {
-  nix-shell -p sops --run "SOPS_AGE_KEY_FILE=$SOPS_AGE_KEY_FILE sops $*"
+  nix shell nixpkgs#sops --command env SOPS_AGE_KEY_FILE="$SOPS_AGE_KEY_FILE" sops $*
 }
 
 usage() {
