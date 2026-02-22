@@ -13,7 +13,7 @@ let
 
   monitorsJson = builtins.toJSON caddyMonitors;
 
-  pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ]);
+  pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ps.requests ]);
 
   syncScript = pkgs.writeShellScript "uptime-kuma-sync" ''
   API_KEY=$(cat ${config.sops.secrets.uptime_kuma_api_key.path})
