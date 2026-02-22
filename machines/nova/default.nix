@@ -9,6 +9,7 @@
     ./storage.nix
     ./matrix.nix
     ./caddy.nix
+    ../../modules/uptime-kuma.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -26,4 +27,6 @@
   ];
 
   system.stateVersion = "24.05";
+
+  services.uptime-kuma-sync.enable = true;
 }
