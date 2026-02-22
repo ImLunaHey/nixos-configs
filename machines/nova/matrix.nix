@@ -34,6 +34,8 @@
         TEMPLATE template0;
       CREATE USER "matrix-synapse";
       GRANT ALL PRIVILEGES ON DATABASE "matrix-synapse" TO "matrix-synapse";
+      \c "matrix-synapse"
+      GRANT ALL ON SCHEMA public TO "matrix-synapse";
     '';
   };
 }
