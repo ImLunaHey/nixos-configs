@@ -28,7 +28,7 @@
     enable = true;
     package = pkgs.caddy.withPlugins {
       plugins = [ "github.com/caddy-dns/cloudflare@v0.2.3" ];
-      hash = ""; # leave empty first, nix will tell you the correct hash
+      hash = "sha256-bJO2RIa6hYsoVl3y2L86EM34Dfkm2tlcEsXn2+COgzo=";
     };
     environmentFile = config.sops.secrets.cloudflare_api_token.path;
     virtualHosts."nova.flaked.org" = {
