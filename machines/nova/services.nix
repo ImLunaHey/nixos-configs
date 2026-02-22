@@ -9,6 +9,7 @@
       matrix_registration_secret = {
         owner = "matrix-synapse";
       };
+      cloudflare_api_token = {};
     };
   };
 }
