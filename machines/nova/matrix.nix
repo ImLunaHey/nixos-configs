@@ -27,7 +27,7 @@
   services.caddy = {
     enable = true;
     package = pkgs.caddy.withPlugins {
-      plugins = [ "github.com/caddy-dns/cloudflare@v0.0.0-20250207213823-230b6a1f1b9a" ];
+      plugins = [ "github.com/caddy-dns/cloudflare@v0.2.3" ];
       hash = ""; # leave empty first, nix will tell you the correct hash
     };
     environmentFile = config.sops.secrets.cloudflare_api_token.path;
