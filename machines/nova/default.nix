@@ -8,6 +8,7 @@
     ./containers.nix
     ./storage.nix
     ./matrix.nix
+    ./caddy.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
