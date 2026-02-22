@@ -48,13 +48,13 @@
           "/var/lib/pihole/dnsmasq:/etc/dnsmasq.d"
         ];
       };
-    };
-    uptime-kuma = {
-      image = "louislam/uptime-kuma:latest";
-      ports = [ "127.0.0.1:3001:3001" ];
-      volumes = [
-        "/var/lib/uptime-kuma:/app/data"
-      ];
+      uptime-kuma = {
+        image = "louislam/uptime-kuma:latest";
+        ports = [ "127.0.0.1:3001:3001" ];
+        volumes = [
+          "/var/lib/uptime-kuma:/app/data"
+        ];
+      };
     };
   };
 }
