@@ -16,14 +16,17 @@ let
   pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ]);
 
   syncScript = pkgs.writeShellScript "uptime-kuma-sync" ''
-    API_KEY=$(cat ${config.sops.secrets.uptime_kuma_api_key.path})
-    ${pythonEnv}/bin/python3 ${pkgs.writeText "sync.py" ''
+  API_KEY=$(cat ${config.sops.secrets.uptime_kuma_api_key.path})
+  export API_KEY
+  echo '${monitorsJson}' > /tmp/monitors.json
+  ${pythonEnv}/bin/python3 ${pkgs.writeText "sync.py" ''
 import json
 import os
-import sys
 from uptime_kuma_api import UptimeKumaApi, MonitorType
 
-monitors = json.loads('''${monitorsJson}''')
+with open("/tmp/monitors.json") as f:
+    monitors = json.load(f)
+
 api_key = os.environ.get("API_KEY")
 
 with UptimeKumaApi("http://127.0.0.1:3001") as api:
@@ -40,9 +43,8 @@ with UptimeKumaApi("http://127.0.0.1:3001") as api:
             )
         else:
             print(f"Monitor already exists: {monitor['name']}")
-    ''}
-    export API_KEY
-  '';
+  ''}
+'';
 in
 {
   options.services.uptime-kuma-sync = {
