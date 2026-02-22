@@ -1,16 +1,14 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   sops.secrets.matrix_registration_secret = {
     owner = "matrix-synapse";
   };
 
-  sops.secrets.cloudflare_api_token = {};
-
   services.matrix-synapse = {
     enable = true;
     settings = {
-      server_name = "nova.tail3275e2.ts.net";
-      public_baseurl = "https://nova.tail3275e2.ts.net";
+      server_name = "nova.flaked.org";
+      public_baseurl = "https://nova.flaked.org";
       listeners = [{
         port = 8008;
         bind_addresses = [ "127.0.0.1" ];
@@ -28,10 +26,14 @@
 
   services.postgresql = {
     enable = true;
-    ensureDatabases = [ "matrix-synapse" ];
-    ensureUsers = [{
-      name = "matrix-synapse";
-      ensureDBOwnership = true;
-    }];
+    initialScript = pkgs.writeText "matrix-pg-init" ''
+      CREATE DATABASE "matrix-synapse"
+        ENCODING 'UTF8'
+        LC_COLLATE 'C'
+        LC_CTYPE 'C'
+        TEMPLATE template0;
+      CREATE USER "matrix-synapse";
+      GRANT ALL PRIVILEGES ON DATABASE "matrix-synapse" TO "matrix-synapse";
+    '';
   };
 }
