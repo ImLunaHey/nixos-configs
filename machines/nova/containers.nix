@@ -62,7 +62,7 @@
           "127.0.0.1:9001:9001"
         ];
         volumes = [
-          "/var/lib/rustfs:/data"
+          "/var/lib/rustfs/data:/data"
           "/var/lib/rustfs/logs:/app/logs"
         ];
         environmentFiles = [ config.sops.secrets.rustfs_env.path ];
