@@ -24,6 +24,8 @@
     "d /var/lib/pihole/pihole 0755 root root -"
     "d /var/lib/pihole/dnsmasq 0755 root root -"
     "d /var/lib/uptime-kuma 0755 root root -"
+    "d /var/lib/rustfs 0755 root root -"
+    "d /var/lib/rustfs/logs 0755 root root -"
   ];
 
   system.stateVersion = "24.05";

@@ -55,6 +55,25 @@
           "/var/lib/uptime-kuma:/app/data"
         ];
       };
+      rustfs = {
+        image = "rustfs/rustfs:latest";
+        ports = [
+          "127.0.0.1:9000:9000"
+          "127.0.0.1:9001:9001"
+        ];
+        volumes = [
+          "/var/lib/rustfs:/data"
+          "/var/lib/rustfs/logs:/app/logs"
+        ];
+        environmentFiles = [ config.sops.secrets.rustfs_env.path ];
+        environment = {
+          RUSTFS_VOLUMES = "/data";
+          RUSTFS_ADDRESS = "0.0.0.0:9000";
+          RUSTFS_CONSOLE_ADDRESS = "0.0.0.0:9001";
+          RUSTFS_CONSOLE_ENABLE = "true";
+        };
+        cmd = [ "/data" ];
+      };
     };
   };
 }

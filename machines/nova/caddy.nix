@@ -49,6 +49,26 @@
         reverse_proxy 127.0.0.1:3001
       '';
     };
+    virtualHosts."s3.flaked.org" = {
+      extraConfig = ''
+        bind 100.106.184.73
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
+        }
+        reverse_proxy 127.0.0.1:9000
+      '';
+    };
+    virtualHosts."s3-console.flaked.org" = {
+      extraConfig = ''
+        bind 100.106.184.73
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
+        }
+        reverse_proxy 127.0.0.1:9001
+      '';
+    };
   };
 
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.cloudflare_api_token.path;

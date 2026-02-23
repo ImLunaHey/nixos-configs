@@ -7,5 +7,6 @@
       tailscale_key = {};
       pihole_password = {};
     };
+    sops.secrets.rustfs_env = {}
   };
 }
