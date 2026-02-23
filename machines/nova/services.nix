@@ -6,7 +6,7 @@
     secrets = {
       tailscale_key = {};
       pihole_password = {};
+      rustfs_env = {};
     };
-    sops.secrets.rustfs_env = {};
   };
 }
