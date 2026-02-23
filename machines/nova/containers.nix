@@ -71,6 +71,7 @@
           RUSTFS_ADDRESS = "0.0.0.0:9000";
           RUSTFS_CONSOLE_ADDRESS = "0.0.0.0:9001";
           RUSTFS_CONSOLE_ENABLE = "true";
+          RUSTFS_SERVER_DOMAINS = "s3.flaked.org,s3-console.flaked.org";
         };
         cmd = [ "/data" ];
       };
