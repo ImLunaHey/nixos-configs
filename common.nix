@@ -56,7 +56,7 @@
     postStart = ''
       ${pkgs.curl}/bin/curl -sf \
         -F "title=NixOS Upgraded" \
-        -F "message=$(hostname -s) has been upgraded" \
+        -F "message=${config.networking.hostName} has been upgraded" \
         -F "priority=5" \
         "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
         || true
