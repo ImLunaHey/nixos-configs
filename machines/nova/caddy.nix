@@ -91,5 +91,13 @@
     };
   };
 
-  systemd.services.caddy.serviceConfig.EnvironmentFile = config.sops.secrets.cloudflare_api_token.path;
+  systemd.services.caddy = {
+    after = [ "tailscaled.service" "tailscale-autoconnect.service" ];
+    wants = [ "tailscaled.service" ];
+    serviceConfig = {
+      EnvironmentFile = config.sops.secrets.cloudflare_api_token.path;
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+  };
 }
