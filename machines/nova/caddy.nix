@@ -76,7 +76,7 @@
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
-        reverse_proxy 127.0.0.1:8086
+        reverse_proxy 127.0.0.1:8080
       '';
     };
     virtualHosts."s3-console.flaked.org" = {

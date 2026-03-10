@@ -67,9 +67,7 @@
       };
       igotify = {
         image = "ghcr.io/androidseb25/igotify-notification-assist:latest";
-        ports = [
-          "127.0.0.1:8086:8080"
-        ];
+        extraOptions = [ "--network=host" ];
         volumes = [
           "/var/lib/igotify:/app/data"
         ];
