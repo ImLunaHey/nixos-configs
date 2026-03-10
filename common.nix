@@ -68,7 +68,7 @@
     enable = true;
     flake = "github:imlunahey/nixos-configs";
     dates = "*:0/15";           # every 15 minutes
-    randomizedDelaySecs = 300;  # stagger nova and gilbert by up to 5 minutes
+    randomizedDelaySec = 300;   # stagger nova and gilbert by up to 5 minutes
     allowReboot = true;
   };
 }
