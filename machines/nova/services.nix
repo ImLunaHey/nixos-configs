@@ -7,6 +7,9 @@
       tailscale_key = {};
       pihole_password = {};
       rustfs_env = {};
+      gotify_env = {};
+      igotify_env = {};
+      gotify_upgrade_token = {};
     };
   };
 }

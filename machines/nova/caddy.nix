@@ -59,6 +59,26 @@
         reverse_proxy 127.0.0.1:9000
       '';
     };
+    virtualHosts."gotify.flaked.org" = {
+      extraConfig = ''
+        bind 100.106.184.73
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
+        }
+        reverse_proxy 127.0.0.1:8085
+      '';
+    };
+    virtualHosts."igotify.flaked.org" = {
+      extraConfig = ''
+        bind 100.106.184.73
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
+        }
+        reverse_proxy 127.0.0.1:8086
+      '';
+    };
     virtualHosts."s3-console.flaked.org" = {
       extraConfig = ''
         bind 100.106.184.73

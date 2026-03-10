@@ -50,4 +50,25 @@
       sha256 = "1j5g3jxalsgdi42a4na3pvdbhdmmvlkpdqjhfw2b80g4hbas6n4f";
     })
   ];
+
+  # Notify Gotify after a successful upgrade (non-reboot case)
+  systemd.services.nixos-upgrade = {
+    postStart = ''
+      ${pkgs.curl}/bin/curl -sf \
+        -F "title=NixOS Upgraded" \
+        -F "message=$(hostname -s) has been upgraded" \
+        -F "priority=5" \
+        "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
+        || true
+    '';
+  };
+
+  # Auto-upgrade: poll GitHub every 15 minutes and rebuild if anything changed
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:imlunahey/nixos-configs";
+    dates = "*:0/15";           # every 15 minutes
+    randomizedDelaySecs = 300;  # stagger nova and gilbert by up to 5 minutes
+    allowReboot = true;
+  };
 }

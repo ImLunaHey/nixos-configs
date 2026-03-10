@@ -55,6 +55,26 @@
           "/var/lib/uptime-kuma:/app/data"
         ];
       };
+      gotify = {
+        image = "gotify/server:latest";
+        ports = [
+          "127.0.0.1:8085:80"
+        ];
+        volumes = [
+          "/var/lib/gotify:/app/data"
+        ];
+        environmentFiles = [ config.sops.secrets.gotify_env.path ];
+      };
+      igotify = {
+        image = "ghcr.io/androidseb25/igotify-notification-assist:latest";
+        ports = [
+          "127.0.0.1:8086:8080"
+        ];
+        volumes = [
+          "/var/lib/igotify:/app/data"
+        ];
+        environmentFiles = [ config.sops.secrets.igotify_env.path ];
+      };
       rustfs = {
         image = "rustfs/rustfs:latest";
         ports = [

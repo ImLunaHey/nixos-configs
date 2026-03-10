@@ -5,6 +5,7 @@
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
       tailscale_key = { };
+      gotify_upgrade_token = { };
       makemkv_key = { };
       omdb_api_key = { };
       rcon_password = {
