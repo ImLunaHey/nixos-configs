@@ -51,15 +51,23 @@
     })
   ];
 
-  # Notify Gotify after a successful upgrade (non-reboot case)
+  # Notify Gotify only when the system actually changed
   systemd.services.nixos-upgrade = {
+    preStart = ''
+      readlink /run/current-system > /tmp/nixos-pre-upgrade-system
+    '';
     postStart = ''
-      ${pkgs.curl}/bin/curl -sf \
-        -F "title=NixOS Upgraded" \
-        -F "message=${config.networking.hostName} has been upgraded" \
-        -F "priority=5" \
-        "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
-        || true
+      pre=$(cat /tmp/nixos-pre-upgrade-system 2>/dev/null)
+      post=$(readlink /run/current-system)
+      if [ "$pre" != "$post" ]; then
+        ${pkgs.curl}/bin/curl -sf \
+          -F "title=NixOS Upgraded" \
+          -F "message=${config.networking.hostName} has been upgraded" \
+          -F "priority=5" \
+          "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
+          || true
+      fi
+      rm -f /tmp/nixos-pre-upgrade-system
     '';
   };
 
