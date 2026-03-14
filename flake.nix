@@ -12,9 +12,14 @@
       url = "github:Infinidoge/nix-minecraft";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, sops-nix, nix-minecraft, ... }: {
+  outputs = { self, nixpkgs, sops-nix, nix-minecraft, disko, ... }: {
     nixosConfigurations = {
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -32,6 +37,16 @@
           ./machines/gilbert
           sops-nix.nixosModules.sops
           nix-minecraft.nixosModules.minecraft-servers
+        ];
+      };
+
+      void = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./common.nix
+          ./machines/void
+          sops-nix.nixosModules.sops
+          disko.nixosModules.disko
         ];
       };
     };
