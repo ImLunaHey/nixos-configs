@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+echo "Regenerating README.md..."
+"$REPO_ROOT/scripts/generate-readme.sh"
+
+# Stage README.md if it was modified (covers both tracked changes and new file)
+if ! git diff --quiet -- README.md 2>/dev/null || \
+   git ls-files --others --exclude-standard "$REPO_ROOT/README.md" | grep -q .; then
+  echo "README.md changed, staging..."
+  git add "$REPO_ROOT/README.md"
+fi
