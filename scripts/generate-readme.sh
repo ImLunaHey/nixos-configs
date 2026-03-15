@@ -22,6 +22,14 @@ get_containers() {
     || true
 }
 
+get_caddy_vhosts() {
+  local file="$REPO_ROOT/machines/$1/caddy.nix"
+  [[ -f "$file" ]] || return 0
+  grep -E 'virtualHosts\."[^"]+"' "$file" 2>/dev/null \
+    | sed 's/.*virtualHosts\."\([^"]*\)".*/\1/' \
+    || true
+}
+
 get_key_services() {
   local machine="$1"
   local services=()
@@ -30,6 +38,7 @@ get_key_services() {
   [[ -f "$REPO_ROOT/machines/$machine/caddy.nix" ]]    && services+=("Caddy")
   [[ -f "$REPO_ROOT/machines/$machine/minecraft.nix" ]] && services+=("Minecraft (ATM10)")
   [[ -f "$REPO_ROOT/machines/$machine/smartd.nix" ]]   && services+=("ZFS + SMART monitoring")
+  grep -q 'cloudflare-dns' "$REPO_ROOT/machines/$machine/default.nix" 2>/dev/null && services+=("Cloudflare DNS sync")
 
   while IFS= read -r c; do
     [[ -n "$c" ]] && services+=("\`$c\`")
@@ -126,7 +135,8 @@ nixos-configs/
 │   ├── gilbert/           # Media ripping / Minecraft / NFS
 │   └── void/              # NAS (ZFS RAID)
 ├── modules/
-│   └── uptime-kuma.nix    # Custom uptime-kuma sync module
+│   ├── uptime-kuma.nix    # Custom uptime-kuma sync module
+│   └── cloudflare-dns.nix # Auto-sync Caddy vhosts to Cloudflare DNS
 ├── scripts/
 │   ├── generate-readme.sh # Regenerates this file
 │   ├── install-hooks.sh   # Installs git hooks
@@ -174,6 +184,21 @@ $(flake_inputs)
 | \`scripts/update.sh\` | \`git pull\` then \`nixos-rebuild switch\` on the current host |
 | \`scripts/install.sh <machine> <ip>\` | Bootstrap any machine from a NixOS live ISO via nixos-anywhere |
 | \`scripts/sops.sh <cmd>\` | list / get / set / delete / edit secrets |
+
+## Custom Modules
+
+| Module | Purpose |
+|--------|---------|
+| \`modules/uptime-kuma.nix\` | Syncs Caddy virtual hosts as HTTP monitors into Uptime Kuma on boot |
+| \`modules/cloudflare-dns.nix\` | Upserts Caddy virtual hosts as Cloudflare DNS A records on boot |
+
+### Cloudflare DNS Sync
+
+The \`cloudflare-dns\` module reads \`services.caddy.virtualHosts\` at build time and generates a boot-time service that creates or updates the corresponding DNS A records via the Cloudflare API. Adding a new Caddy virtual host is enough — no manual DNS management required.
+
+**Managed records (nova):**
+
+$(while IFS= read -r domain; do echo "- \`$domain\`"; done < <(get_caddy_vhosts nova))
 
 ## Secrets Management
 

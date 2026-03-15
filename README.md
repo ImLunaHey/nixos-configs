@@ -15,7 +15,8 @@ nixos-configs/
 │   ├── gilbert/           # Media ripping / Minecraft / NFS
 │   └── void/              # NAS (ZFS RAID)
 ├── modules/
-│   └── uptime-kuma.nix    # Custom uptime-kuma sync module
+│   ├── uptime-kuma.nix    # Custom uptime-kuma sync module
+│   └── cloudflare-dns.nix # Auto-sync Caddy vhosts to Cloudflare DNS
 ├── scripts/
 │   ├── generate-readme.sh # Regenerates this file
 │   ├── install-hooks.sh   # Installs git hooks
@@ -33,7 +34,7 @@ nixos-configs/
 | Host | IP | Purpose | Key Services |
 |------|----|---------|--------------|
 | `gilbert` | `192.168.0.11` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
-| `nova` | `192.168.0.10` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,`jellyfin`,`pihole`,`uptime-kuma`,`gotify`,`igotify`,`romm-db`,`romm`,`rustfs` |
+| `nova` | `192.168.0.10` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`gotify`,`igotify`,`romm-db`,`romm`,`rustfs` |
 | `void` | `192.168.0.12` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
 ## Machine Details
@@ -110,6 +111,29 @@ Applied to every host:
 | `scripts/update.sh` | `git pull` then `nixos-rebuild switch` on the current host |
 | `scripts/install.sh <machine> <ip>` | Bootstrap any machine from a NixOS live ISO via nixos-anywhere |
 | `scripts/sops.sh <cmd>` | list / get / set / delete / edit secrets |
+
+## Custom Modules
+
+| Module | Purpose |
+|--------|---------|
+| `modules/uptime-kuma.nix` | Syncs Caddy virtual hosts as HTTP monitors into Uptime Kuma on boot |
+| `modules/cloudflare-dns.nix` | Upserts Caddy virtual hosts as Cloudflare DNS A records on boot |
+
+### Cloudflare DNS Sync
+
+The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time and generates a boot-time service that creates or updates the corresponding DNS A records via the Cloudflare API. Adding a new Caddy virtual host is enough — no manual DNS management required.
+
+**Managed records (nova):**
+
+- `matrix.flaked.org`
+- `jellyfin.flaked.org`
+- `pihole.flaked.org`
+- `status.flaked.org`
+- `s3.flaked.org`
+- `gotify.flaked.org`
+- `igotify.flaked.org`
+- `romm.flaked.org`
+- `s3-console.flaked.org`
 
 ## Secrets Management
 
