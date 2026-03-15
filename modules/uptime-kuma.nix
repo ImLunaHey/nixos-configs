@@ -61,6 +61,7 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
+        ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.curl}/bin/curl -sf http://127.0.0.1:3001 > /dev/null; do sleep 2; done'";
         ExecStart = syncScript;
       };
     };
