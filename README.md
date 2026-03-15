@@ -33,7 +33,7 @@ nixos-configs/
 | Host | IP | Purpose | Key Services |
 |------|----|---------|--------------|
 | `gilbert` | `192.168.0.11` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
-| `nova` | `192.168.0.10` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,`jellyfin`,`pihole`,`uptime-kuma`,`gotify`,`igotify`,`rustfs` |
+| `nova` | `192.168.0.10` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,`jellyfin`,`pihole`,`uptime-kuma`,`gotify`,`igotify`,`romm-db`,`romm`,`rustfs` |
 | `void` | `192.168.0.12` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
 ## Machine Details

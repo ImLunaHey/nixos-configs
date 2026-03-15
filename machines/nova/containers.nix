@@ -1,5 +1,18 @@
 { config, pkgs, ... }:
 {
+  systemd.services.create-romm-network = {
+    description = "Create romm Docker network";
+    after = [ "docker.service" ];
+    requires = [ "docker.service" ];
+    before = [ "docker-romm.service" "docker-romm-db.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.docker}/bin/docker network create romm-net || true";
+    };
+  };
+
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;
@@ -72,6 +85,39 @@
           "/var/lib/igotify:/app/data"
         ];
         environmentFiles = [ config.sops.secrets.igotify_env.path ];
+      };
+      romm-db = {
+        image = "mariadb:latest";
+        volumes = [
+          "/var/lib/romm-db:/var/lib/mysql"
+        ];
+        environmentFiles = [ config.sops.secrets.romm_env.path ];
+        environment = {
+          MARIADB_DATABASE = "romm";
+          MARIADB_USER = "romm-user";
+        };
+        extraOptions = [ "--network=romm-net" ];
+      };
+      romm = {
+        image = "rommapp/romm:latest";
+        ports = [
+          "127.0.0.1:8083:8080"
+        ];
+        volumes = [
+          "/var/lib/romm/resources:/romm/resources"
+          "/var/lib/romm/redis-data:/redis-data"
+          "/var/lib/romm/assets:/romm/assets"
+          "/var/lib/romm/config:/romm/config"
+          "/mnt/media/roms:/romm/library"
+        ];
+        environmentFiles = [ config.sops.secrets.romm_env.path ];
+        environment = {
+          DB_HOST = "romm-db";
+          DB_NAME = "romm";
+          DB_USER = "romm-user";
+        };
+        extraOptions = [ "--network=romm-net" ];
+        dependsOn = [ "romm-db" ];
       };
       rustfs = {
         image = "rustfs/rustfs:latest";

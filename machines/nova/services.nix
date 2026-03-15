@@ -10,6 +10,7 @@
       gotify_env = {};
       igotify_env = {};
       gotify_upgrade_token = {};
+      romm_env = {};
     };
   };
 }

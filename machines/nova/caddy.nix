@@ -79,6 +79,16 @@
         reverse_proxy 127.0.0.1:8080
       '';
     };
+    virtualHosts."romm.flaked.org" = {
+      extraConfig = ''
+        bind 100.106.184.73
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
+        }
+        reverse_proxy 127.0.0.1:8083
+      '';
+    };
     virtualHosts."s3-console.flaked.org" = {
       extraConfig = ''
         bind 100.106.184.73
