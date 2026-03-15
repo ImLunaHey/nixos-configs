@@ -9,7 +9,7 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pkgs.docker}/bin/docker network create romm-net || true";
+      ExecStart = "-${pkgs.docker}/bin/docker network create romm-net";
     };
   };
 
