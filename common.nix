@@ -51,7 +51,7 @@
     })
   ];
 
-  # Notify Gotify only when the system actually changed
+  # Notify Gotify on upgrade success or failure
   systemd.services.nixos-upgrade = {
     preStart = ''
       readlink /nix/var/nix/profiles/system > /tmp/nixos-pre-upgrade-system
@@ -69,6 +69,18 @@
       fi
       rm -f /tmp/nixos-pre-upgrade-system
     '';
+    serviceConfig.ExecStopPost = [
+      "+${pkgs.writeShellScript "nixos-upgrade-notify-failure" ''
+        if [ "$SERVICE_RESULT" != "success" ]; then
+          ${pkgs.curl}/bin/curl -sf \
+            -F "title=NixOS Upgrade Failed" \
+            -F "message=${config.networking.hostName} failed to upgrade: $SERVICE_RESULT" \
+            -F "priority=8" \
+            "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
+            || true
+        fi
+      ''}"
+    ];
   };
 
   # Auto-upgrade: poll GitHub every 15 minutes and rebuild if anything changed
