@@ -3,6 +3,15 @@ set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
+echo "Updating flake.lock..."
+nix flake update --flake "$REPO_ROOT"
+
+# Stage flake.lock if it was modified
+if ! git diff --quiet -- "$REPO_ROOT/flake.lock" 2>/dev/null; then
+  echo "flake.lock changed, staging..."
+  git add "$REPO_ROOT/flake.lock"
+fi
+
 echo "Regenerating README.md..."
 "$REPO_ROOT/scripts/generate-readme.sh"
 
