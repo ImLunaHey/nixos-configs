@@ -54,11 +54,11 @@
   # Notify Gotify only when the system actually changed
   systemd.services.nixos-upgrade = {
     preStart = ''
-      readlink /run/current-system > /tmp/nixos-pre-upgrade-system
+      readlink /nix/var/nix/profiles/system > /tmp/nixos-pre-upgrade-system
     '';
     postStart = ''
       pre=$(cat /tmp/nixos-pre-upgrade-system 2>/dev/null)
-      post=$(readlink /run/current-system)
+      post=$(readlink /nix/var/nix/profiles/system)
       if [ "$pre" != "$post" ]; then
         ${pkgs.curl}/bin/curl -sf \
           -F "title=NixOS Upgraded" \
@@ -75,7 +75,7 @@
   system.autoUpgrade = {
     enable = true;
     flake = "github:imlunahey/nixos-configs";
-    dates = "*:0/15";           # every 15 minutes
+dates = "*:0/15";           # every 15 minutes
     randomizedDelaySec = "5min"; # stagger nova and gilbert by up to 5 minutes
     allowReboot = true;
   };
