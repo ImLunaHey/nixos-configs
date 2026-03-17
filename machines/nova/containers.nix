@@ -20,6 +20,9 @@
       enable = true;
       dates = "weekly";
     };
+    daemon.settings = {
+      "userns-remap" = "default";
+    };
   };
 
   virtualisation.oci-containers = {
