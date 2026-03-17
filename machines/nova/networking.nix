@@ -11,8 +11,7 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 80 8096 ];
-    allowedUDPPorts = [ 53 ];
+    allowedUDPPorts = [ 53 ]; # Pi-hole DNS — needs to be LAN-accessible
     trustedInterfaces = [ "tailscale0" ];
     checkReversePath = "loose";
   };

@@ -5,6 +5,7 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     auto-optimise-store = true;
+    allowed-users = [ "@wheel" "root" ];
   };
 
   # Timezone
@@ -42,6 +43,9 @@
       { addr = "[::]"; port = 22; }
     ];
   };
+
+  # Only allow SSH via Tailscale
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 22 ];
 
   # Users
   users.mutableUsers = false;

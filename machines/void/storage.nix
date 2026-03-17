@@ -116,7 +116,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/media nova(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/media 192.168.0.10(rw,sync,no_subtree_check,no_root_squash)
     '';
   };
 }

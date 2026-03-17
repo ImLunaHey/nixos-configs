@@ -13,9 +13,12 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 22 2049 ];   # SSH, NFS
-    allowedUDPPorts = [ 2049 ];
     trustedInterfaces = [ "tailscale0" ];
     checkReversePath = "loose";
+    # NFS restricted to nova only
+    extraRules = ''
+      iptables -A nixos-fw -p tcp --dport 2049 -s 192.168.0.10 -j ACCEPT
+      iptables -A nixos-fw -p udp --dport 2049 -s 192.168.0.10 -j ACCEPT
+    '';
   };
 }
