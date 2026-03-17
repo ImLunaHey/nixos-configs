@@ -9,5 +9,5 @@
 
   # Required by ZFS — generate with: head -c 8 /etc/machine-id
   # Or: printf "%08x" $RANDOM$RANDOM
-  networking.hostId = "8735321e";
+  networking.hostId = "73873532";
 }
