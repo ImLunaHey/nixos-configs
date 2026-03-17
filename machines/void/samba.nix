@@ -36,9 +36,4 @@
     enable = true;
     interface = "enp3s0";
   };
-
-  networking.firewall.interfaces.enp3s0 = {
-    allowedTCPPorts = [ 445 139 ];
-    allowedUDPPorts = [ 137 138 ];
-  };
 }
