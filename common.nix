@@ -62,7 +62,7 @@
         -d '{"capabilities":{"devices":{"create":{"reusable":false,"ephemeral":false,"preauthorized":true,"tags":["tag:server"]}}},"expirySeconds":300}' \
         https://api.tailscale.com/api/v2/tailnet/-/keys | ${pkgs.jq}/bin/jq -r '.key')
 
-      ${pkgs.tailscale}/bin/tailscale up --reset --auth-key "$auth_key" --advertise-tags=tag:server
+      ${pkgs.tailscale}/bin/tailscale up --reset --auth-key "$auth_key" --advertise-tags=tag:server --accept-dns=false
     '';
   };
 
