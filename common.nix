@@ -35,7 +35,7 @@
     enable = true;
     settings = {
       PasswordAuthentication = false;
-      PermitRootLogin = "prohibit-password";
+      PermitRootLogin = "no";
     };
     listenAddresses = [
       { addr = "0.0.0.0"; port = 22; }
@@ -43,13 +43,25 @@
     ];
   };
 
-  # Import SSH keys from GitHub
-  users.users.root.openssh.authorizedKeys.keyFiles = [
-    (builtins.fetchurl {
-      url = "https://github.com/ImLunaHey.keys";
-      sha256 = "1j5g3jxalsgdi42a4na3pvdbhdmmvlkpdqjhfw2b80g4hbas6n4f";
-    })
-  ];
+  # Users
+  users.mutableUsers = false;
+
+  users.users.root = {
+    hashedPassword = "!"; # lock root account
+  };
+
+  users.users.luna = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    openssh.authorizedKeys.keyFiles = [
+      (builtins.fetchurl {
+        url = "https://github.com/ImLunaHey.keys";
+        sha256 = "1j5g3jxalsgdi42a4na3pvdbhdmmvlkpdqjhfw2b80g4hbas6n4f";
+      })
+    ];
+  };
+
+  security.sudo.wheelNeedsPassword = false;
 
   # Notify Gotify on upgrade success or failure
   systemd.services.nixos-upgrade = {
