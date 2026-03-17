@@ -28,8 +28,42 @@
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";
-    authKeyFile = config.sops.secrets.tailscale_key.path;
-    extraUpFlags = [ "--advertise-tags=tag:server" ];
+  };
+
+  # Authenticate Tailscale using OAuth client credentials (never expire).
+  # Generates a single-use non-ephemeral preauth key on first boot via the API.
+  systemd.services.tailscale-autoauth = {
+    description = "Tailscale authentication via OAuth";
+    after = [ "tailscaled.service" "sops-install-secrets.service" "network-online.target" ];
+    wants = [ "network-online.target" ];
+    requires = [ "tailscaled.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      EnvironmentFile = config.sops.secrets.tailscale_oauth.path;
+    };
+    script = ''
+      state=$(${pkgs.tailscale}/bin/tailscale status --json 2>/dev/null | ${pkgs.jq}/bin/jq -r '.BackendState // "unknown"')
+      if [ "$state" = "Running" ]; then
+        echo "Tailscale already authenticated, skipping"
+        exit 0
+      fi
+
+      token=$(${pkgs.curl}/bin/curl -sf \
+        --data "client_id=$TAILSCALE_OAUTH_CLIENT_ID" \
+        --data "client_secret=$TAILSCALE_OAUTH_CLIENT_SECRET" \
+        --data "grant_type=client_credentials" \
+        https://api.tailscale.com/api/v2/oauth/token | ${pkgs.jq}/bin/jq -r '.access_token')
+
+      auth_key=$(${pkgs.curl}/bin/curl -sf -X POST \
+        -H "Authorization: Bearer $token" \
+        -H "Content-Type: application/json" \
+        -d '{"capabilities":{"devices":{"create":{"reusable":false,"ephemeral":false,"preauthorized":true,"tags":["tag:server"]}}},"expirySeconds":300}' \
+        https://api.tailscale.com/api/v2/tailnet/-/keys | ${pkgs.jq}/bin/jq -r '.key')
+
+      ${pkgs.tailscale}/bin/tailscale up --auth-key "$auth_key" --advertise-tags=tag:server
+    '';
   };
 
   # SSH
