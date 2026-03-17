@@ -116,6 +116,10 @@
             type = "zfs_fs";
             mountpoint = "/mnt/storage/media/music";
           };
+          rips = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/storage/rips";
+          };
         };
       };
     };
@@ -133,6 +137,7 @@
     exports = ''
       /mnt/storage/media 192.168.0.10(rw,sync,no_subtree_check,root_squash)
       /mnt/storage/games 192.168.0.10(rw,sync,no_subtree_check,root_squash)
+      /mnt/storage/rips 192.168.0.11(rw,sync,no_subtree_check,root_squash)
     '';
   };
 }

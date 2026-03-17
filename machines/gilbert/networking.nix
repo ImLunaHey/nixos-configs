@@ -11,8 +11,6 @@
 
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 2049 ]; # NFS — MacBook has DHCP so can't restrict by IP
-    allowedUDPPorts = [ 2049 ];
     trustedInterfaces = [ "tailscale0" ];
     checkReversePath = "loose";
   };

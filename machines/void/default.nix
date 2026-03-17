@@ -6,6 +6,7 @@
     ./services.nix
     ./storage.nix
     ./smartd.nix
+    ./samba.nix
   ];
 
   boot.loader.systemd-boot.enable = true;

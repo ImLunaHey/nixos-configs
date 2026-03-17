@@ -39,6 +39,7 @@
           "/mnt/media/config:/etc/arm/config"
           "/mnt/media/logs:/home/arm/logs"
           "/mnt/media:/home/arm/media"
+          "/mnt/rips:/home/arm/media/completed"
           "/mnt/media/db:/home/arm/db"
         ];
         extraOptions = [

@@ -80,6 +80,7 @@ nixos-configs/
 | `default.nix` | Imports all machine modules |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `networking.nix` | Static IP, firewall, Tailscale |
+| `samba.nix` | |
 | `services.nix` | SOPS secret declarations |
 | `smartd.nix` | SMART disk monitoring + notifications |
 | `storage.nix` | Disk mounts and NFS |
