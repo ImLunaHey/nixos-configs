@@ -69,6 +69,7 @@ fi
 
 # Copy our key to root's authorized_keys so nixos-anywhere can connect without a password
 echo "Copying SSH key to target (password: root)..."
+ssh-keygen -R "$TARGET_IP" 2>/dev/null || true
 SSHPASS=root sshpass -e ssh-copy-id \
   -o StrictHostKeyChecking=no \
   -o PasswordAuthentication=yes \
