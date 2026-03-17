@@ -120,7 +120,7 @@ if $uses_zfs && grep -q "networking.hostId" "$HW_CONFIG"; then
 Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>" && git push)
     echo "Triggering final rebuild on $MACHINE..."
     ssh "${SSH_OPTS[@]}" luna@"$MACHINE" \
-      'sudo tailscale set --accept-dns=false; sudo nixos-rebuild switch --flake github:imlunahey/nixos-configs#'"$MACHINE"' --refresh' || true
+      'sudo tailscale set --accept-dns=false && sudo nixos-rebuild switch --flake github:imlunahey/nixos-configs#'"$MACHINE"' --refresh && sudo tailscale set --accept-dns=true' || true
   else
     echo "hostId already correct ($MACHINE_ID), no update needed."
   fi
@@ -128,4 +128,3 @@ fi
 
 echo ""
 echo "All done! $MACHINE is installed and configured."
-echo "Note: Tailscale DNS is disabled — it will re-enable after the auto-upgrade applies the full config."
