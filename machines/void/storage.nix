@@ -101,11 +101,12 @@
           xattr = "sa";
           relatime = "on";
           "com.sun:auto-snapshot" = "false";
+          mountpoint = "/mnt/storage";
         };
         datasets = {
           media = {
             type = "zfs_fs";
-            mountpoint = "/mnt/media";
+            mountpoint = "/mnt/storage/media";
           };
         };
       };
@@ -122,7 +123,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/media 192.168.0.10(rw,sync,no_subtree_check,root_squash)
+      /mnt/storage/media 192.168.0.10(rw,sync,no_subtree_check,root_squash)
     '';
   };
 }
