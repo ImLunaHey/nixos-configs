@@ -10,7 +10,7 @@
     disk = {
       boot = {
         type = "disk";
-        device = "/dev/sda"; # SSD — adjust if needed
+        device = "/dev/disk/by-id/ata-KINGSTON_SHSS37A240G_50026B72570B9985";
         content = {
           type = "gpt";
           partitions = {
@@ -38,7 +38,7 @@
 
       data1 = {
         type = "disk";
-        device = "/dev/sdb"; # 1TB drive 1 — adjust if needed
+        device = "/dev/disk/by-id/ata-ST1000DM003-1ER162_Z4YA3HPM";
         content = {
           type = "gpt";
           partitions = {
@@ -55,7 +55,7 @@
 
       data2 = {
         type = "disk";
-        device = "/dev/sdc"; # 1TB drive 2 — adjust if needed
+        device = "/dev/disk/by-id/ata-WDC_WD10EFRX-68PJCN0_WD-WCC4J0XU8HLZ";
         content = {
           type = "gpt";
           partitions = {
@@ -72,7 +72,7 @@
 
       data3 = {
         type = "disk";
-        device = "/dev/sdd"; # 1TB drive 3 — adjust if needed
+        device = "/dev/disk/by-id/ata-WDC_WD10EFRX-68PJCN0_WD-WCC4J1YNHNUV";
         content = {
           type = "gpt";
           partitions = {
