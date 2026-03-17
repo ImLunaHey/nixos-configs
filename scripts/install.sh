@@ -75,25 +75,43 @@ nix run github:nix-community/nixos-anywhere -- "${NIXOS_ANYWHERE_ARGS[@]}"
 [[ -n "$EXTRA_FILES_DIR" ]] && rm -rf "$EXTRA_FILES_DIR"
 
 echo ""
-echo "Install complete. $MACHINE should be rebooting into NixOS."
+echo "Install complete. Waiting for $MACHINE to come up on Tailscale..."
+
+SSH_OPTS=(-o StrictHostKeyChecking=no -o ConnectTimeout=5 -o BatchMode=yes)
+for i in $(seq 1 60); do
+  if ssh "${SSH_OPTS[@]}" luna@"$MACHINE" 'echo ok' &>/dev/null; then
+    echo "$MACHINE is up!"
+    break
+  fi
+  echo -n "."
+  sleep 10
+done
 echo ""
-if $uses_zfs; then
-  echo "Next steps:"
-  echo ""
-  echo "  1. Update networking.hostId in machines/$MACHINE/hardware-configuration.nix:"
-  echo "       ssh luna@$MACHINE 'head -c 8 /etc/machine-id'"
-  echo ""
-  echo "  2. Verify the network interface name:"
-  echo "       ssh luna@$MACHINE 'ip link'"
-  echo "     Update machines/$MACHINE/networking.nix if it differs from the placeholder."
-  echo ""
-  echo "  3. Commit and push — $MACHINE will auto-apply within 15 minutes."
-else
-  echo "Next steps:"
-  echo ""
-  echo "  1. Verify the network interface name:"
-  echo "       ssh luna@$MACHINE 'ip link'"
-  echo "     Update machines/$MACHINE/networking.nix if needed."
-  echo ""
-  echo "  2. Commit and push — $MACHINE will auto-apply within 15 minutes."
+
+if ! ssh "${SSH_OPTS[@]}" luna@"$MACHINE" 'echo ok' &>/dev/null; then
+  echo "Warning: $MACHINE did not come up on Tailscale after 10 minutes. Post-install config updates skipped."
+  exit 0
 fi
+
+# Update networking.hostId if this machine uses ZFS
+HW_CONFIG="$FLAKE_DIR/machines/$MACHINE/hardware-configuration.nix"
+if $uses_zfs && grep -q "networking.hostId" "$HW_CONFIG"; then
+  echo "Fetching machine-id from $MACHINE..."
+  MACHINE_ID=$(ssh "${SSH_OPTS[@]}" luna@"$MACHINE" 'head -c 8 /etc/machine-id')
+  CURRENT_ID=$(grep -o 'networking\.hostId = "[^"]*"' "$HW_CONFIG" | grep -o '"[^"]*"' | tr -d '"')
+  if [[ "$CURRENT_ID" != "$MACHINE_ID" ]]; then
+    echo "Updating hostId: $CURRENT_ID -> $MACHINE_ID"
+    sed -i '' "s/networking\.hostId = \"[^\"]*\"/networking.hostId = \"$MACHINE_ID\"/" "$HW_CONFIG"
+    (cd "$FLAKE_DIR" && git add "$HW_CONFIG" && git commit -m "fix($MACHINE): update hostId to $MACHINE_ID
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>" && git push)
+    echo "Triggering final rebuild on $MACHINE..."
+    ssh "${SSH_OPTS[@]}" luna@"$MACHINE" \
+      'sudo nixos-rebuild switch --flake github:imlunahey/nixos-configs#'"$MACHINE"' --refresh' || true
+  else
+    echo "hostId already correct ($MACHINE_ID), no update needed."
+  fi
+fi
+
+echo ""
+echo "All done! $MACHINE is installed and configured."
