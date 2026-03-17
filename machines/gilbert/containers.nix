@@ -7,9 +7,6 @@
       enable = true;
       dates = "weekly";
     };
-    daemon.settings = {
-      "userns-remap" = "default";
-    };
   };
 
   systemd.services.build-arm-intel-image = {

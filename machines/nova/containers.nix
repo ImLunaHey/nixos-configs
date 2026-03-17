@@ -1,5 +1,33 @@
 { config, pkgs, ... }:
 {
+  # dockremap is required for Docker userns-remap — cannot be auto-created with mutableUsers = false
+  users.users.dockremap = {
+    isSystemUser = true;
+    group = "dockremap";
+    subUidRanges = [{ startUid = 100000; count = 65536; }];
+    subGidRanges = [{ startGid = 100000; count = 65536; }];
+  };
+  users.groups.dockremap = {};
+
+  # Create volume dirs owned by the remapped container UID (100000 = container root)
+  # so containers can write to them on a fresh machine without manual chown
+  systemd.tmpfiles.rules = [
+    "d /var/lib/jellyfin/config  0755 100000 100000 -"
+    "d /var/lib/jellyfin/cache   0755 100000 100000 -"
+    "d /var/lib/pihole/pihole    0755 100000 100000 -"
+    "d /var/lib/pihole/dnsmasq   0755 100000 100000 -"
+    "d /var/lib/uptime-kuma      0755 100000 100000 -"
+    "d /var/lib/gotify            0755 100000 100000 -"
+    "d /var/lib/igotify           0755 100000 100000 -"
+    "d /var/lib/romm-db           0755 100000 100000 -"
+    "d /var/lib/romm/resources   0755 100000 100000 -"
+    "d /var/lib/romm/redis-data  0755 100000 100000 -"
+    "d /var/lib/romm/assets      0755 100000 100000 -"
+    "d /var/lib/romm/config      0755 100000 100000 -"
+    "d /var/lib/rustfs/data      0755 100000 100000 -"
+    "d /var/lib/rustfs/logs      0755 100000 100000 -"
+  ];
+
   systemd.services.create-romm-network = {
     description = "Create romm Docker network";
     after = [ "docker.service" ];
