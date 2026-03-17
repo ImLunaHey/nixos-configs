@@ -67,10 +67,15 @@ if [[ -f "$HOST_KEY_ENC" ]]; then
   chmod 644 "$EXTRA_FILES_DIR/etc/ssh/ssh_host_ed25519_key.pub"
 fi
 
-NIXOS_ANYWHERE_ARGS=(--flake "$FLAKE_DIR#$MACHINE" root@"$TARGET_IP")
+NIXOS_ANYWHERE_ARGS=(
+  --flake "$FLAKE_DIR#$MACHINE"
+  --ssh-option "StrictHostKeyChecking=no"
+  --ssh-option "PasswordAuthentication=yes"
+  root@"$TARGET_IP"
+)
 [[ -n "$EXTRA_FILES_DIR" ]] && NIXOS_ANYWHERE_ARGS+=(--extra-files "$EXTRA_FILES_DIR")
 
-nix run github:nix-community/nixos-anywhere -- "${NIXOS_ANYWHERE_ARGS[@]}"
+SSHPASS=root sshpass -e nix run github:nix-community/nixos-anywhere -- "${NIXOS_ANYWHERE_ARGS[@]}"
 
 [[ -n "$EXTRA_FILES_DIR" ]] && rm -rf "$EXTRA_FILES_DIR"
 
