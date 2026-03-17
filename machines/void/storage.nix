@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   # Disko declarative disk layout
   # Boot SSD + 3x 1TB data drives in RAIDZ1 (2TB usable, 1-drive fault tolerance)
@@ -124,6 +124,14 @@
       };
     };
   };
+
+  # Ensure ZFS datasets exist (disko only creates them at install time)
+  system.activationScripts.create-zfs-datasets.text = ''
+    for dataset in storage/media storage/games storage/rips "storage/media/music"; do
+      ${pkgs.zfs}/bin/zfs list "$dataset" > /dev/null 2>&1 || \
+        ${pkgs.zfs}/bin/zfs create -o compression=lz4 -o acltype=posixacl -o xattr=sa "$dataset"
+    done
+  '';
 
   # ZFS scrub — monthly, catches silent bit-rot
   services.zfs.autoScrub = {
