@@ -39,7 +39,7 @@ fi
 uses_disko=false
 uses_zfs=false
 grep -q "disko.nixosModules.disko" "$FLAKE_DIR/flake.nix" && \
-  grep -A5 "^      $MACHINE = " "$FLAKE_DIR/flake.nix" | grep -q "disko" && \
+  grep -A10 "^      $MACHINE = " "$FLAKE_DIR/flake.nix" | grep -q "disko" && \
   uses_disko=true
 grep -qr 'supportedFilesystems.*zfs\|"zfs"' "$FLAKE_DIR/machines/$MACHINE/" 2>/dev/null && \
   uses_zfs=true
