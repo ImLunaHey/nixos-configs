@@ -29,6 +29,7 @@
     enable = true;
     useRoutingFeatures = "client";
     authKeyFile = config.sops.secrets.tailscale_key.path;
+    extraUpFlags = [ "--advertise-tags=tag:server" ];
   };
 
   # SSH
