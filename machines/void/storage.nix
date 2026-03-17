@@ -112,6 +112,12 @@
     };
   };
 
+  # ZFS scrub — monthly, catches silent bit-rot
+  services.zfs.autoScrub = {
+    enable = true;
+    interval = "monthly";
+  };
+
   # NFS exports
   services.nfs.server = {
     enable = true;

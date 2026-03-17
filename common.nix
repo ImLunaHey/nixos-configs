@@ -27,7 +27,7 @@
   # Tailscale
   services.tailscale = {
     enable = true;
-    useRoutingFeatures = "both";
+    useRoutingFeatures = "client";
     authKeyFile = config.sops.secrets.tailscale_key.path;
   };
 

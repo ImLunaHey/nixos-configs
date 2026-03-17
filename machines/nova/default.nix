@@ -37,6 +37,9 @@
 
   system.stateVersion = "24.05";
 
+  # Nova acts as subnet router and exit node
+  services.tailscale.useRoutingFeatures = "both";
+
   services.uptime-kuma-sync.enable = true;
 
   services.cloudflare-dns = {
