@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -39,7 +39,7 @@
   system.stateVersion = "24.05";
 
   # Nova acts as subnet router and exit node
-  services.tailscale.useRoutingFeatures = "both";
+  services.tailscale.useRoutingFeatures = lib.mkForce "both";
 
   services.uptime-kuma-sync.enable = true;
 
