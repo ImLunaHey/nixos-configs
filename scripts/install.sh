@@ -54,41 +54,46 @@ echo ""
 read -rp "This will WIPE all disks on the target machine. Are you sure? (yes/no): " confirm
 [[ "$confirm" == "yes" ]] || { echo "Aborted."; exit 1; }
 
-nix run github:nix-community/nixos-anywhere -- \
-  --flake "$FLAKE_DIR#$MACHINE" \
-  root@"$TARGET_IP"
+# Inject pre-generated SSH host key if one exists for this machine (keeps SOPS age key stable)
+EXTRA_FILES_DIR=""
+HOST_KEY_ENC="$FLAKE_DIR/secrets/host-keys/${MACHINE}_host_key.enc"
+if [[ -f "$HOST_KEY_ENC" ]]; then
+  echo "Found pre-generated host key for $MACHINE — injecting to keep SOPS age key stable."
+  EXTRA_FILES_DIR="$(mktemp -d)"
+  mkdir -p "$EXTRA_FILES_DIR/etc/ssh"
+  sops --decrypt "$HOST_KEY_ENC" > "$EXTRA_FILES_DIR/etc/ssh/ssh_host_ed25519_key"
+  sops --decrypt "${HOST_KEY_ENC%.enc}.pub.enc" > "$EXTRA_FILES_DIR/etc/ssh/ssh_host_ed25519_key.pub"
+  chmod 600 "$EXTRA_FILES_DIR/etc/ssh/ssh_host_ed25519_key"
+  chmod 644 "$EXTRA_FILES_DIR/etc/ssh/ssh_host_ed25519_key.pub"
+fi
+
+NIXOS_ANYWHERE_ARGS=(--flake "$FLAKE_DIR#$MACHINE" root@"$TARGET_IP")
+[[ -n "$EXTRA_FILES_DIR" ]] && NIXOS_ANYWHERE_ARGS+=(--extra-files "$EXTRA_FILES_DIR")
+
+nix run github:nix-community/nixos-anywhere -- "${NIXOS_ANYWHERE_ARGS[@]}"
+
+[[ -n "$EXTRA_FILES_DIR" ]] && rm -rf "$EXTRA_FILES_DIR"
 
 echo ""
 echo "Install complete. $MACHINE should be rebooting into NixOS."
 echo ""
-echo "Next steps:"
-echo ""
-echo "  1. Get $MACHINE's age key for SOPS:"
-echo "       ssh-keyscan $MACHINE | nix run nixpkgs#ssh-to-age"
-echo "     (or by IP if DNS isn't set up yet):"
-echo "       ssh-keyscan $TARGET_IP | nix run nixpkgs#ssh-to-age"
-echo ""
-echo "  2. Replace the placeholder key for $MACHINE in .sops.yaml with the real one."
-echo ""
-echo "  3. Re-encrypt secrets:"
-echo "       nix run nixpkgs#sops -- updatekeys secrets/secrets.yaml"
-echo ""
 if $uses_zfs; then
-  echo "  4. Update networking.hostId in machines/$MACHINE/hardware-configuration.nix:"
-  echo "       ssh root@$TARGET_IP 'head -c 8 /etc/machine-id'"
+  echo "Next steps:"
   echo ""
-  echo "  5. Verify the network interface name:"
-  echo "       ssh root@$TARGET_IP 'ip link'"
+  echo "  1. Update networking.hostId in machines/$MACHINE/hardware-configuration.nix:"
+  echo "       ssh luna@$MACHINE 'head -c 8 /etc/machine-id'"
+  echo ""
+  echo "  2. Verify the network interface name:"
+  echo "       ssh luna@$MACHINE 'ip link'"
   echo "     Update machines/$MACHINE/networking.nix if it differs from the placeholder."
   echo ""
-  echo "  6. Update disk device paths to stable by-id paths in machines/$MACHINE/storage.nix:"
-  echo "       ssh root@$TARGET_IP 'ls /dev/disk/by-id/ | grep -v part'"
-  echo ""
-  echo "  7. Commit and push — $MACHINE will auto-apply within 15 minutes."
+  echo "  3. Commit and push — $MACHINE will auto-apply within 15 minutes."
 else
-  echo "  4. Verify the network interface name:"
-  echo "       ssh root@$TARGET_IP 'ip link'"
+  echo "Next steps:"
+  echo ""
+  echo "  1. Verify the network interface name:"
+  echo "       ssh luna@$MACHINE 'ip link'"
   echo "     Update machines/$MACHINE/networking.nix if needed."
   echo ""
-  echo "  5. Commit and push — $MACHINE will auto-apply within 15 minutes."
+  echo "  2. Commit and push — $MACHINE will auto-apply within 15 minutes."
 fi
