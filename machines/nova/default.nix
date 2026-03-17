@@ -18,6 +18,7 @@
 
   systemd.tmpfiles.rules = [
     "d /mnt/media 0755 root root -"
+    "d /mnt/games 0755 root root -"
     "d /var/lib/jellyfin 0755 root root -"
     "d /var/lib/jellyfin/config 0755 root root -"
     "d /var/lib/jellyfin/cache 0755 root root -"

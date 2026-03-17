@@ -66,7 +66,7 @@
           "/var/lib/jellyfin/config:/config"
           "/var/lib/jellyfin/cache:/cache"
           "/mnt/media/movies:/media/movies:ro"
-          "/mnt/media/tv:/media/tv:ro"
+          "/mnt/media/shows:/media/shows:ro"
         ];
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
@@ -140,7 +140,7 @@
           "/var/lib/romm/redis-data:/redis-data"
           "/var/lib/romm/assets:/romm/assets"
           "/var/lib/romm/config:/romm/config"
-          "/mnt/media/roms:/romm/library"
+          "/mnt/games:/romm/library"
         ];
         environmentFiles = [ config.sops.secrets.romm_env.path ];
         environment = {

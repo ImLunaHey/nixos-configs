@@ -108,6 +108,10 @@
             type = "zfs_fs";
             mountpoint = "/mnt/storage/media";
           };
+          games = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/storage/games";
+          };
         };
       };
     };
@@ -124,6 +128,7 @@
     enable = true;
     exports = ''
       /mnt/storage/media 192.168.0.10(rw,sync,no_subtree_check,root_squash)
+      /mnt/storage/games 192.168.0.10(rw,sync,no_subtree_check,root_squash)
     '';
   };
 }
