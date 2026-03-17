@@ -112,6 +112,10 @@
             type = "zfs_fs";
             mountpoint = "/mnt/storage/games";
           };
+          music = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/storage/media/music";
+          };
         };
       };
     };

@@ -9,7 +9,7 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/media/completed nova(rw,sync,no_subtree_check,root_squash) lunas-macbook-pro(rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=1000)
+      /mnt/media/completed nova(rw,sync,no_subtree_check,root_squash) lunas-macbook-pro(rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=1000) 192.168.0.12(ro,sync,no_subtree_check,root_squash)
     '';
   };
 }
