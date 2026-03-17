@@ -15,12 +15,10 @@
     enable = true;
     trustedInterfaces = [ "tailscale0" ];
     checkReversePath = "loose";
-    # Allow SSH from LAN so we're not locked out if Tailscale is down
-    interfaces.enp3s0.allowedTCPPorts = [ 22 ];
-    # NFS restricted to nova only
-    extraInputRules = ''
-      ip saddr 192.168.0.10 tcp dport 2049 accept
-      ip saddr 192.168.0.10 udp dport 2049 accept
-    '';
+    interfaces.enp3s0 = {
+      # Allow SSH from LAN so we're not locked out if Tailscale is down
+      allowedTCPPorts = [ 22 2049 111 ];
+      allowedUDPPorts = [ 2049 111 ];
+    };
   };
 }
