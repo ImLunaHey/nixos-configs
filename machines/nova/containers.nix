@@ -50,6 +50,7 @@
     };
     daemon.settings = {
       "userns-remap" = "default";
+      "dns" = [ "1.1.1.1" "1.0.0.1" ]; # fallback DNS so image pulls work before Pi-hole is up
     };
   };
 
@@ -94,7 +95,7 @@
       };
       uptime-kuma = {
         image = "louislam/uptime-kuma:latest";
-        extraOptions = [ "--network=host" ];
+        extraOptions = [ "--network=host" "--userns=host" ]; # host network requires opting out of userns-remap
         volumes = [
           "/var/lib/uptime-kuma:/app/data"
         ];
@@ -111,7 +112,7 @@
       };
       igotify = {
         image = "ghcr.io/androidseb25/igotify-notification-assist:latest";
-        extraOptions = [ "--network=host" ];
+        extraOptions = [ "--network=host" "--userns=host" ]; # host network requires opting out of userns-remap
         volumes = [
           "/var/lib/igotify:/app/data"
         ];
