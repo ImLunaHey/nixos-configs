@@ -16,4 +16,7 @@
   boot.zfs.forceImportRoot = false;
 
   system.stateVersion = "24.05";
+
+  # Disable auto-upgrade until boot regression is investigated
+  system.autoUpgrade.enable = false;
 }
