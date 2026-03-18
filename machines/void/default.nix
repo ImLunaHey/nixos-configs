@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -18,5 +18,5 @@
   system.stateVersion = "24.05";
 
   # Disable auto-upgrade until boot regression is investigated
-  system.autoUpgrade.enable = false;
+  system.autoUpgrade.enable = lib.mkForce false;
 }
