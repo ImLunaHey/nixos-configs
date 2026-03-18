@@ -124,6 +124,10 @@
             type = "zfs_fs";
             mountpoint = "/mnt/storage/backups";
           };
+          files = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/storage/files";
+          };
         };
       };
     };
@@ -131,7 +135,7 @@
 
   # Ensure ZFS datasets exist (disko only creates them at install time)
   system.activationScripts.create-zfs-datasets.text = ''
-    for dataset in storage/media storage/games storage/rips "storage/media/music" storage/backups; do
+    for dataset in storage/media storage/games storage/rips "storage/media/music" storage/backups storage/files; do
       ${pkgs.zfs}/bin/zfs list "$dataset" > /dev/null 2>&1 || \
         ${pkgs.zfs}/bin/zfs create -o compression=lz4 -o acltype=posixacl -o xattr=sa "$dataset"
     done

@@ -6,6 +6,7 @@
     secrets = {
       tailscale_oauth = { };
       gotify_upgrade_token = { };
+      samba_password = { };
     };
   };
 }
