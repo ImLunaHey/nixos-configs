@@ -32,6 +32,7 @@
         "read only" = "yes";
         "guest ok" = "yes";
         "write list" = "luna";
+        "force user" = "root";
       };
       rips = {
         path = "/mnt/storage/rips";
@@ -39,6 +40,7 @@
         "read only" = "yes";
         "guest ok" = "yes";
         "write list" = "luna";
+        "force user" = "root";
       };
       games = {
         path = "/mnt/storage/games";
@@ -46,6 +48,7 @@
         "read only" = "yes";
         "guest ok" = "yes";
         "write list" = "luna";
+        "force user" = "root";
       };
       files = {
         path = "/mnt/storage/files";
@@ -53,6 +56,7 @@
         "read only" = "yes";
         "guest ok" = "yes";
         "write list" = "luna";
+        "force user" = "luna";
       };
     };
   };
