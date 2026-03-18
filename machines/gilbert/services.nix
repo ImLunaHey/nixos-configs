@@ -12,6 +12,7 @@
         mode = "0440";
         group = "minecraft";
       };
+      rustic_password = {};
     };
   };
 

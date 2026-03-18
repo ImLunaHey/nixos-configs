@@ -9,6 +9,7 @@
     ./storage.nix
     ./matrix.nix
     ./caddy.nix
+    ./backups.nix
     ../../modules/uptime-kuma.nix
     ../../modules/cloudflare-dns.nix
   ];

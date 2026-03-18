@@ -45,6 +45,7 @@ nixos-configs/
 
 | File | Role |
 |------|------|
+| `backups.nix` | |
 | `containers.nix` | Docker container definitions |
 | `default.nix` | Imports all machine modules |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
@@ -61,6 +62,7 @@ nixos-configs/
 
 | File | Role |
 |------|------|
+| `backups.nix` | |
 | `caddy.nix` | Reverse proxy virtual hosts |
 | `containers.nix` | Docker container definitions |
 | `default.nix` | Imports all machine modules |
