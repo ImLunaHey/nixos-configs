@@ -143,6 +143,8 @@
       ${pkgs.zfs}/bin/zfs list "$dataset" > /dev/null 2>&1 || \
         ${pkgs.zfs}/bin/zfs create -o compression=lz4 -o acltype=posixacl -o xattr=sa "$dataset"
     done
+    # photos is written by nova's immich container running under userns-remap (container root = host uid 100000)
+    chown 100000:100000 /mnt/storage/photos
   '';
 
   # ZFS scrub — monthly, catches silent bit-rot
