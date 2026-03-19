@@ -26,7 +26,22 @@
     "d /var/lib/romm/config      0755 100000 100000 -"
     "d /var/lib/rustfs/data      0755 100000 100000 -"
     "d /var/lib/rustfs/logs      0755 100000 100000 -"
+    "d /var/lib/immich/postgres  0755 100000 100000 -"
+    "d /var/lib/immich/ml-cache  0755 100000 100000 -"
   ];
+
+  systemd.services.create-immich-network = {
+    description = "Create immich Docker network";
+    after = [ "docker.service" ];
+    requires = [ "docker.service" ];
+    before = [ "docker-immich-server.service" "docker-immich-machine-learning.service" "docker-immich-redis.service" "docker-immich-postgres.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "-${pkgs.docker}/bin/docker network create immich-net";
+    };
+  };
 
   systemd.services.create-romm-network = {
     description = "Create romm Docker network";
@@ -150,6 +165,48 @@
         };
         extraOptions = [ "--network=romm-net" ];
         dependsOn = [ "romm-db" ];
+      };
+      immich-server = {
+        image = "ghcr.io/immich-app/immich-server:release";
+        ports = [
+          "127.0.0.1:2283:2283"
+        ];
+        volumes = [
+          "/mnt/photos:/usr/src/app/upload"
+          "/etc/localtime:/etc/localtime:ro"
+        ];
+        environmentFiles = [ config.sops.secrets.immich_env.path ];
+        environment = {
+          DB_HOSTNAME = "immich-postgres";
+          DB_USERNAME = "immich";
+          DB_DATABASE_NAME = "immich";
+          REDIS_HOSTNAME = "immich-redis";
+        };
+        extraOptions = [ "--network=immich-net" ];
+        dependsOn = [ "immich-postgres" "immich-redis" ];
+      };
+      immich-machine-learning = {
+        image = "ghcr.io/immich-app/immich-machine-learning:release";
+        volumes = [
+          "/var/lib/immich/ml-cache:/cache"
+        ];
+        extraOptions = [ "--network=immich-net" ];
+      };
+      immich-redis = {
+        image = "redis:6.2-alpine";
+        extraOptions = [ "--network=immich-net" ];
+      };
+      immich-postgres = {
+        image = "tensorchord/pgvecto-rs:pg14-v0.2.0";
+        volumes = [
+          "/var/lib/immich/postgres:/var/lib/postgresql/data"
+        ];
+        environmentFiles = [ config.sops.secrets.immich_env.path ];
+        environment = {
+          POSTGRES_USER = "immich";
+          POSTGRES_DB = "immich";
+        };
+        extraOptions = [ "--network=immich-net" ];
       };
       rustfs = {
         image = "rustfs/rustfs:latest";

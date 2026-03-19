@@ -128,6 +128,10 @@
             type = "zfs_fs";
             mountpoint = "/mnt/storage/files";
           };
+          photos = {
+            type = "zfs_fs";
+            mountpoint = "/mnt/storage/photos";
+          };
         };
       };
     };
@@ -135,7 +139,7 @@
 
   # Ensure ZFS datasets exist (disko only creates them at install time)
   system.activationScripts.create-zfs-datasets.text = ''
-    for dataset in storage/media storage/games storage/rips "storage/media/music" storage/backups storage/files; do
+    for dataset in storage/media storage/games storage/rips "storage/media/music" storage/backups storage/files storage/photos; do
       ${pkgs.zfs}/bin/zfs list "$dataset" > /dev/null 2>&1 || \
         ${pkgs.zfs}/bin/zfs create -o compression=lz4 -o acltype=posixacl -o xattr=sa "$dataset"
     done
@@ -155,6 +159,7 @@
       /mnt/storage/games 192.168.0.10(rw,sync,no_subtree_check,root_squash)
       /mnt/storage/rips 192.168.0.11(rw,sync,no_subtree_check,no_root_squash)
       /mnt/storage/backups 192.168.0.10(rw,sync,no_subtree_check,no_root_squash) 192.168.0.11(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/storage/photos 192.168.0.10(rw,sync,no_subtree_check,no_root_squash)
     '';
   };
 }

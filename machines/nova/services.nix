@@ -12,6 +12,7 @@
       gotify_upgrade_token = {};
       romm_env = {};
       rustic_password = {};
+      immich_env = {};
     };
   };
 }
