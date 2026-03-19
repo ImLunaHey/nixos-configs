@@ -126,5 +126,54 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>" && git push)
   fi
 fi
 
+# Restore from rustic backup if this machine has one
+if [[ -f "$FLAKE_DIR/machines/$MACHINE/backups.nix" ]]; then
+  echo ""
+  read -rp "Restore $MACHINE from rustic backup on void? (yes/no): " restore_confirm
+  if [[ "$restore_confirm" == "yes" ]]; then
+    RUSTIC_REPO="/mnt/backups/$MACHINE"
+    RUSTIC_PASSWORD_FILE="/run/secrets/rustic_password"
+
+    echo "Checking for snapshots in $RUSTIC_REPO..."
+    if ! ssh "${SSH_OPTS[@]}" luna@"$MACHINE" \
+        "sudo rustic -r $RUSTIC_REPO --password-file $RUSTIC_PASSWORD_FILE snapshots" 2>/dev/null; then
+      echo "No snapshots found or repo not accessible. Skipping restore."
+    else
+      echo "Restoring files from latest snapshot..."
+      ssh "${SSH_OPTS[@]}" luna@"$MACHINE" \
+        "sudo rustic -r $RUSTIC_REPO --password-file $RUSTIC_PASSWORD_FILE restore latest /"
+
+      # nova: restore PostgreSQL and MariaDB from the pre-backup dumps
+      if [[ "$MACHINE" == "nova" ]]; then
+        echo "Restoring PostgreSQL (Matrix Synapse)..."
+        ssh "${SSH_OPTS[@]}" luna@"$MACHINE" "
+          sudo systemctl stop matrix-synapse
+          sudo -u postgres psql -f /var/backups/postgresql/dump.sql
+          sudo systemctl start matrix-synapse
+        "
+
+        echo "Restoring MariaDB (ROMM)..."
+        ssh "${SSH_OPTS[@]}" luna@"$MACHINE" "
+          sudo docker exec -i romm-db \
+            sh -c 'mariadb -u root -p\"\$MARIADB_ROOT_PASSWORD\" --all-databases' \
+            < /var/backups/mariadb/dump.sql
+        "
+      fi
+
+      echo "Restore complete. Rebooting $MACHINE..."
+      ssh "${SSH_OPTS[@]}" luna@"$MACHINE" "sudo reboot" || true
+      sleep 30
+      for i in $(seq 1 30); do
+        if ssh "${SSH_OPTS[@]}" luna@"$MACHINE" 'echo ok' &>/dev/null; then
+          echo "$MACHINE is back up after restore!"
+          break
+        fi
+        echo -n "."
+        sleep 10
+      done
+    fi
+  fi
+fi
+
 echo ""
 echo "All done! $MACHINE is installed and configured."
