@@ -197,7 +197,7 @@
         extraOptions = [ "--network=immich-net" ];
       };
       immich-postgres = {
-        image = "tensorchord/pgvecto-rs:pg14-v0.2.0";
+        image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0";
         volumes = [
           "/var/lib/immich/postgres:/var/lib/postgresql/data"
         ];
