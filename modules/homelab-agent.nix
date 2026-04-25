@@ -112,10 +112,17 @@ let
     }, separators=(",", ":")).encode()
 
     sig = base64.b64encode(hmac.new(secret.encode(), body, hashlib.sha256).digest()).decode()
+    # Cloudflare's WAF 403s the default `Python-urllib/*` UA as bot
+    # traffic before the request reaches the worker, so we need to send
+    # something benign-looking. Same agent identity as the bash script.
     req = urllib.request.Request(
         "${cfg.endpoint}",
         data=body, method="POST",
-        headers={"content-type": "application/json", "x-homelab-signature": sig},
+        headers={
+            "content-type": "application/json",
+            "x-homelab-signature": sig,
+            "user-agent": "homelab-agent/1.0 (+nixos)",
+        },
     )
     try:
         urllib.request.urlopen(req, timeout=10).read()
