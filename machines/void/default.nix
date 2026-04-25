@@ -17,4 +17,5 @@
 
   system.stateVersion = "24.05";
 
+  services.homelab-agent.role = "nas / zfs raid";
 }

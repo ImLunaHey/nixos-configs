@@ -48,6 +48,11 @@
 
   services.uptime-kuma-sync.enable = true;
 
+  services.homelab-agent = {
+    role = "media server / reverse proxy / matrix";
+    includeUptimeKuma = true;
+  };
+
   services.cloudflare-dns = {
     enable = true;
     zone = "flaked.org";

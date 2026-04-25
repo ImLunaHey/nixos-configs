@@ -3,7 +3,14 @@ SOPS_FILE="secrets/secrets.yaml"
 SOPS_AGE_KEY_FILE="${HOME}/.config/sops/age/keys.txt"
 
 run_sops() {
-  nix shell nixpkgs#sops --command env SOPS_AGE_KEY_FILE="$SOPS_AGE_KEY_FILE" sops $*
+  # Prefer pinning to nixpkgs when nix is available so every host runs
+  # the same sops/age versions; on macs without nix, fall back to whatever
+  # sops is on PATH (homebrew, etc.).
+  if command -v nix >/dev/null 2>&1; then
+    nix shell nixpkgs#sops --command env SOPS_AGE_KEY_FILE="$SOPS_AGE_KEY_FILE" sops $*
+  else
+    SOPS_AGE_KEY_FILE="$SOPS_AGE_KEY_FILE" sops $*
+  fi
 }
 
 usage() {

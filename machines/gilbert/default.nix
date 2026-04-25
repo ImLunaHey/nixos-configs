@@ -28,4 +28,6 @@
   ];
 
   system.stateVersion = "24.05";
+
+  services.homelab-agent.role = "media ripping / minecraft / nfs";
 }

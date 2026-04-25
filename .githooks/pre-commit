@@ -3,13 +3,21 @@ set -euo pipefail
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
-echo "Updating flake.lock..."
-nix flake update --flake "$REPO_ROOT"
+# Refresh flake.lock when committing from a machine that has nix
+# (a NixOS host or a Mac with nix installed). On machines without nix
+# (e.g. a vanilla mac), skip — flake.lock updates can land in a separate
+# commit from any host that does have nix on PATH.
+if command -v nix >/dev/null 2>&1; then
+  echo "Updating flake.lock..."
+  nix flake update --flake "$REPO_ROOT"
 
-# Stage flake.lock if it was modified
-if ! git diff --quiet -- "$REPO_ROOT/flake.lock" 2>/dev/null; then
-  echo "flake.lock changed, staging..."
-  git add "$REPO_ROOT/flake.lock"
+  # Stage flake.lock if it was modified
+  if ! git diff --quiet -- "$REPO_ROOT/flake.lock" 2>/dev/null; then
+    echo "flake.lock changed, staging..."
+    git add "$REPO_ROOT/flake.lock"
+  fi
+else
+  echo "nix not found on PATH — skipping flake.lock update"
 fi
 
 echo "Regenerating README.md..."

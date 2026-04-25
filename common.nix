@@ -1,6 +1,15 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./modules/homelab-agent.nix
+  ];
+
+  # Push host telemetry to imlunahey.com on every host.
+  # Per-host role label + uptime-kuma scrape are configured in each
+  # machines/<host>/default.nix.
+  services.homelab-agent.enable = true;
+
   # Nix settings
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
