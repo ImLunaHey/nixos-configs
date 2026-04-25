@@ -85,7 +85,9 @@ let
     with UptimeKumaApi("${cfg.uptimeKumaUrl}") as api:
         api.login("luna", kuma_pw)
         monitors = api.get_monitors()
-        avg = api.avg_response()
+        # nixpkgs uptime-kuma-api exposes avg_ping (not avg_response — that
+        # name was from a different version's docs).
+        avg = api.avg_ping()
         uptimes = api.uptime()
         heartbeats = api.get_heartbeats()
 
