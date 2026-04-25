@@ -5,7 +5,10 @@ with lib;
 let
   cfg = config.services.homelab-agent;
 
-  pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ]);
+  # uptime-kuma-api at runtime needs `requests`, which nixpkgs doesn't
+  # propagate as a runtime dep — without it the script fails immediately
+  # with `ModuleNotFoundError: No module named 'requests'`.
+  pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ps.requests ]);
 
   hostScript = pkgs.writeShellScript "homelab-agent-host" ''
     set -eu
@@ -23,10 +26,13 @@ let
     disk_total_kb=$(${pkgs.coreutils}/bin/df -P / | ${pkgs.gawk}/bin/awk 'NR==2 {print $2}')
     disk_used_kb=$(${pkgs.coreutils}/bin/df -P / | ${pkgs.gawk}/bin/awk 'NR==2 {print $3}')
 
-    # ZFS pools — only present on hosts with zfs (void)
+    # ZFS pools — only present on hosts with zfs (void). systemd unit PATH
+    # doesn't include /run/current-system/sw/bin, so use the absolute path
+    # rather than `command -v zpool`. The existence test then naturally
+    # falls back to [] on hosts without zfs installed.
     zpools='[]'
-    if command -v zpool >/dev/null 2>&1; then
-      zpools=$(zpool list -H -p -o name,size,alloc,free,health 2>/dev/null \
+    if [ -x /run/current-system/sw/bin/zpool ]; then
+      zpools=$(/run/current-system/sw/bin/zpool list -H -p -o name,size,alloc,free,health 2>/dev/null \
         | ${pkgs.gawk}/bin/awk -F'\t' 'BEGIN{printf "["} {if(NR>1)printf ","; printf "{\"name\":\"%s\",\"size_bytes\":%s,\"alloc_bytes\":%s,\"free_bytes\":%s,\"health\":\"%s\"}",$1,$2,$3,$4,$5} END{printf "]"}')
     fi
 
