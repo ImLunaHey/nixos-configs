@@ -25,6 +25,12 @@
         "security" = "user";
         "guest account" = "nobody";
         "map to guest" = "bad user";
+        # macOS writes AppleDouble (._*) sidecars and .DS_Store files to
+        # any non-native filesystem. Veto them so Samba refuses to serve
+        # or store them, and clean up any that already exist when their
+        # parent directory is touched.
+        "veto files" = "/._*/.DS_Store/";
+        "delete veto files" = "yes";
       };
       media = {
         path = "/mnt/storage/media";
