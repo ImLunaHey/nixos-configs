@@ -82,6 +82,7 @@
           "/var/lib/jellyfin/cache:/cache"
           "/mnt/media/movies:/media/movies:ro"
           "/mnt/media/shows:/media/shows:ro"
+          "/mnt/media/music:/media/music:ro"
         ];
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
