@@ -34,7 +34,7 @@ nixos-configs/
 | Host | IP | Purpose | Key Services |
 |------|----|---------|--------------|
 | `gilbert` | `192.168.0.11` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
-| `nova` | `192.168.0.10` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`gotify`,`igotify`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`rustfs` |
+| `nova` | `192.168.0.10` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`gotify`,`igotify`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
 | `void` | `192.168.0.12` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
 ## Machine Details
@@ -137,6 +137,7 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 - `igotify.flaked.org`
 - `romm.flaked.org`
 - `immich.flaked.org`
+- `watchstate.flaked.org`
 - `s3-console.flaked.org`
 
 ## Secrets Management

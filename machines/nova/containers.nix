@@ -28,6 +28,7 @@
     "d /var/lib/rustfs/logs      0755 100000 100000 -"
     "d /var/lib/immich/postgres  0755 100000 100000 -"
     "d /var/lib/immich/ml-cache  0755 100000 100000 -"
+    "d /var/lib/watchstate/config 0755 100000 100000 -"
   ];
 
   systemd.services.create-immich-network = {
@@ -208,6 +209,23 @@
           POSTGRES_DB = "immich";
         };
         extraOptions = [ "--network=immich-net" ];
+      };
+      watchstate = {
+        image = "ghcr.io/arabcoders/watchstate:latest";
+        ports = [
+          "127.0.0.1:8087:8080"
+        ];
+        volumes = [
+          "/var/lib/watchstate/config:/config"
+          "/mnt/media/movies:/media/movies:ro"
+          "/mnt/media/shows:/media/shows:ro"
+          "/mnt/media/music:/media/music:ro"
+        ];
+        environment = {
+          WS_TZ = "Europe/London";
+          WS_UID = "100000";
+          WS_GID = "100000";
+        };
       };
       rustfs = {
         image = "rustfs/rustfs:latest";
