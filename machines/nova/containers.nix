@@ -44,6 +44,19 @@
     };
   };
 
+  systemd.services.create-media-network = {
+    description = "Create media Docker network";
+    after = [ "docker.service" ];
+    requires = [ "docker.service" ];
+    before = [ "docker-jellyfin.service" "docker-watchstate.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "-${pkgs.docker}/bin/docker network create media-net";
+    };
+  };
+
   systemd.services.create-romm-network = {
     description = "Create romm Docker network";
     after = [ "docker.service" ];
@@ -88,6 +101,7 @@
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
           "--group-add=video"
+          "--network=media-net"
         ];
       };
       pihole = {
@@ -225,6 +239,7 @@
         environment = {
           WS_TZ = "Europe/London";
         };
+        extraOptions = [ "--network=media-net" ];
       };
       rustfs = {
         image = "rustfs/rustfs:latest";
