@@ -212,6 +212,7 @@
       };
       watchstate = {
         image = "ghcr.io/arabcoders/watchstate:latest";
+        user = "0:0"; # image drops to uid 1000 by default; force root so userns-remap maps to host 100000
         ports = [
           "127.0.0.1:8087:8080"
         ];
@@ -223,8 +224,6 @@
         ];
         environment = {
           WS_TZ = "Europe/London";
-          WS_UID = "100000";
-          WS_GID = "100000";
         };
       };
       rustfs = {
