@@ -6,34 +6,41 @@ let
   # ---------------------------------------------------------------------------
   subs = import ./ytdl-sub-channels.nix;
 
+  # Best-effort static show/artist name from a YouTube URL — the @handle if
+  # present, else the last path segment. Must be static: ytdl-sub output dirs
+  # can't depend on per-video variables like {channel}.
+  deriveName = url:
+    let
+      parts = lib.filter (s: s != "") (lib.splitString "/" (lib.head (lib.splitString "?" url)));
+      atParts = lib.filter (lib.hasPrefix "@") parts;
+    in if atParts != [] then lib.removePrefix "@" (lib.head atParts) else lib.last parts;
+
   # Render one entry under a preset. An entry is either a bare URL string
-  # (auto-named from the source) or an attrset:
+  # (named from its @handle) or an attrset:
   #   { url; name?; description?; limit?; }
-  #     name        -> override the auto name (channel/artist)
+  #     name        -> override the derived name (channel/artist)
   #     description -> true: use the video's YouTube description as the plot
   #     limit       -> only grab the first N items (for huge channels)
-  renderEntry = keyPrefix: nameVar: autoVar: i: entry:
+  renderEntry = nameVar: entry:
     let
       e = if builtins.isString entry then { url = entry; } else entry;
-      key = if e ? name then e.name else "${keyPrefix}-${toString i}";
-      nameVal = if e ? name then e.name else autoVar;
+      nameVal = if e ? name then e.name else deriveName e.url;
       lines = [
-        "  \"~${key}\":"
+        "  \"~${nameVal}\":"
         "    url: \"${e.url}\""
         "    ${nameVar}: \"${nameVal}\""
       ]
       ++ lib.optional (e.description or false) "    episode_plot: \"{description}\""
-      ++ lib.optionals (e ? limit) [
-        "    ytdl_options:"
-        "      playlist_items: \"1:${toString e.limit}\""
-      ];
+      # channel_limit is an override variable consumed by the "Limited Channel"
+      # preset's ytdl_options (plugin options can't live in a ~ override block).
+      ++ lib.optional (e ? limit) "    channel_limit: \"${toString e.limit}\"";
     in lib.concatStringsSep "\n" lines;
 
   # Emit a preset block only when it has entries (an empty mapping is invalid YAML).
-  renderGroup = { preset, keyPrefix, nameVar, autoVar, items }:
+  renderGroup = { preset, nameVar, items }:
     lib.optionalString (items != [])
       ("\"${preset}\":\n"
-       + lib.concatStringsSep "\n" (lib.imap0 (renderEntry keyPrefix nameVar autoVar) items)
+       + lib.concatStringsSep "\n" (map (renderEntry nameVar) items)
        + "\n\n");
 
   # A "show" is { name; seasons = [ url ... ]; }. The TV Show Collection preset
@@ -77,14 +84,24 @@ let
 
   subscriptionsYaml = pkgs.writeText "subscriptions.yaml" (
     subscriptionsHeader
-    + renderGroup { preset = "Jellyfin TV Show by Date"; keyPrefix = "channel"; nameVar = "tv_show_name"; autoVar = "{channel}";           items = subs.channels; }
+    + renderGroup { preset = "Limited Channel"; nameVar = "tv_show_name"; items = subs.channels; }
     + showsBlock subs.shows
-    + renderGroup { preset = "YouTube Releases";         keyPrefix = "music";   nameVar = "track_artist"; autoVar = "{playlist_uploader}"; items = subs.music; }
+    + renderGroup { preset = "YouTube Releases"; nameVar = "track_artist"; items = subs.music; }
   );
 
   configYaml = pkgs.writeText "config.yaml" ''
     configuration:
       working_directory: "/config/.working"
+    presets:
+      # "Jellyfin TV Show by Date" plus a download cap. ytdl_options can use the
+      # {channel_limit} override variable here (in a preset) but not in a ~ block.
+      "Limited Channel":
+        preset:
+          - "Jellyfin TV Show by Date"
+        ytdl_options:
+          playlist_items: "1:{channel_limit}"
+        overrides:
+          channel_limit: "100000"
   '';
 
   # The image's cron wrapper does `cd /config; . /config/cron` on CRON_SCHEDULE
