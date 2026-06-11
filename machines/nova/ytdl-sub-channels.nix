@@ -6,13 +6,16 @@
 #   music    -> /mnt/media/music     audio only, artist / album / track
 {
   # Whole YouTube channels (their uploads — not their playlists). A bare URL
-  # self-names from the channel; or an attrset with optional fields:
-  #   { url = "..."; name = "My Name"; description = true; limit = 25; }
+  # self-names from the channel @handle; or an attrset with optional fields:
+  #   { url = "..."; name = "My Name"; genre = "..."; description = true; limit = 25; }
+  #     genre = "..."       -> Jellyfin genre (YouTube's category varies per video)
   #     description = true  -> use each video's YouTube description as the plot
   #                           (default: no plot at all)
   #     limit = N           -> only grab the N most recent uploads (huge channels)
+  # Episodes are grouped into seasons by upload year; the episode number is the
+  # upload date (MMDD + a same-day index), so they sort chronologically.
   channels = [
-    { url = "https://www.youtube.com/@SortedFood"; description = true; limit = 25; }
+    { url = "https://www.youtube.com/@SortedFood"; genre = "Cooking"; description = true; limit = 25; }
   ];
 
   # Shows assembled from playlists. Give the show a name, then list its season

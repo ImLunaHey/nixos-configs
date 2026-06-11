@@ -17,8 +17,9 @@ let
 
   # Render one entry under a preset. An entry is either a bare URL string
   # (named from its @handle) or an attrset:
-  #   { url; name?; description?; limit?; }
+  #   { url; name?; genre?; description?; limit?; }
   #     name        -> override the derived name (channel/artist)
+  #     genre       -> Jellyfin genre (YouTube's per-video category is unreliable)
   #     description -> true: use the video's YouTube description as the plot
   #     limit       -> only grab the first N items (for huge channels)
   renderEntry = nameVar: entry:
@@ -30,6 +31,7 @@ let
         "    url: \"${e.url}\""
         "    ${nameVar}: \"${nameVal}\""
       ]
+      ++ lib.optional (e ? genre) "    tv_show_genre: \"${e.genre}\""
       ++ lib.optional (e.description or false) "    episode_plot: \"{description}\""
       # channel_limit is an override variable consumed by the "Limited Channel"
       # preset's ytdl_options (plugin options can't live in a ~ override block).
