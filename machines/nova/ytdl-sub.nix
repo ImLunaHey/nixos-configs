@@ -77,11 +77,10 @@ let
   cronScript = pkgs.writeText "ytdl-sub-cron" ''
     ytdl-sub sub
 
-    # Playlist-sourced shows have no channel avatar, so ytdl-sub writes no show
-    # poster.jpg (only per-season posters from the latest video). Fall back to the
-    # first season's poster so Jellyfin has a show image. Idempotent.
+    # By default ytdl-sub uses the channel avatar (a small round icon) as the show
+    # poster, which looks bad. Always override it with the first season's poster
+    # (a real video thumbnail) instead.
     for show in /tv_shows/*/; do
-      [ -e "$show/poster.jpg" ] && continue
       first=$(ls "$show"season*-poster.jpg 2>/dev/null | sort | head -1)
       [ -n "$first" ] && cp "$first" "$show/poster.jpg"
     done
