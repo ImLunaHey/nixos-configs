@@ -102,8 +102,76 @@ let
           - "Jellyfin TV Show by Date"
         ytdl_options:
           playlist_items: "1:{channel_limit}"
+        # Skip Shorts (their URL contains /shorts/)
+        match_filters:
+          filters:
+            - "original_url!*=/shorts/"
         overrides:
           channel_limit: "100000"
+  '';
+
+  # Post-download step: strip creator promo/ad boilerplate from each episode's
+  # Jellyfin <plot>, editing the .nfo in place (fixes already-downloaded files
+  # too, no re-download). Boilerplate is auto-detected per show as lines that
+  # repeat across many of that channel's episodes (real descriptions are unique;
+  # ads are copy-pasted) — the plot is truncated at the first such line, which
+  # also drops the per-video tracking URLs that follow. `adMarkers` from
+  # ytdl-sub-channels.nix are extra manual cut-points for one-offs.
+  adMarkersPy = "[" + lib.concatMapStringsSep ", " (m: "\"${m}\"") (subs.adMarkers or []) + "]";
+  cleanDescScript = pkgs.writeText "ytdl-sub-clean-descriptions.py" ''
+    import glob, json, os, re
+    from collections import Counter
+    from xml.sax.saxutils import escape
+
+    markers = ${adMarkersPy}
+
+    for show in sorted(glob.glob("/tv_shows/*/")):
+        eps = []
+        for ij in glob.glob(show + "**/*.info.json", recursive=True):
+            nfo = ij[:-len(".info.json")] + ".nfo"
+            if not os.path.exists(nfo):
+                continue
+            try:
+                desc = json.load(open(ij, encoding="utf-8")).get("description") or ""
+            except Exception:
+                continue
+            eps.append((nfo, desc))
+        n = len(eps)
+        boiler = set()
+        if n >= 4:
+            freq = Counter()
+            for _, d in eps:
+                for line in set(x.strip() for x in d.split("\n") if len(x.strip()) >= 12):
+                    freq[line] += 1
+            thr = max(3, round(n * 0.3))
+            boiler = {l for l, c in freq.items() if c >= thr}
+        for nfo, desc in eps:
+            lines = desc.split("\n")
+            cut = len(lines)
+            for i, l in enumerate(lines):
+                if l.strip() in boiler:
+                    cut = i
+                    break
+            cleaned = "\n".join(lines[:cut])
+            marker_cut = False
+            for mk in markers:
+                j = cleaned.find(mk)
+                if j != -1:
+                    cleaned = cleaned[:j]
+                    marker_cut = True
+            if cut == len(lines) and not marker_cut:
+                continue
+            cleaned = re.sub(r"\n{3,}", "\n\n", cleaned).strip()
+            try:
+                s = open(nfo, encoding="utf-8").read()
+            except Exception:
+                continue
+            m = re.search(r"<plot>(.*?)</plot>", s, re.S)
+            if not m:
+                continue
+            new = s[:m.start(1)] + escape(cleaned) + s[m.end(1):]
+            if new != s:
+                open(nfo, "w", encoding="utf-8").write(new)
   '';
 
   # The image's cron wrapper does `cd /config; . /config/cron` on CRON_SCHEDULE
@@ -120,6 +188,9 @@ let
       first=$(ls "$show"season*-poster.jpg 2>/dev/null | sort | head -1)
       [ -n "$first" ] && cp "$first" "$show/poster.jpg"
     done
+
+    # Strip channel ad/promo boilerplate from episode descriptions.
+    python3 /config/clean-descriptions.py
   '';
 in
 {
@@ -136,6 +207,7 @@ in
       "${configYaml}:/config/config.yaml:ro"
       "${subscriptionsYaml}:/config/subscriptions.yaml:ro"
       "${cronScript}:/config/cron:ro"
+      "${cleanDescScript}:/config/clean-descriptions.py:ro"
       "/mnt/media/youtube:/tv_shows"
       "/mnt/media/music:/music"
     ];

@@ -43,4 +43,12 @@
   music = [
     # "https://www.youtube.com/@officialtheloniousmonk/releases"
   ];
+
+  # Extra description ad-strippers. The post-step already auto-detects promo
+  # boilerplate (lines repeated across a channel's episodes) and truncates each
+  # plot there. These are optional manual cut-points for one-off ad lines that
+  # don't repeat enough to be auto-detected. Applies to existing files too.
+  adMarkers = [
+    # "VOTE AND HELP US WIN A WEBBY"
+  ];
 }
