@@ -10,6 +10,7 @@
     ./matrix.nix
     ./caddy.nix
     ./backups.nix
+    ./ytdl-sub.nix
     ../../modules/uptime-kuma.nix
     ../../modules/cloudflare-dns.nix
   ];
@@ -39,7 +40,6 @@
     "d /var/lib/immich 0755 root root -"
     "d /var/lib/immich/postgres 0755 root root -"
     "d /var/lib/immich/ml-cache 0755 root root -"
-    "d /var/lib/ytdl-sub 0755 root root -"
   ];
 
   system.stateVersion = "24.05";
