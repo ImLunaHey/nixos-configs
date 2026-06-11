@@ -29,6 +29,7 @@
     "d /var/lib/immich/postgres  0755 100000 100000 -"
     "d /var/lib/immich/ml-cache  0755 100000 100000 -"
     "d /var/lib/watchstate/config 0755 100000 100000 -"
+    "d /var/lib/ytdl-sub/config   0755 100000 100000 -"
   ];
 
   systemd.services.create-immich-network = {
@@ -97,6 +98,7 @@
           "/mnt/media/movies:/media/movies:ro"
           "/mnt/media/shows:/media/shows:ro"
           "/mnt/media/music:/media/music:ro"
+          "/mnt/media/youtube:/media/youtube:ro"
         ];
         extraOptions = [
           "--device=/dev/dri:/dev/dri"
@@ -240,6 +242,25 @@
           WS_TZ = "Europe/London";
         };
         extraOptions = [ "--network=media-net" ];
+      };
+      ytdl-sub = {
+        # GUI variant = LSIO code-server image with ytdl-sub preinstalled (web UI on 8443)
+        image = "ghcr.io/jmbannon/ytdl-sub-gui:latest";
+        ports = [
+          "127.0.0.1:8443:8443"
+        ];
+        volumes = [
+          "/var/lib/ytdl-sub/config:/config"
+          "/mnt/media/youtube:/tv_shows"
+          "/mnt/media/music:/music"
+        ];
+        environment = {
+          # PUID/PGID 0 -> container root -> host uid 100000 under userns-remap,
+          # matching the /config dir and the youtube dataset ownership on void
+          PUID = "0";
+          PGID = "0";
+          TZ = "Europe/London";
+        };
       };
       rustfs = {
         image = "rustfs/rustfs:latest";

@@ -141,6 +141,14 @@
     done
     # photos is written by nova's immich container running under userns-remap (container root = host uid 100000)
     chown 100000:100000 /mnt/storage/photos
+    # youtube lives inside the media dataset (sibling of movies/shows/music) but is
+    # written by nova's ytdl-sub container under userns-remap (container root = host uid 100000)
+    mkdir -p /mnt/storage/media/youtube
+    chown 100000:100000 /mnt/storage/media/youtube
+    # music is the shared library — chown the dir (non-recursive) so ytdl-sub (host uid 100000)
+    # can add audio downloads; Samba uploads still work since smbd writes as local root
+    mkdir -p /mnt/storage/media/music
+    chown 100000:100000 /mnt/storage/media/music
   '';
 
   # ZFS scrub — monthly, catches silent bit-rot
