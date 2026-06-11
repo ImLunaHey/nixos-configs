@@ -54,7 +54,8 @@ let
     # and number collection episodes by playlist position (1, 2, 3...) not upload date.
     + "    episode_title: \"{title}\"\n"
     + "    episode_plot: \"{webpage_url}\"\n"
-    + "    tv_show_collection_episode_ordering: \"playlist-index\"\n\n";
+    + "    tv_show_collection_episode_ordering: \"playlist-index\"\n"
+    + "    tv_show_genre: \"YouTube\"\n\n";
 
   subscriptionsYaml = pkgs.writeText "subscriptions.yaml" (
     subscriptionsHeader
@@ -74,6 +75,15 @@ let
   # /config/cron is a no-op warning; this replaces it.
   cronScript = pkgs.writeText "ytdl-sub-cron" ''
     ytdl-sub sub
+
+    # Playlist-sourced shows have no channel avatar, so ytdl-sub writes no show
+    # poster.jpg (only per-season posters from the latest video). Fall back to the
+    # first season's poster so Jellyfin has a show image. Idempotent.
+    for show in /tv_shows/*/; do
+      [ -e "$show/poster.jpg" ] && continue
+      first=$(ls "$show"season*-poster.jpg 2>/dev/null | sort | head -1)
+      [ -n "$first" ] && cp "$first" "$show/poster.jpg"
+    done
   '';
 in
 {
