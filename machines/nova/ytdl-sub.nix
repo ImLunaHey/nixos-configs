@@ -48,7 +48,13 @@ let
     "__preset__:\n"
     + "  overrides:\n"
     + "    tv_show_directory: \"/tv_shows\"\n"
-    + "    music_directory: \"/music\"\n\n";
+    + "    music_directory: \"/music\"\n"
+    # Clean up Jellyfin display: episode title = the raw YouTube title (drop the
+    # "<date> - " prefix), plot = just the video URL (drop the description link spam),
+    # and number collection episodes by playlist position (1, 2, 3...) not upload date.
+    + "    episode_title: \"{title}\"\n"
+    + "    episode_plot: \"{webpage_url}\"\n"
+    + "    tv_show_collection_episode_ordering: \"playlist-index\"\n\n";
 
   subscriptionsYaml = pkgs.writeText "subscriptions.yaml" (
     subscriptionsHeader
