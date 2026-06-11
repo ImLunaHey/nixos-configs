@@ -6,16 +6,28 @@ let
   # ---------------------------------------------------------------------------
   subs = import ./ytdl-sub-channels.nix;
 
-  # Render one entry under a preset:
-  #   "url" string      -> override mode (~), name taken from the source's own title (autoVar)
-  #   { name; url; }     -> simple mode, name = the one you gave
+  # Render one entry under a preset. An entry is either a bare URL string
+  # (auto-named from the source) or an attrset:
+  #   { url; name?; description?; limit?; }
+  #     name        -> override the auto name (channel/artist)
+  #     description -> true: use the video's YouTube description as the plot
+  #     limit       -> only grab the first N items (for huge channels)
   renderEntry = keyPrefix: nameVar: autoVar: i: entry:
-    if builtins.isString entry then
-      "  \"~${keyPrefix}-${toString i}\":\n"
-      + "    url: \"${entry}\"\n"
-      + "    ${nameVar}: \"${autoVar}\""
-    else
-      "  \"${entry.name}\": \"${entry.url}\"";
+    let
+      e = if builtins.isString entry then { url = entry; } else entry;
+      key = if e ? name then e.name else "${keyPrefix}-${toString i}";
+      nameVal = if e ? name then e.name else autoVar;
+      lines = [
+        "  \"~${key}\":"
+        "    url: \"${e.url}\""
+        "    ${nameVar}: \"${nameVal}\""
+      ]
+      ++ lib.optional (e.description or false) "    episode_plot: \"{description}\""
+      ++ lib.optionals (e ? limit) [
+        "    ytdl_options:"
+        "      playlist_items: \"1:${toString e.limit}\""
+      ];
+    in lib.concatStringsSep "\n" lines;
 
   # Emit a preset block only when it has entries (an empty mapping is invalid YAML).
   renderGroup = { preset, keyPrefix, nameVar, autoVar, items }:
@@ -35,10 +47,15 @@ let
     else
       "    s${pad2 n}_name: \"${season.name}\"\n"
       + "    s${pad2 n}_url: \"${season.url}\"";
+  # A show also takes optional `genre` and `description` (true -> use the
+  # videos' YouTube descriptions as plots; default is no plot at all).
   renderShow = show:
-    "  \"~${show.name}\":\n"
-    + lib.optionalString (show ? genre) "    tv_show_genre: \"${show.genre}\"\n"
-    + lib.concatStringsSep "\n" (lib.imap1 renderSeason show.seasons);
+    lib.concatStringsSep "\n" ([
+      "  \"~${show.name}\":"
+    ]
+    ++ lib.optional (show ? genre) "    tv_show_genre: \"${show.genre}\""
+    ++ lib.optional (show.description or false) "    episode_plot: \"{description}\""
+    ++ lib.imap1 renderSeason show.seasons);
   showsBlock = shows:
     lib.optionalString (shows != [])
       ("\"Jellyfin TV Show Collection\":\n"
@@ -51,10 +68,10 @@ let
     + "    tv_show_directory: \"/tv_shows\"\n"
     + "    music_directory: \"/music\"\n"
     # Clean up Jellyfin display: episode title = the raw YouTube title (drop the
-    # "<date> - " prefix), plot = just the video URL (drop the description link spam),
-    # and number collection episodes by playlist position (1, 2, 3...) not upload date.
+    # "<date> - " prefix), no plot by default (per-entry `description = true` opts
+    # back in), and number collection episodes by playlist position not upload date.
     + "    episode_title: \"{title}\"\n"
-    + "    episode_plot: \"{webpage_url}\"\n"
+    + "    episode_plot: \"\"\n"
     + "    tv_show_collection_episode_ordering: \"playlist-index\"\n"
     + "    tv_show_genre: \"YouTube\"\n\n";
 
