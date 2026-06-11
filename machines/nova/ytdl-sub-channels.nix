@@ -1,29 +1,32 @@
 # ytdl-sub subscriptions — add entries here, then commit & push (auto-deploys within ~15 min).
 #
-# The simplest entry is just a URL on its own line:
-#     "https://www.youtube.com/@veritasium"
-# ytdl-sub names the show/artist from the source itself (channel name / playlist title).
-#
-# To force a name instead of using the source's own, write:
-#     { name = "My Name"; url = "https://..."; }
-#
 # Where each group lands (mapping lives in machines/nova/ytdl-sub.nix):
-#   channels  -> /mnt/media/youtube   one TV show per channel, episodes by upload date
-#   playlists -> /mnt/media/youtube   each playlist as its own ordered season
-#   music     -> /mnt/media/music     audio only, artist / album / track
+#   channels -> /mnt/media/youtube   one show per channel, episodes by upload date
+#   shows    -> /mnt/media/youtube   a show built from playlists, one season per playlist
+#   music    -> /mnt/media/music     audio only, artist / album / track
 {
-  # Whole YouTube channels, organised by upload date. Named from the channel.
+  # Whole YouTube channels. A bare URL self-names from the channel; or use
+  # { name = "My Name"; url = "https://..."; } to force the show name.
   channels = [
     # "https://www.youtube.com/@veritasium"
     # { name = "Kurzgesagt"; url = "https://www.youtube.com/@kurzgesagt"; }
   ];
 
-  # Playlists — each downloaded as its own season. Named from the playlist title.
-  playlists = [
-    "https://www.youtube.com/playlist?list=PLLGT0cEMIAze5tmNSlEvUKo-cQ0YrIs2j"
+  # Shows assembled from playlists. Give the show a name, then list its season
+  # playlists in order — the first becomes Season 01, the second Season 02, etc.
+  # A season can be a bare URL, or { name = "..."; url = "..."; } to title it.
+  shows = [
+    {
+      name = "Tip 2 Tip";
+      seasons = [
+        { name = "China"; url = "https://www.youtube.com/playlist?list=PLLGT0cEMIAze5tmNSlEvUKo-cQ0YrIs2j"; }
+        { name = "Japan"; url = "https://www.youtube.com/playlist?list=PLLGT0cEMIAzeq_YFR_iHm831-GuOWlwUJ"; }
+      ];
+    }
   ];
 
-  # Music — audio only. Artist named from the uploader, album from the playlist title.
+  # Music — audio only. A bare URL names the artist from the uploader and the
+  # album from the playlist; or { name = "Artist"; url = "https://..."; }.
   music = [
     # "https://www.youtube.com/@officialtheloniousmonk/releases"
   ];

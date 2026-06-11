@@ -24,6 +24,26 @@ let
        + lib.concatStringsSep "\n" (lib.imap0 (renderEntry keyPrefix nameVar autoVar) items)
        + "\n\n");
 
+  # A "show" is { name; seasons = [ url ... ]; }. The TV Show Collection preset
+  # takes each season playlist as s01_url, s02_url, ... -> Season 01, Season 02, ...
+  # The "~" prefix is override mode; the name itself becomes the show (tv_show_name).
+  pad2 = n: if n < 10 then "0${toString n}" else toString n;
+  # A season is a bare URL, or { name; url; } to give it a title (s0N_name).
+  renderSeason = n: season:
+    if builtins.isString season then
+      "    s${pad2 n}_url: \"${season}\""
+    else
+      "    s${pad2 n}_name: \"${season.name}\"\n"
+      + "    s${pad2 n}_url: \"${season.url}\"";
+  renderShow = show:
+    "  \"~${show.name}\":\n"
+    + lib.concatStringsSep "\n" (lib.imap1 renderSeason show.seasons);
+  showsBlock = shows:
+    lib.optionalString (shows != [])
+      ("\"Jellyfin TV Show Collection\":\n"
+       + lib.concatStringsSep "\n" (map renderShow shows)
+       + "\n\n");
+
   subscriptionsHeader =
     "__preset__:\n"
     + "  overrides:\n"
@@ -32,9 +52,9 @@ let
 
   subscriptionsYaml = pkgs.writeText "subscriptions.yaml" (
     subscriptionsHeader
-    + renderGroup { preset = "Jellyfin TV Show by Date";    keyPrefix = "channel";  nameVar = "tv_show_name"; autoVar = "{channel}";           items = subs.channels; }
-    + renderGroup { preset = "Jellyfin TV Show Collection"; keyPrefix = "playlist"; nameVar = "tv_show_name"; autoVar = "{playlist_title}";    items = subs.playlists; }
-    + renderGroup { preset = "YouTube Releases";            keyPrefix = "music";    nameVar = "track_artist"; autoVar = "{playlist_uploader}"; items = subs.music; }
+    + renderGroup { preset = "Jellyfin TV Show by Date"; keyPrefix = "channel"; nameVar = "tv_show_name"; autoVar = "{channel}";           items = subs.channels; }
+    + showsBlock subs.shows
+    + renderGroup { preset = "YouTube Releases";         keyPrefix = "music";   nameVar = "track_artist"; autoVar = "{playlist_uploader}"; items = subs.music; }
   );
 
   configYaml = pkgs.writeText "config.yaml" ''
