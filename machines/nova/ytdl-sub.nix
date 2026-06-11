@@ -102,10 +102,12 @@ let
           - "Jellyfin TV Show by Date"
         ytdl_options:
           playlist_items: "1:{channel_limit}"
-        # Skip Shorts (their URL contains /shorts/)
+        # Skip Shorts. They often come through as normal /watch URLs, so filter
+        # by duration (>60s) as well as the /shorts/ path. "?" keeps entries
+        # whose duration isn't known at filter time.
         match_filters:
           filters:
-            - "original_url!*=/shorts/"
+            - "duration>?60 & original_url!*=/shorts/"
         overrides:
           channel_limit: "100000"
   '';
