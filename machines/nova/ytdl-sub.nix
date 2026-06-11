@@ -37,6 +37,7 @@ let
       + "    s${pad2 n}_url: \"${season.url}\"";
   renderShow = show:
     "  \"~${show.name}\":\n"
+    + lib.optionalString (show ? genre) "    tv_show_genre: \"${show.genre}\"\n"
     + lib.concatStringsSep "\n" (lib.imap1 renderSeason show.seasons);
   showsBlock = shows:
     lib.optionalString (shows != [])
