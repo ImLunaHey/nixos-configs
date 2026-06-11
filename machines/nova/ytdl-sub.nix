@@ -62,9 +62,10 @@ let
       working_directory: "/config/.working"
   '';
 
-  # The image runs this script on CRON_SCHEDULE / on start, with its cwd set to
-  # /config/ytdl-sub-configs (where config.yaml + subscriptions.yaml live), so a
-  # bare `ytdl-sub sub` picks them up. The stock script is a no-op warning.
+  # The image's cron wrapper does `cd /config; . /config/cron` on CRON_SCHEDULE
+  # and on start, so the script runs with cwd /config where config.yaml +
+  # subscriptions.yaml live and a bare `ytdl-sub sub` finds them. The stock
+  # /config/cron is a no-op warning; this replaces it.
   cronScript = pkgs.writeText "ytdl-sub-cron" ''
     ytdl-sub sub
   '';
@@ -80,9 +81,9 @@ in
     image = "ghcr.io/jmbannon/ytdl-sub:latest";
     volumes = [
       "/var/lib/ytdl-sub/config:/config"
-      "${configYaml}:/config/ytdl-sub-configs/config.yaml:ro"
-      "${subscriptionsYaml}:/config/ytdl-sub-configs/subscriptions.yaml:ro"
-      "${cronScript}:/config/ytdl-sub-configs/cron:ro"
+      "${configYaml}:/config/config.yaml:ro"
+      "${subscriptionsYaml}:/config/subscriptions.yaml:ro"
+      "${cronScript}:/config/cron:ro"
       "/mnt/media/youtube:/tv_shows"
       "/mnt/media/music:/music"
     ];
