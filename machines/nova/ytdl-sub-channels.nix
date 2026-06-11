@@ -12,8 +12,7 @@
   #                           (default: no plot at all)
   #     limit = N           -> only grab the N most recent uploads (huge channels)
   channels = [
-    # "https://www.youtube.com/@veritasium"
-    # { url = "https://www.youtube.com/@SortedFood"; description = true; limit = 25; }
+    { url = "https://www.youtube.com/@SortedFood"; description = true; limit = 25; }
   ];
 
   # Shows assembled from playlists. Give the show a name, then list its season
