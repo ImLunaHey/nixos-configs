@@ -17,8 +17,6 @@
     "d /var/lib/pihole/pihole    0755 100000 100000 -"
     "d /var/lib/pihole/dnsmasq   0755 100000 100000 -"
     "d /var/lib/uptime-kuma      0755 100000 100000 -"
-    "d /var/lib/gotify            0755 100000 100000 -"
-    "d /var/lib/igotify           0755 100000 100000 -"
     "d /var/lib/romm-db           0755 100000 100000 -"
     "d /var/lib/romm/resources   0755 100000 100000 -"
     "d /var/lib/romm/redis-data  0755 100000 100000 -"
@@ -131,24 +129,6 @@
         volumes = [
           "/var/lib/uptime-kuma:/app/data"
         ];
-      };
-      gotify = {
-        image = "gotify/server:latest";
-        ports = [
-          "127.0.0.1:8085:80"
-        ];
-        volumes = [
-          "/var/lib/gotify:/app/data"
-        ];
-        environmentFiles = [ config.sops.secrets.gotify_env.path ];
-      };
-      igotify = {
-        image = "ghcr.io/androidseb25/igotify-notification-assist:latest";
-        extraOptions = [ "--network=host" "--userns=host" ]; # host network requires opting out of userns-remap
-        volumes = [
-          "/var/lib/igotify:/app/data"
-        ];
-        environmentFiles = [ config.sops.secrets.igotify_env.path ];
       };
       romm-db = {
         image = "mariadb:latest";

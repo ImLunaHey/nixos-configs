@@ -5,7 +5,7 @@
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
       tailscale_oauth = { };
-      gotify_upgrade_token = { };
+      brrr_token = { };
       samba_password = { };
     };
   };

@@ -1,12 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, brrrNotify, ... }:
 let
-  notifyScript = pkgs.writeShellScript "smartd-notify-gotify" ''
-    ${pkgs.curl}/bin/curl -sf \
-      -F "title=SMART Alert: $SMARTD_DEVICE ($SMARTD_FAILTYPE)" \
-      -F "message=$SMARTD_MESSAGE" \
-      -F "priority=8" \
-      "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
-      || true
+  notifyScript = pkgs.writeShellScript "smartd-notify-brrr" ''
+    ${brrrNotify} \
+      "SMART Alert: $SMARTD_DEVICE ($SMARTD_FAILTYPE)" \
+      "$SMARTD_MESSAGE" \
+      time-sensitive warm_soft_error smartd
   '';
 in
 {

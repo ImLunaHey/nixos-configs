@@ -1,8 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, brrrNotify, ... }:
 
 {
   imports = [
     ./modules/homelab-agent.nix
+    ./modules/brrr-notify.nix
   ];
 
   # Push host telemetry to imlunahey.com on every host.
@@ -111,7 +112,7 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  # Notify Gotify on upgrade success or failure
+  # Notify brrr.now on upgrade success or failure
   systemd.services.nixos-upgrade = {
     preStart = ''
       readlink /nix/var/nix/profiles/system > /tmp/nixos-pre-upgrade-system
@@ -120,24 +121,20 @@
       pre=$(cat /tmp/nixos-pre-upgrade-system 2>/dev/null)
       post=$(readlink /nix/var/nix/profiles/system)
       if [ "$pre" != "$post" ]; then
-        ${pkgs.curl}/bin/curl -sf \
-          -F "title=NixOS Upgraded" \
-          -F "message=${config.networking.hostName} has been upgraded" \
-          -F "priority=5" \
-          "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
-          || true
+        ${brrrNotify} \
+          "NixOS Upgraded" \
+          "${config.networking.hostName} has been upgraded" \
+          active bubbly_success_ding nixos
       fi
       rm -f /tmp/nixos-pre-upgrade-system
     '';
     serviceConfig.ExecStopPost = [
       "+${pkgs.writeShellScript "nixos-upgrade-notify-failure" ''
         if [ "$SERVICE_RESULT" != "success" ]; then
-          ${pkgs.curl}/bin/curl -sf \
-            -F "title=NixOS Upgrade Failed" \
-            -F "message=${config.networking.hostName} failed to upgrade: $SERVICE_RESULT" \
-            -F "priority=8" \
-            "https://gotify.flaked.org/message?token=$(cat ${config.sops.secrets.gotify_upgrade_token.path})" \
-            || true
+          ${brrrNotify} \
+            "NixOS Upgrade Failed" \
+            "${config.networking.hostName} failed to upgrade: $SERVICE_RESULT" \
+            time-sensitive warm_soft_error nixos
         fi
       ''}"
     ];
