@@ -11,15 +11,16 @@ Nix settings) lives here in `darwin/`.
 
 ## First-time bootstrap on a fresh Mac
 
-1. **Install Nix.** The [Determinate Systems installer](https://github.com/DeterminateSystems/nix-installer)
-   is the easiest on macOS:
+1. **Install Nix** using the official multi-user installer (nix-darwin manages the
+   daemon it sets up — `nix.enable` is left at its default `true`):
 
    ```sh
-   curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+   sh <(curl -L https://nixos.org/nix/install) --daemon
    ```
 
-   > If you use the Determinate installer, set `nix.enable = false;` in
-   > `darwin/common.nix` so nix-darwin doesn't manage the daemon Determinate owns.
+   > Do NOT use the Determinate Systems installer here — it owns the daemon itself
+   > and would conflict with `nix.enable = true`. If you ever switch to it, set
+   > `nix.enable = false;` in `darwin/common.nix`.
 
 2. **Install Homebrew** (nix-darwin drives `brew bundle` but does not install brew):
 
