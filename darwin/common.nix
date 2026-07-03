@@ -65,13 +65,13 @@
       "axiom"
       "expo-orbit"
       "gstreamer-runtime"
-      "aprilnea/tap/openlogi@latest" # tap-qualified; bare "openlogi" isn't found
       "orbstack"
       "retroarch"
       "swiftformat-for-xcode"
 
       # Intentionally omitted (present on the MacBook, can't install on the mini):
       #   "codexbar"    — requires macOS Sonoma; mini is on macOS 26.
+      #   "openlogi"    — requires macOS Ventura; mini is on macOS 26.
       #   "wine-stable" — Intel-only + deprecated + upstream download 404s.
     ];
 
