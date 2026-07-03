@@ -103,15 +103,19 @@
   # ── git ─────────────────────────────────────────────────────────────
   programs.git = {
     enable = true;
-    userName = "luna";
-    userEmail = "luna@wvvw.me";
-    extraConfig = {
+    settings = {
+      user = {
+        name = "luna";
+        email = "luna@wvvw.me";
+        # SSH-signed commits/tags.
+        signingkey = "~/.ssh/id_ed25519.pub";
+      };
       init.defaultBranch = "main";
       core.autocrlf = "input";
-      # SSH-signed commits/tags.
-      gpg.format = "ssh";
-      gpg.ssh.allowedSignersFile = "~/.config/git/allowed_signers";
-      user.signingkey = "~/.ssh/id_ed25519.pub";
+      gpg = {
+        format = "ssh";
+        ssh.allowedSignersFile = "~/.config/git/allowed_signers";
+      };
       commit.gpgsign = true;
       tag.gpgsign = true;
       # difftastic (installed via brew as `difft`).
