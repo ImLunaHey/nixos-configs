@@ -1,7 +1,13 @@
 {
   description = "Luna's Nix configurations (NixOS servers + macOS/nix-darwin)";
   inputs = {
+    # NixOS servers track nixos-unstable.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    # macOS tracks nixpkgs-unstable, which is what nix-darwin's master branch
+    # requires (their release numbers must match). Kept separate so the servers'
+    # channel is unaffected.
+    nixpkgs-darwin.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -20,16 +26,16 @@
 
     nix-darwin = {
       url = "github:nix-darwin/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, ... }: {
     nixosConfigurations = {
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
