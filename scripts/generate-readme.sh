@@ -106,6 +106,25 @@ machine_sections() {
   done
 }
 
+darwin_purpose() {
+  case "$1" in
+    pulsar) echo "Mac mini (Apple Silicon)" ;;
+    comet)  echo "MacBook Pro (Apple Silicon)" ;;
+    *)      echo "—" ;;
+  esac
+}
+
+darwin_hosts_table() {
+  echo "| Host | Type | Config |"
+  echo "|------|------|--------|"
+  for host_dir in "$REPO_ROOT/darwin"/*/; do
+    [[ -d "$host_dir" ]] || continue
+    local name
+    name=$(basename "$host_dir")
+    echo "| \`$name\` | $(darwin_purpose "$name") | \`darwin/$name/\` |"
+  done
+}
+
 flake_inputs() {
   awk '
     /^  [a-zA-Z_-]+ = \{/ { name = $1 }
@@ -118,9 +137,9 @@ flake_inputs() {
 }
 
 cat > "$README" << HEREDOC
-# Luna's NixOS Configurations
+# Luna's Nix Configurations
 
-Personal NixOS system configurations managed with [flakes](https://nixos.wiki/wiki/Flakes) and [sops-nix](https://github.com/Mic92/sops-nix) for encrypted secrets.
+Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes) and [sops-nix](https://github.com/Mic92/sops-nix) for encrypted secrets. Covers both NixOS servers (the homelab) and macOS machines via [nix-darwin](https://github.com/nix-darwin/nix-darwin) + [home-manager](https://github.com/nix-community/home-manager).
 
 > **This file is auto-generated.** Edit \`scripts/generate-readme.sh\` to change its contents.
 
@@ -128,12 +147,17 @@ Personal NixOS system configurations managed with [flakes](https://nixos.wiki/wi
 
 \`\`\`
 nixos-configs/
-├── flake.nix              # Flake entry point with host definitions
-├── common.nix             # Shared configuration for all hosts
-├── machines/
+├── flake.nix              # Flake entry point (NixOS + darwin host definitions)
+├── common.nix             # Shared configuration for all NixOS hosts
+├── machines/              # NixOS hosts (Linux)
 │   ├── nova/              # Media server / reverse proxy / Matrix
 │   ├── gilbert/           # Media ripping / Minecraft / NFS
 │   └── void/              # NAS (ZFS RAID)
+├── darwin/                # macOS hosts (nix-darwin)
+│   ├── common.nix         # Shared macOS system config + Homebrew
+│   └── pulsar/            # Mac mini
+├── home/                  # home-manager user configs (zsh, aliases, git)
+│   └── luna.nix           # Luna's cross-Mac user environment
 ├── modules/
 │   ├── uptime-kuma.nix    # Custom uptime-kuma sync module
 │   └── cloudflare-dns.nix # Auto-sync Caddy vhosts to Cloudflare DNS
@@ -156,6 +180,14 @@ $(machines_table)
 ## Machine Details
 
 $(machine_sections)
+
+## macOS Hosts
+
+Managed with nix-darwin + home-manager. User dotfiles (zsh, aliases, git) are shared across every Mac via \`home/luna.nix\`.
+
+$(darwin_hosts_table)
+
+Rebuild a Mac with \`darwin-rebuild switch --flake .#<host>\`. See \`darwin/README.md\` for first-time bootstrap.
 
 ## Common Configuration (\`common.nix\`)
 
