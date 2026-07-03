@@ -63,14 +63,16 @@
       "android-commandlinetools"
       "android-platform-tools"
       "axiom"
-      "codexbar"
       "expo-orbit"
       "gstreamer-runtime"
-      "openlogi"
+      "aprilnea/tap/openlogi@latest" # tap-qualified; bare "openlogi" isn't found
       "orbstack"
       "retroarch"
       "swiftformat-for-xcode"
-      "wine-stable"
+
+      # Intentionally omitted (present on the MacBook, can't install on the mini):
+      #   "codexbar"    — requires macOS Sonoma; mini is on macOS 26.
+      #   "wine-stable" — Intel-only + deprecated + upstream download 404s.
     ];
 
     # CLI formulae. These can migrate to nix (home/luna.nix) over time; kept in
