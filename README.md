@@ -100,6 +100,7 @@ Managed with nix-darwin + home-manager. User dotfiles (zsh, aliases, git) are sh
 
 | Host | Type | Config |
 |------|------|--------|
+| `comet` | MacBook Pro (Apple Silicon) | `darwin/comet/` |
 | `pulsar` | Mac mini (Apple Silicon) | `darwin/pulsar/` |
 
 Rebuild a Mac with `darwin-rebuild switch --flake .#<host>`. See `darwin/README.md` for first-time bootstrap.

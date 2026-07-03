@@ -3,6 +3,10 @@
 # Shared configuration for all macOS (nix-darwin) hosts.
 # Host-specific bits (hostname) live in darwin/<host>/default.nix.
 {
+  imports = [
+    ./auto-upgrade.nix
+  ];
+
   # User identity (system.primaryUser, users.users.<name>, home-manager.users.<name>)
   # is set per-host in darwin/<host>/default.nix, since the account name differs
   # per machine (mini = xo, MacBook = luna).

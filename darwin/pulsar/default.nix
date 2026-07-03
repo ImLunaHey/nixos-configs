@@ -2,6 +2,10 @@
 
 # pulsar — Mac mini (Apple Silicon). macOS account: xo.
 {
+  imports = [
+    ./networking.nix
+  ];
+
   networking.hostName = "pulsar";
   networking.computerName = "pulsar";
   networking.localHostName = "pulsar";

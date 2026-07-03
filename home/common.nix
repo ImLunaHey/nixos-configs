@@ -48,8 +48,6 @@
       changed = "git diff -w HEAD --staged -- . ':!yarn.lock' ':!*package-lock.json'";
       commit = "npx git-cz";
       vlc = "/Applications/VLC.app/Contents/MacOS/VLC";
-      claude-work = "CLAUDE_CONFIG_DIR=~/.claude-work claude";
-      claude-personal = "CLAUDE_CONFIG_DIR=~/.claude-personal claude";
     };
 
     initContent = ''

@@ -79,6 +79,16 @@
           home-manager.darwinModules.home-manager
         ];
       };
+
+      # MacBook Pro (not yet adopted — see darwin/README.md)
+      comet = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./darwin/common.nix
+          ./darwin/comet
+          home-manager.darwinModules.home-manager
+        ];
+      };
     };
   };
 }
