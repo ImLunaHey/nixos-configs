@@ -1,6 +1,6 @@
 # macOS (nix-darwin) hosts
 
-User dotfiles (zsh, aliases, git, starship) live in [`../home/luna.nix`](../home/luna.nix)
+User dotfiles (zsh, aliases, git, starship) live in [`../home/common.nix`](../home/common.nix)
 and are shared across every Mac. System-level config (Homebrew, macOS defaults,
 Nix settings) lives here in `darwin/`.
 
@@ -62,5 +62,5 @@ nix flake update
    picks up a friendly name.
 4. Bootstrap it with the steps above.
 
-The user environment (`home/luna.nix`) is shared automatically — no per-host dotfile
+The user environment (`home/common.nix`) is shared automatically — no per-host dotfile
 duplication.

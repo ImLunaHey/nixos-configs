@@ -157,7 +157,7 @@ nixos-configs/
 │   ├── common.nix         # Shared macOS system config + Homebrew
 │   └── pulsar/            # Mac mini
 ├── home/                  # home-manager user configs (zsh, aliases, git)
-│   └── luna.nix           # Luna's cross-Mac user environment
+│   └── common.nix         # Shared cross-Mac user environment
 ├── modules/
 │   ├── uptime-kuma.nix    # Custom uptime-kuma sync module
 │   └── cloudflare-dns.nix # Auto-sync Caddy vhosts to Cloudflare DNS
@@ -183,7 +183,7 @@ $(machine_sections)
 
 ## macOS Hosts
 
-Managed with nix-darwin + home-manager. User dotfiles (zsh, aliases, git) are shared across every Mac via \`home/luna.nix\`.
+Managed with nix-darwin + home-manager. User dotfiles (zsh, aliases, git) are shared across every Mac via \`home/common.nix\`.
 
 $(darwin_hosts_table)
 

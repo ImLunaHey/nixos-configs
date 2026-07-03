@@ -1,12 +1,10 @@
 { pkgs, ... }:
 
-# Luna's user environment (home-manager). Shared across every Mac —
-# import this from each darwin host. Ported from the old ~/.zshrc +
-# ~/code/imlunahey/dot-files/aliases and modernised.
+# Shared user environment (home-manager). Imported by each darwin host, which
+# supplies the account identity (home.username / home.homeDirectory) — the mini
+# runs as `xo`, the MacBook as `luna`, but the shell/git/aliases are identical.
+# Ported from the old ~/.zshrc + ~/code/imlunahey/dot-files/aliases, modernised.
 {
-  home.username = "luna";
-  home.homeDirectory = "/Users/luna";
-
   # Don't change without reading the home-manager release notes.
   home.stateVersion = "24.11";
 

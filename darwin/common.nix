@@ -3,13 +3,9 @@
 # Shared configuration for all macOS (nix-darwin) hosts.
 # Host-specific bits (hostname) live in darwin/<host>/default.nix.
 {
-  # The user nix-darwin applies user-scoped settings (defaults, homebrew) for.
-  system.primaryUser = "luna";
-
-  users.users.luna = {
-    name = "luna";
-    home = "/Users/luna";
-  };
+  # User identity (system.primaryUser, users.users.<name>, home-manager.users.<name>)
+  # is set per-host in darwin/<host>/default.nix, since the account name differs
+  # per machine (mini = xo, MacBook = luna).
 
   # Nix settings (mirror common.nix for the NixOS hosts).
   #
@@ -168,14 +164,14 @@
     };
   };
 
-  # Home-manager: user dotfiles (zsh, aliases, git, …) live in home/luna.nix.
+  # Home-manager: user dotfiles (zsh, aliases, git, …) live in home/common.nix,
+  # wired to the right account in darwin/<host>/default.nix.
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    # On a machine with pre-existing dotfiles (e.g. the MacBook's old ~/.zshrc),
+    # On a machine with pre-existing dotfiles (e.g. the mini's old ~/.zshrc),
     # move them aside instead of aborting activation.
     backupFileExtension = "hm-backup";
-    users.luna = import ../home/luna.nix;
   };
 
   # Used for backwards compatibility. Read the nix-darwin changelog before
