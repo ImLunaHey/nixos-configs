@@ -84,6 +84,11 @@
       [ -d "$HOME/.opencode/bin" ]  && export PATH="$HOME/.opencode/bin:$PATH"
       [ -d "$HOME/.amp/bin" ]       && export PATH="$HOME/.amp/bin:$PATH"
       [ -d "$HOME/.grok/bin" ]      && export PATH="$HOME/.grok/bin:$PATH"
+      [ -d "/opt/homebrew/opt/libpq/bin" ] && export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+      [ -d "$HOME/.cache/lm-studio/bin" ]  && export PATH="$PATH:$HOME/.cache/lm-studio/bin"
+
+      # deno env (sets PATH + DENO_INSTALL).
+      [ -s "$HOME/.deno/env" ] && \. "$HOME/.deno/env"
 
       # nvm (if installed via brew or the install script).
       export NVM_DIR="$HOME/.nvm"
@@ -92,11 +97,60 @@
 
       # bun completions.
       [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+      # ── extra completions (deno/pnpm, grok, cf) ────────────────────
+      for _cdir in "$HOME/.zsh/completions" "$HOME/.grok/completions/zsh"; do
+        [ -d "$_cdir" ] && fpath=("$_cdir" $fpath)
+      done
+      autoload -Uz compinit && compinit
+      [ -f "$HOME/.config/cf/completions/_cf.zsh" ] && source "$HOME/.config/cf/completions/_cf.zsh"
     '';
   };
 
   # ── starship prompt ─────────────────────────────────────────────────
-  programs.starship.enable = true;
+  # Styled to look like oh-my-zsh's robbyrussell theme: `➜  dir git:(branch) ✗`
+  # (bold green/red arrow, cyan dir, bold-blue "git:(" + red branch + blue ")",
+  # yellow ✗ when dirty). Single line, no leading blank line.
+  programs.starship = {
+    enable = true;
+    settings = {
+      add_newline = false;
+      format = "$character  $directory$git_branch$git_status ";
+
+      character = {
+        success_symbol = "[➜](bold green)";
+        error_symbol = "[➜](bold red)";
+      };
+
+      directory = {
+        style = "cyan";
+        truncation_length = 1; # trailing path component only, like robbyrussell's %c
+        truncate_to_repo = false;
+        truncation_symbol = "";
+        format = "[$path]($style)";
+      };
+
+      git_branch = {
+        symbol = "";
+        format = " [git:(](bold blue)[$branch](red)[)](blue)";
+      };
+
+      git_status = {
+        style = "yellow";
+        format = " [$all_status]($style)";
+        conflicted = "✗";
+        deleted = "✗";
+        modified = "✗";
+        renamed = "✗";
+        staged = "✗";
+        untracked = "✗";
+        stashed = "";
+        ahead = "";
+        behind = "";
+        diverged = "";
+      };
+    };
+  };
 
   # ── git ─────────────────────────────────────────────────────────────
   programs.git = {
