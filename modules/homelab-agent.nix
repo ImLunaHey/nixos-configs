@@ -82,20 +82,31 @@ let
     secret = open(os.environ["CREDENTIALS_DIRECTORY"] + "/secret").read().strip()
     kuma_pw = open(os.environ["CREDENTIALS_DIRECTORY"] + "/kuma_password").read().strip()
 
-    with UptimeKumaApi("${cfg.uptimeKumaUrl}") as api:
-        api.login("luna", kuma_pw)
-        monitors = api.get_monitors()
-        # nixpkgs uptime-kuma-api exposes avg_ping (not avg_response — that
-        # name was from a different version's docs).
-        avg = api.avg_ping()
-        uptimes = api.uptime()
-        heartbeats = api.get_heartbeats()
+    # Best-effort telemetry: never exit non-zero. A failed oneshot lands in
+    # systemd's failed-unit set, which makes any concurrent
+    # switch-to-configuration (and therefore nixos-upgrade) report failure.
+    try:
+        with UptimeKumaApi("${cfg.uptimeKumaUrl}") as api:
+            api.login("luna", kuma_pw)
+            monitors = api.get_monitors()
+            # nixpkgs uptime-kuma-api exposes avg_ping (not avg_response — that
+            # name was from a different version's docs).
+            avg = api.avg_ping()
+            uptimes = api.uptime()
+            heartbeats = api.get_heartbeats()
+    except Exception as e:
+        print(f"homelab-agent-services: uptime-kuma scrape failed: {e}")
+        raise SystemExit(0)
 
     services = []
     for m in monitors:
         mid = m["id"]
         last = (heartbeats.get(mid) or [{}])[-1]
-        s = last.get("status")
+        # uptime-kuma-api occasionally hands back a nested list here
+        # instead of a heartbeat dict.
+        if isinstance(last, list):
+            last = last[-1] if last else {}
+        s = last.get("status") if isinstance(last, dict) else None
         services.append({
             "name": m["name"],
             "url": m.get("url"),
