@@ -8,6 +8,7 @@
     ./containers.nix
     ./storage.nix
     ./matrix.nix
+    ./ndi.nix
     ./caddy.nix
     ./backups.nix
     ./ytdl-sub.nix
