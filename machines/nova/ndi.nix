@@ -15,7 +15,13 @@ in
   # The NDI SDK contains a proprietary, redistributable runtime.
   nixpkgs.config.allowUnfreePredicate = pkg: lib.getName pkg == "ndi";
 
-  services.avahi.enable = true;
+  services.avahi = {
+    enable = true;
+    publish = {
+      enable = true;
+      userServices = true;
+    };
+  };
 
   networking.firewall.interfaces.enp1s0 = {
     # NDI source discovery on the local network.
