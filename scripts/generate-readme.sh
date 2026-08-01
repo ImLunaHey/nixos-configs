@@ -36,6 +36,7 @@ get_key_services() {
 
   [[ -f "$REPO_ROOT/machines/$machine/matrix.nix" ]]   && services+=("Matrix-Synapse")
   [[ -f "$REPO_ROOT/machines/$machine/caddy.nix" ]]    && services+=("Caddy")
+  [[ -f "$REPO_ROOT/machines/$machine/ndi.nix" ]]      && services+=("NDI capture")
   [[ -f "$REPO_ROOT/machines/$machine/minecraft.nix" ]] && services+=("Minecraft (ATM10)")
   [[ -f "$REPO_ROOT/machines/$machine/smartd.nix" ]]   && services+=("ZFS + SMART monitoring")
   grep -q 'cloudflare-dns' "$REPO_ROOT/machines/$machine/default.nix" 2>/dev/null && services+=("Cloudflare DNS sync")
@@ -93,6 +94,7 @@ machine_sections() {
         containers.nix)             echo "| \`$fname\` | Docker container definitions |" ;;
         caddy.nix)                  echo "| \`$fname\` | Reverse proxy virtual hosts |" ;;
         matrix.nix)                 echo "| \`$fname\` | Matrix-Synapse homeserver + PostgreSQL |" ;;
+        ndi.nix)                    echo "| \`$fname\` | Elgato capture card to NDI sender |" ;;
         minecraft.nix)              echo "| \`$fname\` | Minecraft server (ATM10 / NeoForge) |" ;;
         smartd.nix)                 echo "| \`$fname\` | SMART disk monitoring + notifications |" ;;
         default.nix)                echo "| \`$fname\` | Imports all machine modules |" ;;
