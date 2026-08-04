@@ -161,11 +161,11 @@
   services.nfs.server = {
     enable = true;
     exports = ''
-      /mnt/storage/media 192.168.0.10(rw,sync,no_subtree_check,root_squash)
-      /mnt/storage/games 192.168.0.10(rw,sync,no_subtree_check,root_squash)
-      /mnt/storage/rips 192.168.0.11(rw,sync,no_subtree_check,no_root_squash)
-      /mnt/storage/backups 192.168.0.10(rw,sync,no_subtree_check,no_root_squash) 192.168.0.11(rw,sync,no_subtree_check,no_root_squash)
-      /mnt/storage/photos 192.168.0.10(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/storage/media nova(rw,sync,no_subtree_check,root_squash)
+      /mnt/storage/games nova(rw,sync,no_subtree_check,root_squash)
+      /mnt/storage/rips gilbert(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/storage/backups nova(rw,sync,no_subtree_check,no_root_squash) gilbert(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/storage/photos nova(rw,sync,no_subtree_check,no_root_squash)
     '';
   };
 }

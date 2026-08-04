@@ -32,7 +32,7 @@ in
 
   config = lib.mkIf cfg.enable {
     fileSystems."/mnt/backups" = {
-      device = "192.168.0.12:/mnt/storage/backups";
+      device = "void:/mnt/storage/backups";
       fsType = "nfs";
       options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
     };
