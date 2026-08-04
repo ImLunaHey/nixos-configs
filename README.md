@@ -33,15 +33,15 @@ nixos-configs/
 
 | Host | IP | Purpose | Key Services |
 |------|----|---------|--------------|
-| `gilbert` | `192.168.0.11` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
-| `nova` | `192.168.0.10` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,NDI capture,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
-| `void` | `192.168.0.12` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
+| `gilbert` | `DHCP` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
+| `nova` | `DHCP` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,NDI capture,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
+| `void` | `DHCP` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
 ## Machine Details
 
 ### `gilbert`
 
-**IP:** `192.168.0.11` &nbsp; **Purpose:** Media ripping (ARM), Minecraft server, NFS storage
+**IP:** `DHCP` &nbsp; **Purpose:** Media ripping (ARM), Minecraft server, NFS storage
 
 | File | Role |
 |------|------|
@@ -51,14 +51,14 @@ nixos-configs/
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `hardware.nix` | GPU drivers and hardware acceleration |
 | `minecraft.nix` | Minecraft server (ATM10 / NeoForge) |
-| `networking.nix` | Static IP, firewall, Tailscale |
+| `networking.nix` | DHCP, firewall, Tailscale |
 | `services.nix` | SOPS secret declarations |
 | `storage.nix` | Disk mounts and NFS |
 | `arm-config/` | ARM app config (`arm.yaml`) + `Dockerfile` |
 
 ### `nova`
 
-**IP:** `192.168.0.10` &nbsp; **Purpose:** Media server, reverse proxy, Matrix homeserver
+**IP:** `DHCP` &nbsp; **Purpose:** Media server, reverse proxy, Matrix homeserver
 
 | File | Role |
 |------|------|
@@ -70,7 +70,7 @@ nixos-configs/
 | `hardware.nix` | GPU drivers and hardware acceleration |
 | `matrix.nix` | Matrix-Synapse homeserver + PostgreSQL |
 | `ndi.nix` | Elgato capture card to NDI sender |
-| `networking.nix` | Static IP, firewall, Tailscale |
+| `networking.nix` | DHCP, firewall, Tailscale |
 | `services.nix` | SOPS secret declarations |
 | `storage.nix` | Disk mounts and NFS |
 | `ytdl-sub-channels.nix` | |
@@ -78,13 +78,13 @@ nixos-configs/
 
 ### `void`
 
-**IP:** `192.168.0.12` &nbsp; **Purpose:** NAS with ZFS RAID storage
+**IP:** `DHCP` &nbsp; **Purpose:** NAS with ZFS RAID storage
 
 | File | Role |
 |------|------|
 | `default.nix` | Imports all machine modules |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
-| `networking.nix` | Static IP, firewall, Tailscale |
+| `networking.nix` | DHCP, firewall, Tailscale |
 | `samba.nix` | |
 | `services.nix` | SOPS secret declarations |
 | `smartd.nix` | SMART disk monitoring + notifications |

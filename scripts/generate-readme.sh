@@ -8,9 +8,15 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 README="$REPO_ROOT/README.md"
 
 get_ip() {
-  grep 'address = "' "$REPO_ROOT/machines/$1/networking.nix" 2>/dev/null \
-    | head -1 \
-    | sed 's/.*address = "\([^"]*\)".*/\1/'
+  local file="$REPO_ROOT/machines/$1/networking.nix"
+
+  if grep -q 'useDHCP = true;' "$file" 2>/dev/null; then
+    echo "DHCP"
+  else
+    grep 'address = "' "$file" 2>/dev/null \
+      | head -1 \
+      | sed 's/.*address = "\([^"]*\)".*/\1/'
+  fi
 }
 
 get_containers() {
@@ -88,7 +94,7 @@ machine_sections() {
       case "$fname" in
         hardware-configuration.nix) echo "| \`$fname\` | Generated hardware config (do not edit) |" ;;
         hardware.nix)               echo "| \`$fname\` | GPU drivers and hardware acceleration |" ;;
-        networking.nix)             echo "| \`$fname\` | Static IP, firewall, Tailscale |" ;;
+        networking.nix)             echo "| \`$fname\` | DHCP, firewall, Tailscale |" ;;
         services.nix)               echo "| \`$fname\` | SOPS secret declarations |" ;;
         storage.nix)                echo "| \`$fname\` | Disk mounts and NFS |" ;;
         containers.nix)             echo "| \`$fname\` | Docker container definitions |" ;;

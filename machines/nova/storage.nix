@@ -1,19 +1,19 @@
 { ... }:
 {
   fileSystems."/mnt/media" = {
-    device = "192.168.0.12:/mnt/storage/media";
+    device = "void:/mnt/storage/media";
     fsType = "nfs";
     options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
 
   fileSystems."/mnt/games" = {
-    device = "192.168.0.12:/mnt/storage/games";
+    device = "void:/mnt/storage/games";
     fsType = "nfs";
     options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
 
   fileSystems."/mnt/photos" = {
-    device = "192.168.0.12:/mnt/storage/photos";
+    device = "void:/mnt/storage/photos";
     fsType = "nfs";
     options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
