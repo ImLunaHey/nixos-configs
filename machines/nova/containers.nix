@@ -48,6 +48,27 @@
     after = [ "mnt-photos.mount" ];
   };
 
+  # Containers must not bind the empty directories beneath an unmounted NFS path.
+  systemd.services.docker-jellyfin = {
+    requires = [ "mnt-media.mount" ];
+    after = [ "mnt-media.mount" ];
+  };
+
+  systemd.services.docker-watchstate = {
+    requires = [ "mnt-media.mount" ];
+    after = [ "mnt-media.mount" ];
+  };
+
+  systemd.services.docker-ytdl-sub = {
+    requires = [ "mnt-media.mount" ];
+    after = [ "mnt-media.mount" ];
+  };
+
+  systemd.services.docker-romm = {
+    requires = [ "mnt-games.mount" ];
+    after = [ "mnt-games.mount" ];
+  };
+
   systemd.services.create-media-network = {
     description = "Create media Docker network";
     after = [ "docker.service" ];
