@@ -56,8 +56,8 @@
     script = ''
       state=$(${pkgs.tailscale}/bin/tailscale status --json 2>/dev/null | ${pkgs.jq}/bin/jq -r '.BackendState // "unknown"')
       if [ "$state" = "Running" ]; then
-        echo "Tailscale already authenticated, enabling Tailscale DNS"
-        ${pkgs.tailscale}/bin/tailscale set --accept-dns=true
+        echo "Tailscale already authenticated, keeping DNS on the LAN resolver"
+        ${pkgs.tailscale}/bin/tailscale set --accept-dns=false
         exit 0
       fi
 
@@ -73,7 +73,7 @@
         -d '{"capabilities":{"devices":{"create":{"reusable":false,"ephemeral":false,"preauthorized":true,"tags":["tag:server"]}}},"expirySeconds":300}' \
         https://api.tailscale.com/api/v2/tailnet/-/keys | ${pkgs.jq}/bin/jq -r '.key')
 
-      ${pkgs.tailscale}/bin/tailscale up --reset --auth-key "$auth_key" --advertise-tags=tag:server --accept-dns=true
+      ${pkgs.tailscale}/bin/tailscale up --reset --auth-key "$auth_key" --advertise-tags=tag:server --accept-dns=false
     '';
   };
 
