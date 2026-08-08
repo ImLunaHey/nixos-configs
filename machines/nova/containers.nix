@@ -42,6 +42,12 @@
     };
   };
 
+  # Never start Immich with an unmounted upload directory.
+  systemd.services.docker-immich-server = {
+    requires = [ "mnt-photos.mount" ];
+    after = [ "mnt-photos.mount" ];
+  };
+
   systemd.services.create-media-network = {
     description = "Create media Docker network";
     after = [ "docker.service" ];

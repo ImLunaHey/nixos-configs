@@ -102,8 +102,8 @@
   };
 
   systemd.services.caddy = {
-    after = [ "tailscaled.service" "tailscale-autoconnect.service" ];
-    wants = [ "tailscaled.service" ];
+    after = [ "tailscaled.service" "tailscale-autoauth.service" ];
+    wants = [ "tailscaled.service" "tailscale-autoauth.service" ];
     serviceConfig = {
       EnvironmentFile = config.sops.secrets.cloudflare_api_token.path;
       Restart = "on-failure";
