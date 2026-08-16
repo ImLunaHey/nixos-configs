@@ -1,4 +1,45 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
+let
+  # This is the source of truth for Pi-hole's subscribed blocklists. Lists added
+  # through the web UI are removed on the next deployment or boot.
+  piholeAdlists = [
+    {
+      address = "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/pro.txt";
+      comment = "HaGeZi Multi PRO";
+    }
+    {
+      address = "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/tif.mini.txt";
+      comment = "HaGeZi Threat Intelligence Feeds Mini";
+    }
+  ];
+
+  escapeSql = value: lib.replaceStrings [ "'" ] [ "''" ] value;
+  piholeAdlistsSql = pkgs.writeText "pihole-adlists.sql" ''
+    .timeout 10000
+    BEGIN IMMEDIATE;
+    CREATE TEMP TABLE nix_adlists (
+      address TEXT PRIMARY KEY,
+      comment TEXT NOT NULL
+    );
+    ${lib.concatMapStringsSep "\n" (adlist: ''
+      INSERT INTO nix_adlists (address, comment) VALUES (
+        '${escapeSql adlist.address}',
+        '${escapeSql adlist.comment}'
+      );
+    '') piholeAdlists}
+
+    INSERT INTO adlist (address, enabled, comment, type)
+      SELECT address, 1, comment, 0 FROM nix_adlists WHERE true
+      ON CONFLICT(address, type) DO UPDATE SET
+        enabled = excluded.enabled,
+        comment = excluded.comment;
+
+    DELETE FROM adlist
+      WHERE type = 0
+        AND address NOT IN (SELECT address FROM nix_adlists);
+    COMMIT;
+  '';
+in
 {
   # dockremap is required for Docker userns-remap — cannot be auto-created with mutableUsers = false
   users.users.dockremap = {
@@ -93,6 +134,33 @@
       RemainAfterExit = true;
       ExecStart = "-${pkgs.docker}/bin/docker network create romm-net";
     };
+  };
+
+  systemd.services.pihole-adlists = {
+    description = "Reconcile Pi-hole adlists managed by Nix";
+    after = [ "network-online.target" "docker-pihole.service" ];
+    wants = [ "network-online.target" ];
+    requires = [ "docker-pihole.service" ];
+    wantedBy = [ "multi-user.target" ];
+    restartTriggers = [ piholeAdlistsSql ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      for _ in {1..30}; do
+        if ${pkgs.docker}/bin/docker exec pihole pihole-FTL sqlite3 \
+          /etc/pihole/gravity.db "SELECT 1 FROM adlist LIMIT 1" \
+          >/dev/null 2>&1; then
+          break
+        fi
+        ${pkgs.coreutils}/bin/sleep 1
+      done
+
+      ${pkgs.docker}/bin/docker exec -i pihole pihole-FTL sqlite3 \
+        /etc/pihole/gravity.db < ${piholeAdlistsSql}
+      ${pkgs.docker}/bin/docker exec pihole pihole -g
+    '';
   };
 
   virtualisation.docker = {
