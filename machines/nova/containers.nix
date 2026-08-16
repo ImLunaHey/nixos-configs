@@ -156,7 +156,10 @@
         ];
       };
       romm-db = {
-        image = "mariadb:latest";
+        # Keep the server version in lockstep with the on-disk data format.
+        # A floating `latest` tag plus an unclean shutdown can leave tc.log
+        # unreadable by the next image and prevent MariaDB crash recovery.
+        image = "mariadb:12.2.2@sha256:310a2b521cdf1c3c1cfd2cb468e3f0843cc0d7b06d7325b7d48e197592f5d8bd";
         volumes = [
           "/var/lib/romm-db:/var/lib/mysql"
         ];
@@ -165,7 +168,10 @@
           MARIADB_DATABASE = "romm";
           MARIADB_USER = "romm-user";
         };
-        extraOptions = [ "--network=romm-net" ];
+        extraOptions = [
+          "--network=romm-net"
+          "--stop-timeout=120"
+        ];
       };
       romm = {
         image = "rommapp/romm:latest";
