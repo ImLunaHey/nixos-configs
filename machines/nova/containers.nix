@@ -142,6 +142,8 @@
           TZ = "Europe/London";
           FTLCONF_dns_listeningMode = "all";
           FTLCONF_dns_rateLimit_count = "0";
+          FTLCONF_dns_revServers =
+            "true,100.64.0.0/10,100.100.100.100,tail3275e2.ts.net";
         };
         volumes = [
           "/var/lib/pihole/pihole:/etc/pihole"
