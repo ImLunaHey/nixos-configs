@@ -48,6 +48,7 @@
           ./common.nix
           ./machines/nova
           sops-nix.nixosModules.sops
+          anvil.nixosModules.anvil-agent
         ];
       };
 
@@ -58,6 +59,7 @@
           ./machines/gilbert
           sops-nix.nixosModules.sops
           nix-minecraft.nixosModules.minecraft-servers
+          anvil.nixosModules.anvil-agent
         ];
       };
 
@@ -68,6 +70,7 @@
           ./machines/void
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
+          anvil.nixosModules.anvil-agent
         ];
       };
     };

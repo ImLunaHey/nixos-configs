@@ -59,4 +59,10 @@
     zone = "flaked.org";
     ip = "100.106.184.73";
   };
+
+  services.anvil-deployment-host = {
+    enable = true;
+    environment = "staging";
+    address = "100.106.184.73";
+  };
 }

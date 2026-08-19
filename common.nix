@@ -4,6 +4,7 @@
   imports = [
     ./modules/homelab-agent.nix
     ./modules/brrr-notify.nix
+    ./modules/anvil-deployment-host.nix
   ];
 
   # Push host telemetry to imlunahey.com on every host.
@@ -105,7 +106,7 @@
     openssh.authorizedKeys.keyFiles = [
       (builtins.fetchurl {
         url = "https://github.com/ImLunaHey.keys";
-        sha256 = "1j5g3jxalsgdi42a4na3pvdbhdmmvlkpdqjhfw2b80g4hbas6n4f";
+        sha256 = "17b8ip05wyjvab7kl43ym19cv70vam05cwf4bnbin0pl3i1h1c7m";
       })
     ];
   };
