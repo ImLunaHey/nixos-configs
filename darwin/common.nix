@@ -3,6 +3,10 @@
 # Shared configuration for all macOS (nix-darwin) hosts.
 # Host-specific bits (hostname) live in darwin/<host>/default.nix.
 {
+  imports = [
+    ./auto-upgrade.nix
+  ];
+
   # User identity (system.primaryUser, users.users.<name>, home-manager.users.<name>)
   # is set per-host in darwin/<host>/default.nix, since the account name differs
   # per machine (mini = xo, MacBook = luna).
@@ -65,13 +69,13 @@
       "axiom"
       "expo-orbit"
       "gstreamer-runtime"
-      "aprilnea/tap/openlogi@latest" # tap-qualified; bare "openlogi" isn't found
       "orbstack"
       "retroarch"
       "swiftformat-for-xcode"
 
       # Intentionally omitted (present on the MacBook, can't install on the mini):
       #   "codexbar"    — requires macOS Sonoma; mini is on macOS 26.
+      #   "openlogi"    — requires macOS Ventura; mini is on macOS 26.
       #   "wine-stable" — Intel-only + deprecated + upstream download 404s.
     ];
 
