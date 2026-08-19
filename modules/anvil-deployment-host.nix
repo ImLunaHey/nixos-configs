@@ -26,7 +26,7 @@ in {
       address = cfg.address;
       root = agentRoot;
       maxDeployments = 1;
-      sopsSshKeyFile = "${agentRoot}/sops-ssh-key";
+      sopsAgeKeyFile = "${agentRoot}/sops-age-key";
       activations.anvil-canary = {
         path = activationPath;
         unit = "anvil-canary.service";
@@ -41,13 +41,13 @@ in {
     ];
 
     systemd.services.anvil-agent-identity = {
-      description = "Install the host-owned SOPS identity for Anvil";
+      description = "Install the host-owned SOPS age identity for Anvil";
       requiredBy = [ "anvil-agent.service" ];
       before = [ "anvil-agent.service" ];
       path = [ pkgs.coreutils ];
       script = ''
         install -o anvil-agent -g anvil-agent -m 0600 \
-          /etc/ssh/ssh_host_ed25519_key ${agentRoot}/sops-ssh-key
+          /run/secrets.d/age-keys.txt ${agentRoot}/sops-age-key
       '';
       serviceConfig.Type = "oneshot";
     };
