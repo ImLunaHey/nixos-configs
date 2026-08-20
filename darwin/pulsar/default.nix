@@ -26,7 +26,8 @@
     ciDirectory = "/Users/xo/.local/state/anvil/ci";
     logDirectory = "/Users/xo/.local/state/anvil/logs";
     activationPath = "/Users/xo/.local/state/anvil/agent/active/luna-anvil-anvil-dogfood";
-    bindAddress = "0.0.0.0:3001";
+    bindAddress = "disabled";
+    unixSocket = "/Users/xo/.local/state/anvil/agent/sockets/anvil.sock";
     postgresql = {
       enable = true;
       dataDirectory = "/Users/xo/.local/state/anvil/postgresql";
@@ -50,6 +51,15 @@
     address = "100.117.220.119";
     root = "/Users/xo/.local/state/anvil/agent";
     logDirectory = "/Users/xo/.local/state/anvil/logs";
+    launchdDomain = "system";
+    activations.anvil = {
+      path = "/Users/xo/.local/state/anvil/agent/active/luna-anvil-anvil-dogfood";
+      label = "dev.anvil.server";
+    };
+    gateway = {
+      enable = true;
+      stateDirectory = "/Users/xo/.local/state/anvil/agent/gateway";
+    };
   };
 
   # Attach the shared user environment to this machine's account.

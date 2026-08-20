@@ -38,9 +38,15 @@
       url = "git+http://100.117.220.119:3001/git/luna/anvil?ref=main";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
+    # Pulsar dogfood advances independently so Nova and Void are never changed
+    # merely to update the control-plane host.
+    anvil-dogfood = {
+      url = "git+http://100.117.220.119:3001/git/luna/anvil?ref=main";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil, anvil-dogfood, ... }: {
     nixosConfigurations = {
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -85,7 +91,7 @@
           ./darwin/common.nix
           ./darwin/pulsar
           home-manager.darwinModules.home-manager
-          anvil.darwinModules.default
+          anvil-dogfood.darwinModules.default
         ];
       };
 
