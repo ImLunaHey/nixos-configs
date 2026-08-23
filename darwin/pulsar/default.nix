@@ -59,6 +59,7 @@
     };
     gateway = {
       enable = true;
+      bootstrapUpstream = "unix//Users/xo/.local/state/anvil/agent/sockets/anvil.sock";
       stateDirectory = "/Users/xo/.local/state/anvil/agent/gateway";
     };
   };
