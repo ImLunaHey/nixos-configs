@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 # pulsar — Mac mini (Apple Silicon). macOS account: xo.
 {
@@ -30,6 +30,7 @@
     unixSocket = "/Users/xo/.local/state/anvil/agent/sockets/anvil.sock";
     postgresql = {
       enable = true;
+      package = pkgs.postgresql_18;
       dataDirectory = "/Users/xo/.local/state/anvil/postgresql";
       socketDirectory = "/Users/xo/.local/state/anvil/postgresql-socket";
       port = 55432;
