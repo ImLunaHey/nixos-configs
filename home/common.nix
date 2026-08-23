@@ -132,7 +132,7 @@
 
       git_branch = {
         symbol = "";
-        format = " [git:(](bold blue)[$branch](red)[)](blue)";
+        format = " [git:\\(](bold blue)[$branch](red)[\\)](blue)";
       };
 
       git_status = {
