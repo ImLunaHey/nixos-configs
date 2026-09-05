@@ -34,19 +34,15 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
-    anvil = {
-      url = "git+http://100.117.220.119:3001/git/luna/anvil?ref=main";
-      inputs.nixpkgs.follows = "nixpkgs-darwin";
-    };
-    # Pulsar dogfood advances independently so Nova and Void are never changed
-    # merely to update the control-plane host.
+    # Pulsar dogfood advances independently so Nova, Gilbert, and Void are never
+    # changed merely to update the control-plane host.
     anvil-dogfood = {
       url = "git+http://100.117.220.119:3001/git/luna/anvil?ref=main";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil, anvil-dogfood, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil-dogfood, ... }: {
     nixosConfigurations = {
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -54,7 +50,6 @@
           ./common.nix
           ./machines/nova
           sops-nix.nixosModules.sops
-          anvil.nixosModules.anvil-agent
         ];
       };
 
@@ -65,7 +60,6 @@
           ./machines/gilbert
           sops-nix.nixosModules.sops
           nix-minecraft.nixosModules.minecraft-servers
-          anvil.nixosModules.anvil-agent
         ];
       };
 
@@ -76,7 +70,6 @@
           ./machines/void
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
-          anvil.nixosModules.anvil-agent
         ];
       };
     };

@@ -18,10 +18,4 @@
   system.stateVersion = "24.05";
 
   services.homelab-agent.role = "nas / zfs raid";
-
-  services.anvil-deployment-host = {
-    enable = true;
-    environment = "production";
-    address = "100.94.41.124";
-  };
 }
