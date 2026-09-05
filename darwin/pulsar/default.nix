@@ -28,6 +28,16 @@
     activationPath = "/Users/xo/.local/state/anvil/agent/active/luna-anvil-anvil-dogfood";
     bindAddress = "disabled";
     unixSocket = "/Users/xo/.local/state/anvil/agent/sockets/anvil.sock";
+    auth = {
+      mode = "required";
+      secretFile = "/Users/xo/.local/state/anvil/auth-secret";
+      publicUrl = "http://100.117.220.119:3001";
+      trustedOrigins = [
+        "http://100.117.220.119:3001"
+        "http://127.0.0.1:3001"
+        "http://localhost:3001"
+      ];
+    };
     postgresql = {
       enable = true;
       package = pkgs.postgresql_18;
