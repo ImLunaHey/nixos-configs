@@ -1,6 +1,6 @@
-# Luna's NixOS Configurations
+# Luna's Nix Configurations
 
-Personal NixOS system configurations managed with [flakes](https://nixos.wiki/wiki/Flakes) and [sops-nix](https://github.com/Mic92/sops-nix) for encrypted secrets.
+Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes) and [sops-nix](https://github.com/Mic92/sops-nix) for encrypted secrets. Covers both NixOS servers (the homelab) and macOS machines via [nix-darwin](https://github.com/nix-darwin/nix-darwin) + [home-manager](https://github.com/nix-community/home-manager).
 
 > **This file is auto-generated.** Edit `scripts/generate-readme.sh` to change its contents.
 
@@ -8,12 +8,17 @@ Personal NixOS system configurations managed with [flakes](https://nixos.wiki/wi
 
 ```
 nixos-configs/
-├── flake.nix              # Flake entry point with host definitions
-├── common.nix             # Shared configuration for all hosts
-├── machines/
+├── flake.nix              # Flake entry point (NixOS + darwin host definitions)
+├── common.nix             # Shared configuration for all NixOS hosts
+├── machines/              # NixOS hosts (Linux)
 │   ├── nova/              # Media server / reverse proxy / Matrix
 │   ├── gilbert/           # Media ripping / Minecraft / NFS
 │   └── void/              # NAS (ZFS RAID)
+├── darwin/                # macOS hosts (nix-darwin)
+│   ├── common.nix         # Shared macOS system config + Homebrew
+│   └── pulsar/            # Mac mini
+├── home/                  # home-manager user configs (zsh, aliases, git)
+│   └── common.nix         # Shared cross-Mac user environment
 ├── modules/
 │   ├── uptime-kuma.nix    # Custom uptime-kuma sync module
 │   └── cloudflare-dns.nix # Auto-sync Caddy vhosts to Cloudflare DNS
@@ -89,6 +94,17 @@ nixos-configs/
 | `services.nix` | SOPS secret declarations |
 | `smartd.nix` | SMART disk monitoring + notifications |
 | `storage.nix` | Disk mounts and NFS |
+
+## macOS Hosts
+
+Managed with nix-darwin + home-manager. User dotfiles (zsh, aliases, git) are shared across every Mac via `home/common.nix`.
+
+| Host | Type | Config |
+|------|------|--------|
+| `comet` | MacBook Pro (Apple Silicon) | `darwin/comet/` |
+| `pulsar` | Mac mini (Apple Silicon) | `darwin/pulsar/` |
+
+Rebuild a Mac with `darwin-rebuild switch --flake .#<host>`. See `darwin/README.md` for first-time bootstrap.
 
 ## Common Configuration (`common.nix`)
 
