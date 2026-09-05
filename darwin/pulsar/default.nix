@@ -18,6 +18,9 @@
     home = "/Users/xo";
   };
 
+  services.darwinAutoUpgrade.inputOverrides.anvil-dogfood =
+    "git+http://100.117.220.119:3001/git/luna/anvil?ref=main";
+
   services.anvil = {
     enable = true;
     user = "xo";
