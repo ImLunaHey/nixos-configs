@@ -8,7 +8,7 @@ let
   host = config.networking.hostName;
   upgrade = pkgs.writeShellScript "darwin-auto-upgrade" ''
     export PATH=/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin
-    exec darwin-rebuild switch --flake ${flake}#${host}
+    exec darwin-rebuild switch --refresh --flake ${flake}#${host}
   '';
 in
 {
