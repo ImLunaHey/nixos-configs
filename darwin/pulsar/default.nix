@@ -19,7 +19,7 @@
   };
 
   services.darwinAutoUpgrade.inputOverrides.anvil-dogfood =
-    "git+http://100.117.220.119:3001/git/luna/anvil?ref=main";
+    "git+ssh://git@100.117.220.119:2222/luna/anvil.git?ref=main";
 
   services.anvil = {
     enable = true;
@@ -56,6 +56,9 @@
       serverUrl = "http://127.0.0.1:3001";
     };
   };
+
+  launchd.daemons.anvil.serviceConfig.EnvironmentVariables.ANVIL_SSH_BIND =
+    "0.0.0.0:2222";
 
   services.anvil-agent = {
     enable = true;
