@@ -2,7 +2,7 @@
   description = "A NixOS host using the reusable homelab base profile";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    homelab.url = "github:ImLunaHey/nixos-configs";
+    homelab.url = "github:ImLunaHey/nixos-configs?dir=public";
     homelab.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { nixpkgs, homelab, ... }: {

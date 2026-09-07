@@ -210,7 +210,7 @@ The public \`nixosModules.default\` module is deliberately separate from Luna's 
 Start a separate configuration with the included template:
 
 \`\`\`bash
-nix flake init -t github:ImLunaHey/nixos-configs
+nix flake init -t 'github:ImLunaHey/nixos-configs?dir=public'
 \`\`\`
 
 Then replace the example SSH key and add hardware, boot, filesystem, and networking configuration for the target machine. Automatic reboots and upgrades are disabled by default.
