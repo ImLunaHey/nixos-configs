@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./display.nix
     ./networking.nix
     ./services.nix
     ./smartd.nix
