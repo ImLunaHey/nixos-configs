@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./networking.nix
     ./services.nix
+    ./smartd.nix
     ./storage.nix
   ];
 
