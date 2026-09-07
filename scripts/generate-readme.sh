@@ -60,6 +60,7 @@ get_purpose() {
     nova)    echo "Media server, reverse proxy, Matrix homeserver" ;;
     gilbert) echo "Media ripping (ARM), Minecraft server, NFS storage" ;;
     void)    echo "NAS with ZFS RAID storage" ;;
+    lake)    echo "NAS / data lake" ;;
     *)       echo "—" ;;
   esac
 }
@@ -156,7 +157,12 @@ Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes
 \`\`\`
 nixos-configs/
 ├── flake.nix              # Flake entry point (NixOS + darwin host definitions)
-├── common.nix             # Shared configuration for all NixOS hosts
+├── common.nix             # Compatibility entry point for Luna's hosts
+├── personal.nix           # Luna's accounts, secrets, VPN auth, and notifications
+├── profiles/
+│   └── base.nix           # Public, configurable NixOS server profile
+├── templates/
+│   └── default/           # Generic starter flake for downstream users
 ├── machines/              # NixOS hosts (Linux)
 │   ├── nova/              # Media server / reverse proxy / Matrix
 │   ├── gilbert/           # Media ripping / Minecraft / NFS
@@ -197,7 +203,19 @@ $(darwin_hosts_table)
 
 Rebuild a Mac with \`darwin-rebuild switch --flake .#<host>\`. See \`darwin/README.md\` for first-time bootstrap.
 
-## Common Configuration (\`common.nix\`)
+## Reusable NixOS profile
+
+The public \`nixosModules.default\` module is deliberately separate from Luna's machines and secrets. It provides configurable administrative-user, SSH, locale, upgrade, and mesh-VPN settings. Tailscale, NetBird, or no mesh VPN can be selected without importing \`personal.nix\`.
+
+Start a separate configuration with the included template:
+
+\`\`\`bash
+nix flake init -t github:ImLunaHey/nixos-configs
+\`\`\`
+
+Then replace the example SSH key and add hardware, boot, filesystem, and networking configuration for the target machine. Automatic reboots and upgrades are disabled by default.
+
+## Personal configuration (\`common.nix\` + \`personal.nix\`)
 
 Applied to every host:
 
