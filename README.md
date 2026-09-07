@@ -9,7 +9,12 @@ Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes
 ```
 nixos-configs/
 ├── flake.nix              # Flake entry point (NixOS + darwin host definitions)
-├── common.nix             # Shared configuration for all NixOS hosts
+├── common.nix             # Compatibility entry point for Luna's hosts
+├── personal.nix           # Luna's accounts, secrets, VPN auth, and notifications
+├── profiles/
+│   └── base.nix           # Public, configurable NixOS server profile
+├── templates/
+│   └── default/           # Generic starter flake for downstream users
 ├── machines/              # NixOS hosts (Linux)
 │   ├── nova/              # Media server / reverse proxy / Matrix
 │   ├── gilbert/           # Media ripping / Minecraft / NFS
@@ -39,6 +44,7 @@ nixos-configs/
 | Host | IP | Purpose | Key Services |
 |------|----|---------|--------------|
 | `gilbert` | `DHCP` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
+| `lake` | `DHCP` | NAS / data lake | ZFS + SMART monitoring |
 | `nova` | `DHCP` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,NDI capture,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
 | `void` | `DHCP` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
@@ -60,6 +66,20 @@ nixos-configs/
 | `services.nix` | SOPS secret declarations |
 | `storage.nix` | Disk mounts and NFS |
 | `arm-config/` | ARM app config (`arm.yaml`) + `Dockerfile` |
+
+### `lake`
+
+**IP:** `DHCP` &nbsp; **Purpose:** NAS / data lake
+
+| File | Role |
+|------|------|
+| `default.nix` | Imports all machine modules |
+| `display.nix` | |
+| `hardware-configuration.nix` | Generated hardware config (do not edit) |
+| `networking.nix` | DHCP, firewall, Tailscale |
+| `services.nix` | SOPS secret declarations |
+| `smartd.nix` | SMART disk monitoring + notifications |
+| `storage.nix` | Disk mounts and NFS |
 
 ### `nova`
 
@@ -106,7 +126,19 @@ Managed with nix-darwin + home-manager. User dotfiles (zsh, aliases, git) are sh
 
 Rebuild a Mac with `darwin-rebuild switch --flake .#<host>`. See `darwin/README.md` for first-time bootstrap.
 
-## Common Configuration (`common.nix`)
+## Reusable NixOS profile
+
+The public `nixosModules.default` module is deliberately separate from Luna's machines and secrets. It provides configurable administrative-user, SSH, locale, upgrade, and mesh-VPN settings. Tailscale, NetBird, or no mesh VPN can be selected without importing `personal.nix`.
+
+Start a separate configuration with the included template:
+
+```bash
+nix flake init -t 'github:ImLunaHey/nixos-configs?dir=public'
+```
+
+Then replace the example SSH key and add hardware, boot, filesystem, and networking configuration for the target machine. Automatic reboots and upgrades are disabled by default.
+
+## Personal configuration (`common.nix` + `personal.nix`)
 
 Applied to every host:
 

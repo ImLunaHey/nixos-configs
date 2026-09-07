@@ -43,6 +43,16 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil-dogfood, ... }: {
+    nixosModules = {
+      default = ./profiles/base.nix;
+      base = ./profiles/base.nix;
+    };
+
+    templates.default = {
+      path = ./templates/default;
+      description = "A reusable NixOS server configuration";
+    };
+
     nixosConfigurations = {
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
