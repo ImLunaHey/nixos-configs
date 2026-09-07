@@ -37,17 +37,34 @@ let
     diy = [{
       id = "lake";
       name = "Lake status";
+      img = null;
       sensor = let
         line = label: y: size: color: {
           mode = 1;
+          type = null;
+          name = null;
+          itemName = null;
           inherit label y;
+          value = null;
+          minValue = null;
+          maxValue = null;
+          unit = null;
           x = 36;
           width = 888;
           height = 44;
+          direction = null;
           fontFamily = "DejaVuSans";
           fontSize = size;
           fontColor = color;
+          fontWeight = null;
           textAlign = "left";
+          integerDigits = null;
+          decimalDigits = null;
+          pic = null;
+          minAngle = null;
+          maxAngle = null;
+          xz_x = null;
+          xz_y = null;
         };
       in [
         (line "title" 18 34 "#63d8ff")
@@ -63,7 +80,7 @@ let
 
   collectSensors = pkgs.writeShellApplication {
     name = "lake-display-collect";
-    runtimeInputs = with pkgs; [ coreutils gawk gnused iproute2 procps smartmontools zfs ];
+    runtimeInputs = with pkgs; [ coreutils gawk gnused iproute2 smartmontools util-linux zfs ];
     text = ''
       read_temp() {
         local name="$1"
@@ -86,7 +103,7 @@ let
       hdd_max=0
       for disk in /dev/sd?; do
         [ "$(blockdev --getsize64 "$disk" 2>/dev/null || echo 0)" -gt 0 ] || continue
-        temp=$(smartctl -A "$disk" 2>/dev/null | awk '$1 == 194 { print $10; exit }')
+        temp=$(smartctl -A "$disk" 2>/dev/null | awk '$1 == 194 { print $10; exit }' || true)
         case "$temp" in
           ""|*[!0-9]*) continue ;;
         esac
@@ -108,6 +125,16 @@ let
       link_speed=$(cat /sys/class/net/enp100s0f1np1/speed 2>/dev/null || echo unknown)
       if [ "$link_speed" = "10000" ]; then link_speed="10 Gb/s"; else link_speed="''${link_speed} Mb/s"; fi
 
+      uptime_seconds=$(awk '{ print int($1) }' /proc/uptime)
+      uptime_days=$((uptime_seconds / 86400))
+      uptime_hours=$(((uptime_seconds % 86400) / 3600))
+      uptime_minutes=$(((uptime_seconds % 3600) / 60))
+      if [ "$uptime_days" -gt 0 ]; then
+        uptime_text="Up ''${uptime_days}d ''${uptime_hours}h ''${uptime_minutes}m"
+      else
+        uptime_text="Up ''${uptime_hours}h ''${uptime_minutes}m"
+      fi
+
       tmp=$(mktemp /run/lake-display/sensors.XXXXXX)
       {
         echo "title: LAKE"
@@ -116,8 +143,9 @@ let
         echo "pool: $pool_text"
         echo "capacity: $capacity_text"
         echo "network: ''${lan_ip:-no IPv4}    $link_speed"
-        echo "uptime: $(uptime -p)"
+        echo "uptime: $uptime_text"
       } > "$tmp"
+      chmod 0644 "$tmp"
       mv "$tmp" /run/lake-display/sensors.txt
     '';
   };
@@ -157,7 +185,7 @@ in
         (lib.getExe asterctl)
         "--device /dev/ttyACM0"
         "--config ${dashboardConfig}"
-        "--font-dir ${pkgs.dejavu_fonts}/share/fonts/truetype/DejaVu"
+        "--font-dir ${pkgs.dejavu_fonts}/share/fonts/truetype"
         "--sensor-path /run/lake-display"
       ];
       Restart = "on-failure";
