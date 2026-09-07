@@ -72,6 +72,16 @@
           disko.nixosModules.disko
         ];
       };
+
+      lake = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./common.nix
+          ./machines/lake
+          sops-nix.nixosModules.sops
+          disko.nixosModules.disko
+        ];
+      };
     };
 
     # macOS hosts, managed with nix-darwin + home-manager.
