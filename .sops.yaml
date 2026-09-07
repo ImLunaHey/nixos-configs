@@ -3,6 +3,7 @@ keys:
   - &nova age1kkwcc0eezy07yzxpunc74usxal9vpfcg6g8f0fehpdalslptef6s0lt0cp
   - &gilbert age1486uqx2yrr3ef5ygkf3d3ffnyp9k4ee7a8029javfazs00pdvpyq6vzade
   - &void age1hvsr95lr02ylzqn88j2cem0heltxmanedk4egaz8tqjzq2hrf4nqcghhzz
+  - &lake age1jjwjcvzuk5dy25esxk4vcxmyqm3watmze7cndkpdvag28lydzd7s2kwjgx
 creation_rules:
   - path_regex: secrets/secrets.yaml$
     key_groups:
@@ -11,6 +12,7 @@ creation_rules:
           - *nova
           - *gilbert
           - *void
+          - *lake
   - path_regex: secrets/host-keys/.*$
     key_groups:
       - age:
