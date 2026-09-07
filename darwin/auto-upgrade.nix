@@ -27,11 +27,6 @@ let
   sshEnvironment = lib.optionalString (sshCommand != "") ''
     export GIT_SSH_COMMAND=${lib.escapeShellArg sshCommand}
   '';
-  upgrade = pkgs.writeShellScript "darwin-auto-upgrade" ''
-    export PATH=/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin
-    ${sshEnvironment}
-    exec darwin-rebuild switch --refresh${inputOverrides} --flake ${flake}#${host}
-  '';
   workerLabel = "org.nixos.darwin-auto-upgrade-worker";
   worker = pkgs.writeShellScript "darwin-auto-upgrade-worker" ''
     export PATH=/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -73,22 +68,11 @@ in
   };
 
   config = {
-    # Keep the legacy job while installing the detached scheduler. A follow-up
-    # removes it after the scheduler is live on Pulsar.
-    launchd.daemons.darwin-auto-upgrade = {
-      serviceConfig = {
-        ProgramArguments = [ "${upgrade}" ];
-        StartInterval = 900; # every 15 minutes
-        RunAtLoad = false; # don't re-trigger a rebuild during activation
-        StandardOutPath = "/var/log/darwin-auto-upgrade.log";
-        StandardErrorPath = "/var/log/darwin-auto-upgrade.log";
-      };
-    };
     launchd.daemons.darwin-auto-upgrade-scheduler = {
       serviceConfig = {
         ProgramArguments = [ "${trigger}" ];
-        StartInterval = 900;
-        RunAtLoad = false;
+        StartInterval = 900; # every 15 minutes
+        RunAtLoad = false; # don't re-trigger a rebuild during activation
         StandardOutPath = "/var/log/darwin-auto-upgrade.log";
         StandardErrorPath = "/var/log/darwin-auto-upgrade.log";
       };
