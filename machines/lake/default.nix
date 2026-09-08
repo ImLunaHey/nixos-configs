@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./display.nix
     ./networking.nix
+    ./samba.nix
     ./services.nix
     ./smartd.nix
     ./storage.nix

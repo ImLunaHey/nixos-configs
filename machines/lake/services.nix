@@ -6,6 +6,7 @@
     secrets = {
       tailscale_oauth = { };
       brrr_token = { };
+      samba_password = { };
     };
   };
 }
