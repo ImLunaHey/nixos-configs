@@ -62,7 +62,11 @@ in
   };
 
   systemd.services.anvil = {
-    after = [ "tailscaled.service" ];
+    after = [
+      "tailscaled.service"
+      "postgresql-setup.service"
+    ];
     wants = [ "tailscaled.service" ];
+    requires = [ "postgresql-setup.service" ];
   };
 }
