@@ -42,6 +42,22 @@
         "url": "ssh://git@100.94.132.48:2222/luna/anvil.git"
       }
     },
+    "cache-domains": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788767320,
+        "narHash": "sha256-DGJqzVw60yOJLGDqrsvXGNoyERGFKC+avw1CDp9H3LM=",
+        "owner": "uklans",
+        "repo": "cache-domains",
+        "rev": "1a3cbc75256f34a4cb1d98848db7c2715e17c6f3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "uklans",
+        "repo": "cache-domains",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -229,6 +245,7 @@
       "inputs": {
         "anvil-dogfood": "anvil-dogfood",
         "anvil-lake": "anvil-lake",
+        "cache-domains": "cache-domains",
         "disko": "disko",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",

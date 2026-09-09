@@ -34,6 +34,11 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
 
+    cache-domains = {
+      url = "github:uklans/cache-domains";
+      flake = false;
+    };
+
     # Pulsar dogfood advances independently so Nova, Gilbert, and Void are never
     # changed merely to update the control-plane host.
     anvil-dogfood = {
@@ -47,7 +52,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil-dogfood, anvil-lake, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil-dogfood, anvil-lake, cache-domains, ... }: {
     nixosModules = {
       default = ./profiles/base.nix;
       base = ./profiles/base.nix;
@@ -61,6 +66,7 @@
     nixosConfigurations = {
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        specialArgs = { inherit cache-domains; };
         modules = [
           ./common.nix
           ./machines/nova
