@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./anvil.nix
     ./display.nix
     ./networking.nix
     ./samba.nix

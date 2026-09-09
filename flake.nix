@@ -40,9 +40,14 @@
       url = "git+http://100.117.220.119:3001/git/luna/anvil?ref=main";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
+
+    # Lake runs Anvil on NixOS while Pulsar keeps its independent Darwin input.
+    anvil-lake = {
+      url = "git+ssh://git@100.117.220.119:2222/luna/anvil.git?ref=main";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil-dogfood, ... }: {
+  outputs = inputs@{ self, nixpkgs, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil-dogfood, anvil-lake, ... }: {
     nixosModules = {
       default = ./profiles/base.nix;
       base = ./profiles/base.nix;
@@ -90,6 +95,7 @@
           ./machines/lake
           sops-nix.nixosModules.sops
           disko.nixosModules.disko
+          anvil-lake.nixosModules.default
         ];
       };
     };
