@@ -79,6 +79,7 @@ nixos-configs/
 | `display.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `lancache.nix` | |
+| `monitoring.nix` | |
 | `networking.nix` | DHCP, firewall, Tailscale |
 | `samba.nix` | |
 | `services.nix` | SOPS secret declarations |
