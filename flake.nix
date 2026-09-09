@@ -43,7 +43,7 @@
 
     # Lake runs Anvil on NixOS while Pulsar keeps its independent Darwin input.
     anvil-lake = {
-      url = "git+ssh://git@100.117.220.119:2222/luna/anvil.git?ref=main";
+      url = "git+ssh://git@100.94.132.48:2222/luna/anvil.git?ref=main";
     };
   };
 

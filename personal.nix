@@ -1,6 +1,10 @@
 { config, pkgs, brrrNotify, ... }:
 {
-  imports = [ ./modules/homelab-agent.nix ./modules/brrr-notify.nix ];
+  imports = [
+    ./modules/brrr-notify.nix
+    ./modules/homelab-agent.nix
+    ./modules/lake-cache-client.nix
+  ];
 
   homelabBase = {
     user = {
