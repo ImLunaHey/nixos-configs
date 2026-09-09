@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ./anvil.nix
+    ./cache.nix
     ./display.nix
     ./networking.nix
     ./samba.nix

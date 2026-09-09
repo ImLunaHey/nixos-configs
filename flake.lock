@@ -34,12 +34,12 @@
         "rev": "a1776cec14d8ee0d8545c3edb49d22b67d586cfc",
         "revCount": 344,
         "type": "git",
-        "url": "ssh://git@100.117.220.119:2222/luna/anvil.git"
+        "url": "ssh://git@100.94.132.48:2222/luna/anvil.git"
       },
       "original": {
         "ref": "main",
         "type": "git",
-        "url": "ssh://git@100.117.220.119:2222/luna/anvil.git"
+        "url": "ssh://git@100.94.132.48:2222/luna/anvil.git"
       }
     },
     "disko": {

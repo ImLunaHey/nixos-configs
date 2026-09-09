@@ -5,6 +5,7 @@
 {
   imports = [
     ./auto-upgrade.nix
+    ../modules/lake-cache-client.nix
   ];
 
   # User identity (system.primaryUser, users.users.<name>, home-manager.users.<name>)
