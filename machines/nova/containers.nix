@@ -1,5 +1,26 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, cache-domains, ... }:
 let
+  lancacheAddress = "10.0.0.46";
+  lancacheDnsmasqConfig = pkgs.runCommand "lancache-steam-dnsmasq.conf" {
+    nativeBuildInputs = [ pkgs.jq ];
+  } ''
+    cp -r ${cache-domains} source
+    chmod -R u+w source
+    cd source/scripts
+    cat > config.json <<'EOF'
+    {
+      "combined_output": false,
+      "ips": { "generic": "${lancacheAddress}" },
+      "cache_domains": {
+        "default": "disabled",
+        "steam": "generic"
+      }
+    }
+    EOF
+    bash create-dnsmasq.sh
+    cp output/dnsmasq/steam.conf "$out"
+  '';
+
   # This is the source of truth for Pi-hole's subscribed blocklists. Lists added
   # through the web UI are removed on the next deployment or boot.
   piholeAdlists = [
@@ -210,12 +231,14 @@ in
           TZ = "Europe/London";
           FTLCONF_dns_listeningMode = "all";
           FTLCONF_dns_rateLimit_count = "0";
+          FTLCONF_misc_etc_dnsmasq_d = "true";
           FTLCONF_dns_revServers =
             "true,100.64.0.0/10,100.100.100.100,tail3275e2.ts.net";
         };
         volumes = [
           "/var/lib/pihole/pihole:/etc/pihole"
           "/var/lib/pihole/dnsmasq:/etc/dnsmasq.d"
+          "${lancacheDnsmasqConfig}:/etc/dnsmasq.d/99-lancache-steam.conf:ro"
         ];
       };
       uptime-kuma = {
