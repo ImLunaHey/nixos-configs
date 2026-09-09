@@ -1,5 +1,24 @@
 { config, pkgs, ... }:
+let
+  share = path: {
+    inherit path;
+    browseable = "yes";
+    "read only" = "no";
+    "guest ok" = "no";
+    "valid users" = "luna";
+    "force user" = "root";
+  };
+in
 {
+  systemd.tmpfiles.rules = map (name: "d /mnt/storage/${name} 0755 root root -") [
+    "media"
+    "files"
+    "photos"
+    "backups"
+    "games"
+    "rips"
+  ];
+
   systemd.services.samba-setup-users = {
     description = "Configure Samba user accounts";
     after = [ "sops-install-secrets.service" ];
@@ -26,14 +45,12 @@
         "veto files" = "/._*/.DS_Store/";
         "delete veto files" = "yes";
       };
-      storage = {
-        path = "/mnt/storage";
-        browseable = "yes";
-        "read only" = "no";
-        "guest ok" = "no";
-        "valid users" = "luna";
-        "force user" = "root";
-      };
+      media = share "/mnt/storage/media";
+      files = share "/mnt/storage/files";
+      photos = share "/mnt/storage/photos";
+      backups = share "/mnt/storage/backups";
+      games = share "/mnt/storage/games";
+      rips = share "/mnt/storage/rips";
     };
   };
 
