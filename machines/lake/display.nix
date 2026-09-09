@@ -67,20 +67,22 @@ let
           xz_y = null;
         };
       in [
-        (line "title" 18 34 "#63d8ff")
-        (line "temperatures" 82 24 "#ffffff")
-        (line "drives" 132 23 "#ffffff")
-        (line "pool" 182 25 "#80ff9d")
-        (line "capacity" 232 23 "#ffffff")
-        (line "network" 282 22 "#ffffff")
-        (line "uptime" 330 18 "#aeb8c4")
+        (line "title" 14 32 "#63d8ff")
+        (line "temperatures" 62 22 "#ffffff")
+        (line "drives" 108 21 "#ffffff")
+        (line "pool" 154 22 "#80ff9d")
+        (line "capacity" 200 21 "#ffffff")
+        (line "services" 246 21 "#ffffff")
+        (line "cache" 292 20 "#ffffff")
+        (line "network" 338 20 "#ffffff")
+        (line "uptime" 382 18 "#aeb8c4")
       ];
     }];
   });
 
   collectSensors = pkgs.writeShellApplication {
     name = "lake-display-collect";
-    runtimeInputs = with pkgs; [ coreutils gawk gnused iproute2 smartmontools util-linux zfs ];
+    runtimeInputs = with pkgs; [ coreutils gawk gnused iproute2 postgresql_18 smartmontools systemd util-linux zfs ];
     text = ''
       read_temp() {
         local name="$1"
@@ -121,6 +123,28 @@ let
         capacity_text="Root used: $(df -h / | awk 'NR == 2 { print $5 }')"
       fi
 
+      anvil_state=$(systemctl is-active anvil.service 2>/dev/null || true)
+      agent_state=$(systemctl is-active anvil-agent.service 2>/dev/null || true)
+      agent_fresh=$(runuser -u anvil -- psql -d anvil -Atc \
+        "SELECT COALESCE(bool_or(last_seen_at > now() - interval '2 minutes'), false) FROM hosts WHERE name = 'lake';" \
+        2>/dev/null || echo f)
+      if [ "$anvil_state" = active ] && [ "$agent_state" = active ] && [ "$agent_fresh" = t ]; then
+        services_text="Anvil: healthy    agent: connected"
+      else
+        services_text="Anvil: ''${anvil_state:-unknown}    agent: disconnected"
+      fi
+
+      if systemctl is-active --quiet docker-lancache.service; then
+        cache_usage=$(zfs list -H -o used,quota storage/lancache 2>/dev/null | awk '{ print $1 "/" $2 }')
+        hit_percent=$(
+          tail -n 20000 /mnt/storage/lancache/logs/access.log 2>/dev/null \
+            | awk '/"HIT"/ { h++ } /"MISS"/ { m++ } END { printf "%d", (h + m ? 100 * h / (h + m) : 0) }'
+        )
+        cache_text="Lancache: ''${cache_usage:-unknown}    hit ''${hit_percent:-0}%"
+      else
+        cache_text="Lancache: offline"
+      fi
+
       lan_ip=$(ip -4 -o addr show dev enp100s0f1np1 | awk '{ split($4, a, "/"); print a[1]; exit }')
       link_speed=$(cat /sys/class/net/enp100s0f1np1/speed 2>/dev/null || echo unknown)
       if [ "$link_speed" = "10000" ]; then link_speed="10 Gb/s"; else link_speed="''${link_speed} Mb/s"; fi
@@ -142,6 +166,8 @@ let
         echo "drives: HDDs ($hdd_count) ''${hdd_temps:-no readings}    max ''${hdd_max}°C"
         echo "pool: $pool_text"
         echo "capacity: $capacity_text"
+        echo "services: $services_text"
+        echo "cache: $cache_text"
         echo "network: ''${lan_ip:-no IPv4}    $link_speed"
         echo "uptime: $uptime_text"
       } > "$tmp"

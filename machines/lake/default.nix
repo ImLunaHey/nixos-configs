@@ -5,6 +5,7 @@
     ./anvil.nix
     ./cache.nix
     ./lancache.nix
+    ./monitoring.nix
     ./display.nix
     ./networking.nix
     ./samba.nix
