@@ -9,8 +9,6 @@ let
   sshPort = 2222;
 in
 {
-  # This module remains deliberately unimported until the cutover. The cutover
-  # also adds the encrypted auth secret and Anvil's NixOS module.
   sops.secrets.anvil_auth_secret = {
     owner = "anvil";
     group = "anvil";
