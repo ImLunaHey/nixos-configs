@@ -56,7 +56,7 @@ in
   services.anvil-agent = {
     enable = true;
     serverUrl = "http://${tailscaleAddress}:${toString httpPort}";
-    name = "local";
+    name = "lake";
     address = tailscaleAddress;
     root = "/var/lib/anvil-agent";
   };
