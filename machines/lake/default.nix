@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./anvil.nix
     ./cache.nix
+    ./lancache.nix
     ./display.nix
     ./networking.nix
     ./samba.nix

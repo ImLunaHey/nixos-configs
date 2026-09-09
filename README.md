@@ -78,6 +78,7 @@ nixos-configs/
 | `default.nix` | Imports all machine modules |
 | `display.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
+| `lancache.nix` | |
 | `networking.nix` | DHCP, firewall, Tailscale |
 | `samba.nix` | |
 | `services.nix` | SOPS secret declarations |
