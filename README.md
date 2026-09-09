@@ -73,6 +73,7 @@ nixos-configs/
 
 | File | Role |
 |------|------|
+| `anvil.nix` | |
 | `default.nix` | Imports all machine modules |
 | `display.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
