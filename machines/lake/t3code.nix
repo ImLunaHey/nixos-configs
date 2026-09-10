@@ -4,15 +4,24 @@ let
   codeDirectory = "${user.home}/code";
   tailscaleAddress = "100.94.132.48";
   port = 3773;
+  t3code = t3codePkgs.callPackage ../../packages/t3code { };
+  developmentTools = with t3codePkgs; [
+    cargo
+    clippy
+    cmake
+    codex
+    gcc
+    gh
+    gnumake
+    pkg-config
+    pnpm_11
+    rust-analyzer
+    rustc
+    rustfmt
+  ];
 in
 {
-  environment.systemPackages = with t3codePkgs; [
-    t3code
-    codex
-    gh
-    nodejs_24
-    ripgrep
-  ];
+  environment.systemPackages = [ t3code ] ++ developmentTools ++ [ t3codePkgs.ripgrep ];
 
   # Lake's root filesystem (including /home) is on the 2 TB NVMe SSD.
   systemd.tmpfiles.rules = [
@@ -36,24 +45,23 @@ in
     };
 
     environment.HOME = user.home;
-    path = with pkgs; [
+    path = (with pkgs; [
       bashInteractive
       coreutils
       findutils
       git
       gnugrep
       gnused
-      t3codePkgs.nodejs_24
       openssh
       ripgrep
-    ];
+    ]) ++ developmentTools;
 
     serviceConfig = {
       User = "luna";
       Group = user.group;
       WorkingDirectory = codeDirectory;
-      # Use the server CLI explicitly: the package's default executable is GUI.
-      ExecStart = "${t3codePkgs.t3code}/bin/t3 serve --host ${tailscaleAddress} --port ${toString port} --base-dir ${user.home}/.t3";
+      # Run the headless server; device pairing is managed separately with `t3 pair`.
+      ExecStart = "${t3code}/bin/t3 serve --host ${tailscaleAddress} --port ${toString port} --base-dir ${user.home}/.t3";
       Restart = "always";
       RestartSec = "5s";
       UMask = "0027";

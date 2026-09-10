@@ -141,10 +141,12 @@ individual repositories under `/home/luna/code` through T3 Code's project picker
 The service uses the same home directory and provider credentials as SSH sessions.
 
 `systemctl status t3code` and `journalctl -u t3code` show service health and logs.
-NixOS manages startup. T3 Code and its provider tools use the separate
-`nixpkgs-t3code` flake input (currently T3 Code 0.0.33); update that input's revision
-and lock entry to upgrade them.
-See [upstream remote access](https://github.com/pingdotgg/t3code/blob/v0.0.33/docs/user/remote-access.md)
+NixOS manages startup. T3 Code uses the official npm release, packaged
+reproducibly with pnpm in `packages/t3code`; change the pinned version and pnpm
+lockfile there to upgrade it. Lake exposes pnpm as its JavaScript package manager.
+It also provides Codex, GitHub CLI, and a Rust development toolchain to SSH and
+T3 Code sessions. These tools use the separate `nixpkgs-t3code` flake input.
+See [upstream remote access](https://github.com/pingdotgg/t3code/blob/v0.0.40/docs/user/remote-access.md)
 for pairing and device access management.
 
 ## macOS Hosts
