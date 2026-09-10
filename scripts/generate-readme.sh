@@ -45,6 +45,7 @@ get_key_services() {
   [[ -f "$REPO_ROOT/machines/$machine/ndi.nix" ]]      && services+=("NDI capture")
   [[ -f "$REPO_ROOT/machines/$machine/minecraft.nix" ]] && services+=("Minecraft (ATM10)")
   [[ -f "$REPO_ROOT/machines/$machine/smartd.nix" ]]   && services+=("ZFS + SMART monitoring")
+  [[ -f "$REPO_ROOT/machines/$machine/t3code.nix" ]]   && services+=("T3 Code")
   grep -q 'cloudflare-dns' "$REPO_ROOT/machines/$machine/default.nix" 2>/dev/null && services+=("Cloudflare DNS sync")
 
   while IFS= read -r c; do
@@ -104,6 +105,7 @@ machine_sections() {
         ndi.nix)                    echo "| \`$fname\` | Elgato capture card to NDI sender |" ;;
         minecraft.nix)              echo "| \`$fname\` | Minecraft server (ATM10 / NeoForge) |" ;;
         smartd.nix)                 echo "| \`$fname\` | SMART disk monitoring + notifications |" ;;
+        t3code.nix)                 echo "| \`$fname\` | T3 Code server and SSD code workspace |" ;;
         default.nix)                echo "| \`$fname\` | Imports all machine modules |" ;;
         *)                          echo "| \`$fname\` | |" ;;
       esac
@@ -194,6 +196,32 @@ $(machines_table)
 ## Machine Details
 
 $(machine_sections)
+
+### T3 Code on Lake
+
+Lake runs T3 Code as \`luna\` at \`http://100.94.132.48:3773\`, reachable over
+Tailscale. Projects belong in \`/home/luna/code\`; T3 Code state, pairing sessions,
+and worktrees live in \`/home/luna/.t3\`. Both directories are on the 2 TB NVMe root
+filesystem. The code directory is available through T3 Code and SSH.
+
+After deploying the configuration, generate a fresh device pairing link:
+
+\`\`\`bash
+ssh luna@lake 't3 pair'
+\`\`\`
+
+Open the returned link in a browser connected to the tailnet, or add it as an
+environment in the T3 Code desktop app. Links expire after five minutes.
+Authenticate Codex as \`luna\` on Lake before starting an agent thread, then add
+individual repositories under \`/home/luna/code\` through T3 Code's project picker.
+The service uses the same home directory and provider credentials as SSH sessions.
+
+\`systemctl status t3code\` and \`journalctl -u t3code\` show service health and logs.
+NixOS manages startup. T3 Code and its provider tools use the separate
+\`nixpkgs-t3code\` flake input (currently T3 Code 0.0.33); update that input's revision
+and lock entry to upgrade them.
+See [upstream remote access](https://github.com/pingdotgg/t3code/blob/v0.0.33/docs/user/remote-access.md)
+for pairing and device access management.
 
 ## macOS Hosts
 

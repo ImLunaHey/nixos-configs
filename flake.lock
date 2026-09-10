@@ -225,6 +225,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-t3code": {
+      "locked": {
+        "lastModified": 1786862985,
+        "narHash": "sha256-FBJRXmbGXiSUDvYEbfLYRkckayyZ6SK1UEqhCrIZ2Cs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e5bdc4a41d4c072fe1e3787eaa0320a384741d44",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "e5bdc4a41d4c072fe1e3787eaa0320a384741d44",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1773821835,
@@ -252,6 +268,7 @@
         "nix-minecraft": "nix-minecraft",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-darwin": "nixpkgs-darwin",
+        "nixpkgs-t3code": "nixpkgs-t3code",
         "sops-nix": "sops-nix"
       }
     },

@@ -12,6 +12,7 @@
     ./services.nix
     ./smartd.nix
     ./storage.nix
+    ./t3code.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
