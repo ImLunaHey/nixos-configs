@@ -28,4 +28,5 @@
   system.stateVersion = "26.05";
 
   services.homelab-agent.role = "nas / data lake";
+  users.users.luna.extraGroups = [ "docker" ];
 }
