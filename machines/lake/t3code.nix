@@ -5,6 +5,7 @@ let
   tailscaleAddress = "100.94.132.48";
   port = 3773;
   t3code = t3codePkgs.callPackage ../../packages/t3code { };
+  pnpm_12 = t3codePkgs.callPackage ../../packages/pnpm-12 { };
   developmentTools = with t3codePkgs; [
     cargo
     clippy
@@ -14,7 +15,7 @@ let
     gh
     gnumake
     pkg-config
-    pnpm_11
+    pnpm_12
     rust-analyzer
     rustc
     rustfmt
