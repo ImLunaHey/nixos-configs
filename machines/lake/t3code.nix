@@ -14,6 +14,7 @@ let
     gcc
     gh
     gnumake
+    nodejs_24
     pkg-config
     pnpm_12
     rust-analyzer
