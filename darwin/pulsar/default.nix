@@ -28,12 +28,20 @@
     [100.117.220.119]:2222 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyifTj1clbav1qah98g296Unc5yjWUvlsZK96rSu77r
   '';
 
-  environment.etc."ssh/ssh_config.d/100-void.conf".text = ''
-    Host void
-      User luna
-      IdentityFile ~/.ssh/id_ed25519
-      IdentitiesOnly yes
-  '';
+  # Keep Void's media share mounted for Finder and local media tools. The SMB
+  # password stays in the login keychain rather than entering the Nix store.
+  launchd.user.agents.mount-void-media = {
+    script = ''
+      if ! /sbin/mount | /usr/bin/grep -Fq '//luna@void/media on '; then
+        /usr/bin/osascript -e 'mount volume "smb://luna@void/media"'
+      fi
+    '';
+    serviceConfig = {
+      RunAtLoad = true;
+      StartInterval = 300;
+      LimitLoadToSessionType = "Aqua";
+    };
+  };
 
   services.anvil = {
     enable = true;
