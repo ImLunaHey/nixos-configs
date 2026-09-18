@@ -28,6 +28,13 @@
     [100.117.220.119]:2222 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyifTj1clbav1qah98g296Unc5yjWUvlsZK96rSu77r
   '';
 
+  environment.etc."ssh/ssh_config.d/100-void.conf".text = ''
+    Host void
+      User luna
+      IdentityFile ~/.ssh/id_ed25519
+      IdentitiesOnly yes
+  '';
+
   services.anvil = {
     enable = true;
     user = "xo";
