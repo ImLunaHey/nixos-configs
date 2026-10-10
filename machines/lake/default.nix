@@ -19,6 +19,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.forceImportRoot = false;
+  boot.zfs.extraPools = [ "storage" ];
 
   services.zfs.autoScrub = {
     enable = true;
