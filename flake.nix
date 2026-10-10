@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Toolchain for the official T3 Code npm release and its coding providers.
-    nixpkgs-t3code.url = "github:NixOS/nixpkgs/e5bdc4a41d4c072fe1e3787eaa0320a384741d44";
+    nixpkgs-t3code.url = "github:NixOS/nixpkgs/bca62b97a200efd801fbb4a84652bd6070f0e698";
 
     # macOS tracks nixpkgs-unstable, which is what nix-darwin's master branch
     # requires (their release numbers must match). Kept separate so the servers'
