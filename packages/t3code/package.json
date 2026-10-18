@@ -1,9 +1,0 @@
-{
-  "name": "t3code-nix-package",
-  "private": true,
-  "version": "0.0.46-nightly.20261010.2922",
-  "packageManager": "pnpm@11.21.0",
-  "dependencies": {
-    "t3": "0.0.46-nightly.20261010.2922"
-  }
-}
