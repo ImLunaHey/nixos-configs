@@ -28,6 +28,12 @@
 
   services.homelab-agent.enable = true;
 
+  # Keep SOPS installed during the staged migration. Varlock becomes the
+  # consumer-facing secret loader after each host receives an OpenBao AppRole.
+  environment.systemPackages = [
+    (pkgs.callPackage ./packages/varlock { })
+  ];
+
   systemd.services.tailscale-autoauth = {
     description = "Tailscale authentication via OAuth";
     after = [ "tailscaled.service" "sops-install-secrets.service" "network-online.target" ];

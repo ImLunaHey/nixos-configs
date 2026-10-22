@@ -1,6 +1,6 @@
 # Luna's Nix Configurations
 
-Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes) and [sops-nix](https://github.com/Mic92/sops-nix) for encrypted secrets. Covers both NixOS servers (the homelab) and macOS machines via [nix-darwin](https://github.com/nix-darwin/nix-darwin) + [home-manager](https://github.com/nix-community/home-manager).
+Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes). Secrets are migrating from [sops-nix](https://github.com/Mic92/sops-nix) to a self-hosted OpenBao control plane with Varlock consumers. Covers both NixOS servers (the homelab) and macOS machines via [nix-darwin](https://github.com/nix-darwin/nix-darwin) + [home-manager](https://github.com/nix-community/home-manager).
 
 > **This file is auto-generated.** Edit `scripts/generate-readme.sh` to change its contents.
 
@@ -32,7 +32,9 @@ nixos-configs/
 │   ├── install-hooks.sh   # Installs git hooks
 │   ├── update.sh          # Pull + nixos-rebuild on current host
 │   ├── install.sh         # Bootstrap any machine via nixos-anywhere
+│   ├── openbao-migrate-sops.sh # One-time staged secret migration
 │   └── sops.sh            # Secrets management helper
+├── varlock/hosts/         # Per-host Varlock schemas
 ├── .githooks/
 │   └── pre-commit         # Auto-regenerates README on commit
 └── secrets/
@@ -44,7 +46,7 @@ nixos-configs/
 | Host | IP | Purpose | Key Services |
 |------|----|---------|--------------|
 | `gilbert` | `DHCP` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
-| `lake` | `DHCP` | NAS / data lake | ZFS + SMART monitoring,T3 Code |
+| `lake` | `DHCP` | NAS / data lake | ZFS + SMART monitoring,T3 Code,OpenBao |
 | `nova` | `DHCP` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,NDI capture,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
 | `void` | `DHCP` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
@@ -81,6 +83,7 @@ nixos-configs/
 | `lancache.nix` | |
 | `monitoring.nix` | |
 | `networking.nix` | DHCP, firewall, Tailscale |
+| `openbao.nix` | OpenBao secrets control plane |
 | `samba.nix` | |
 | `services.nix` | SOPS secret declarations |
 | `smartd.nix` | SMART disk monitoring + notifications |
@@ -198,6 +201,7 @@ Applied to every host:
 | `scripts/install-hooks.sh` | Configure git to use `.githooks/` |
 | `scripts/update.sh` | `git pull` then `nixos-rebuild switch` on the current host |
 | `scripts/install.sh <machine> <ip>` | Bootstrap any machine from a NixOS live ISO via nixos-anywhere |
+| `scripts/openbao-migrate-sops.sh` | Copy SOPS values into OpenBao and create scoped host AppRoles |
 | `scripts/sops.sh <cmd>` | list / get / set / delete / edit secrets |
 
 ## Custom Modules
@@ -223,9 +227,17 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 - `watchstate.flaked.org`
 - `s3-console.flaked.org`
 
-## Secrets Management
+## Secrets Management (migration in progress)
 
-Secrets are encrypted with [SOPS](https://github.com/mozilla/sops) + [age](https://github.com/FiloSottile/age).
+Lake hosts an OpenBao control plane and every NixOS host has a pinned Varlock CLI
+and a host-specific schema. SOPS remains the active service backend during the
+staged migration, providing a safe rollback path.
+
+See [`docs/openbao-varlock-migration.md`](docs/openbao-varlock-migration.md) for
+the initialization, migration, identity provisioning, verification, and final
+cutover sequence.
+
+Existing secrets are encrypted with [SOPS](https://github.com/mozilla/sops) + [age](https://github.com/FiloSottile/age).
 
 Each machine decrypts secrets via its host SSH key (`/etc/ssh/ssh_host_ed25519_key`). Age keys are defined in `.sops.yaml`.
 

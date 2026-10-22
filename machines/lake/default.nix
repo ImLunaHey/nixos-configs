@@ -6,6 +6,7 @@
     ./cache.nix
     ./lancache.nix
     ./monitoring.nix
+    ./openbao.nix
     ./display.nix
     ./networking.nix
     ./samba.nix
