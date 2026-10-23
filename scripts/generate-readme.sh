@@ -186,7 +186,7 @@ nixos-configs/
 │   ├── install.sh         # Bootstrap any machine via nixos-anywhere
 │   ├── openbao-migrate-sops.sh # One-time staged secret migration
 │   └── sops.sh            # Secrets management helper
-├── varlock/hosts/         # Per-host Varlock schemas
+├── varlock/workloads/     # Least-privilege schema for each service
 ├── .githooks/
 │   └── pre-commit         # Auto-regenerates README on commit
 └── secrets/
@@ -275,7 +275,7 @@ $(flake_inputs)
 | \`scripts/install-hooks.sh\` | Configure git to use \`.githooks/\` |
 | \`scripts/update.sh\` | \`git pull\` then \`nixos-rebuild switch\` on the current host |
 | \`scripts/install.sh <machine> <ip>\` | Bootstrap any machine from a NixOS live ISO via nixos-anywhere |
-| \`scripts/openbao-migrate-sops.sh\` | Copy SOPS values into OpenBao and create scoped host AppRoles |
+| \`scripts/openbao-migrate-sops.sh\` | Copy SOPS values into isolated workload paths and create scoped AppRoles |
 | \`scripts/sops.sh <cmd>\` | list / get / set / delete / edit secrets |
 
 ## Custom Modules
@@ -295,9 +295,10 @@ $(while IFS= read -r domain; do echo "- \`$domain\`"; done < <(get_caddy_vhosts 
 
 ## Secrets Management (migration in progress)
 
-Lake hosts an OpenBao control plane and every NixOS host has a pinned Varlock CLI
-and a host-specific schema. SOPS remains the active service backend during the
-staged migration, providing a safe rollback path.
+Lake hosts an OpenBao control plane and every NixOS host has a pinned Varlock CLI.
+Each secret-consuming workload has its own schema, OpenBao path, policy, and
+AppRole; there are no host-wide secret identities. SOPS remains the active
+service backend during the staged migration, providing a safe rollback path.
 
 See [\`docs/openbao-varlock-migration.md\`](docs/openbao-varlock-migration.md) for
 the initialization, migration, identity provisioning, verification, and final

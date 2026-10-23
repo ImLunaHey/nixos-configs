@@ -29,7 +29,7 @@
   services.homelab-agent.enable = true;
 
   # Keep SOPS installed during the staged migration. Varlock becomes the
-  # consumer-facing secret loader after each host receives an OpenBao AppRole.
+  # consumer-facing secret loader after each workload receives an OpenBao AppRole.
   environment.systemPackages = [
     (pkgs.callPackage ./packages/varlock { })
   ];

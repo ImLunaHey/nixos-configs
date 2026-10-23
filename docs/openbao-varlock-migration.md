@@ -17,8 +17,11 @@ Varlock schema and has survived a reboot.
 - The static auto-unseal key is a SHA-256 derivation of Lake's SSH host private
   key, passed into the sandboxed service with a systemd credential. Neither key
   is copied into the Nix store.
-- Every host gets a separate AppRole that can read only
-  `secret/data/hosts/<host>`. AppRole tokens are renewable hourly service tokens.
+- Every workload gets a separate AppRole that can read exactly one path:
+  `secret/data/workloads/<host>/<workload>`. There are no host-wide wildcard
+  policies. If multiple workloads need the same underlying value, migration
+  copies it into each isolated workload path. AppRole tokens are renewable
+  hourly service tokens.
 - Existing encrypted SOPS data stays in Git until the later consumer cutover is
   complete and rollback has been tested.
 
@@ -56,14 +59,15 @@ sudo ./scripts/openbao-migrate-sops.sh
 ```
 
 The script decrypts one value at a time directly into OpenBao, without printing
-it or writing a plaintext export. It creates root-only AppRole files under
-`/var/lib/openbao-bootstrap/approles`. Re-running it updates secret values but
-does not replace an AppRole credential file that already exists.
+it or writing a plaintext export. It creates one root-only AppRole file per
+workload under `/var/lib/openbao-bootstrap/approles/<host>`. Re-running it
+updates secret values but does not replace an AppRole credential file that
+already exists.
 
-Copy each host's matching `.env` file and the public `ca.crt` over an
-authenticated channel. Store them as root-only files outside the repository.
-Delete an AppRole file from Lake after confirming its destination and offline
-backup.
+Copy only a service's matching `.env` file and the public `ca.crt` over an
+authenticated channel. Store them as root-only files outside the repository;
+do not give a service another workload's AppRole. Delete an AppRole file from
+Lake after confirming its destination and offline backup.
 
 ## Stage 3: verify Varlock locally
 
@@ -72,15 +76,16 @@ Install the pinned plugin and verify Lake's schema against the loopback listener
 ```bash
 varlock install-plugin @varlock/hashicorp-vault-plugin@2.1.2
 set -a
-. /var/lib/openbao-bootstrap/approles/lake.env
+. /var/lib/openbao-bootstrap/approles/lake/anvil.env
 set +a
 export NODE_EXTRA_CA_CERTS=/var/lib/openbao-bootstrap/tls/ca.crt
 export BAO_ADDR=https://127.0.0.1:8200
-varlock load --agent --path ./varlock/hosts/lake
+varlock load --agent --path ./varlock/workloads/lake/anvil.env.schema
 ```
 
 `--agent` verifies resolution while redacting sensitive output. The schemas in
-`varlock/hosts` cover every currently declared SOPS key for each NixOS host.
+`varlock/workloads` cover every current secret consumer with the minimum secret
+set that workload needs.
 
 ## Stage 4: consumer cutover
 
@@ -88,7 +93,8 @@ Make the consumer changes in a follow-up PR, one host at a time. That change mus
 bind OpenBao to `10.0.0.46`, open TCP 8200 only on the intended LAN or mesh
 interface, distribute the public CA, and add `openbao.home.arpa` resolution to
 each client. Each service should use `varlock run --inject vars` or a root-only
-rendered credential file; never put a resolved value into the Nix store or a
+rendered credential file, with its AppRole credential readable only by that
+service's system user; never put a resolved value into the Nix store or a
 command line. Keep SOPS as the rollback path until all four hosts have rebooted
 successfully, then remove `sops-nix`, `.sops.yaml`, the encrypted YAML, and the
 old bootstrap path.
