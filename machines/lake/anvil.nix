@@ -29,7 +29,7 @@ in
   };
 
   services.anvil = {
-    enable = true;
+    enable = false;
     stateDirectory = "/var/lib/anvil";
     bindAddress = "${tailscaleAddress}:${toString httpPort}";
     databaseUrl = "postgresql:///anvil?host=/run/postgresql";
@@ -61,12 +61,4 @@ in
     root = "/var/lib/anvil-agent";
   };
 
-  systemd.services.anvil = {
-    after = [
-      "tailscaled.service"
-      "postgresql-setup.service"
-    ];
-    wants = [ "tailscaled.service" ];
-    requires = [ "postgresql-setup.service" ];
-  };
 }
