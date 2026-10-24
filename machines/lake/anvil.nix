@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -9,7 +10,7 @@ let
   sshPort = 2222;
 in
 {
-  sops.secrets.anvil_auth_secret = {
+  sops.secrets.anvil_auth_secret = lib.mkIf config.services.anvil.enable {
     owner = "anvil";
     group = "anvil";
     mode = "0400";
