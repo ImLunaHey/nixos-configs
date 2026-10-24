@@ -109,6 +109,32 @@ in
 {
   environment.systemPackages = [ t3code ] ++ developmentTools ++ botTools ++ [ t3codePkgs.ripgrep ];
 
+  # T3 downloads a generic Linux Chrome Headless Shell for browser previews.
+  # Let that dynamically linked binary run on NixOS and provide its runtime
+  # libraries through nix-ld.
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      alsa-lib
+      at-spi2-core
+      dbus
+      expat
+      glib
+      libgbm
+      libx11
+      libxcb
+      libxcomposite
+      libxdamage
+      libxext
+      libxfixes
+      libxkbcommon
+      libxrandr
+      nspr
+      nss
+      systemd
+    ];
+  };
+
   sops.secrets.lumen_t3code_private_key = {
     owner = "luna";
     group = user.group;
