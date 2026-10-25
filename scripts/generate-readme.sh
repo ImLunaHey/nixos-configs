@@ -46,6 +46,7 @@ get_key_services() {
   [[ -f "$REPO_ROOT/machines/$machine/minecraft.nix" ]] && services+=("Minecraft (ATM10)")
   [[ -f "$REPO_ROOT/machines/$machine/smartd.nix" ]]   && services+=("ZFS + SMART monitoring")
   [[ -f "$REPO_ROOT/machines/$machine/t3code.nix" ]]   && services+=("T3 Code")
+  [[ -f "$REPO_ROOT/machines/$machine/openbao.nix" ]]  && services+=("OpenBao")
   grep -q 'cloudflare-dns' "$REPO_ROOT/machines/$machine/default.nix" 2>/dev/null && services+=("Cloudflare DNS sync")
 
   while IFS= read -r c; do
@@ -106,6 +107,7 @@ machine_sections() {
         minecraft.nix)              echo "| \`$fname\` | Minecraft server (ATM10 / NeoForge) |" ;;
         smartd.nix)                 echo "| \`$fname\` | SMART disk monitoring + notifications |" ;;
         t3code.nix)                 echo "| \`$fname\` | T3 Code server and SSD code workspace |" ;;
+        openbao.nix)                echo "| \`$fname\` | OpenBao secrets control plane |" ;;
         default.nix)                echo "| \`$fname\` | Imports all machine modules |" ;;
         *)                          echo "| \`$fname\` | |" ;;
       esac
@@ -150,7 +152,7 @@ flake_inputs() {
 cat > "$README" << HEREDOC
 # Luna's Nix Configurations
 
-Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes) and [sops-nix](https://github.com/Mic92/sops-nix) for encrypted secrets. Covers both NixOS servers (the homelab) and macOS machines via [nix-darwin](https://github.com/nix-darwin/nix-darwin) + [home-manager](https://github.com/nix-community/home-manager).
+Personal Nix configurations managed with [flakes](https://nixos.wiki/wiki/Flakes). Secrets are migrating from [sops-nix](https://github.com/Mic92/sops-nix) to a self-hosted OpenBao control plane with Varlock consumers. Covers both NixOS servers (the homelab) and macOS machines via [nix-darwin](https://github.com/nix-darwin/nix-darwin) + [home-manager](https://github.com/nix-community/home-manager).
 
 > **This file is auto-generated.** Edit \`scripts/generate-readme.sh\` to change its contents.
 
@@ -182,7 +184,9 @@ nixos-configs/
 │   ├── install-hooks.sh   # Installs git hooks
 │   ├── update.sh          # Pull + nixos-rebuild on current host
 │   ├── install.sh         # Bootstrap any machine via nixos-anywhere
+│   ├── openbao-migrate-sops.sh # One-time staged secret migration
 │   └── sops.sh            # Secrets management helper
+├── varlock/workloads/     # Least-privilege schema for each service
 ├── .githooks/
 │   └── pre-commit         # Auto-regenerates README on commit
 └── secrets/
@@ -271,6 +275,7 @@ $(flake_inputs)
 | \`scripts/install-hooks.sh\` | Configure git to use \`.githooks/\` |
 | \`scripts/update.sh\` | \`git pull\` then \`nixos-rebuild switch\` on the current host |
 | \`scripts/install.sh <machine> <ip>\` | Bootstrap any machine from a NixOS live ISO via nixos-anywhere |
+| \`scripts/openbao-migrate-sops.sh\` | Copy SOPS values into isolated workload paths and create scoped AppRoles |
 | \`scripts/sops.sh <cmd>\` | list / get / set / delete / edit secrets |
 
 ## Custom Modules
@@ -288,9 +293,18 @@ The \`cloudflare-dns\` module reads \`services.caddy.virtualHosts\` at build tim
 
 $(while IFS= read -r domain; do echo "- \`$domain\`"; done < <(get_caddy_vhosts nova))
 
-## Secrets Management
+## Secrets Management (migration in progress)
 
-Secrets are encrypted with [SOPS](https://github.com/mozilla/sops) + [age](https://github.com/FiloSottile/age).
+Lake hosts an OpenBao control plane and every NixOS host has a pinned Varlock CLI.
+Each secret-consuming workload has its own schema, OpenBao path, policy, and
+AppRole; there are no host-wide secret identities. SOPS remains the active
+service backend during the staged migration, providing a safe rollback path.
+
+See [\`docs/openbao-varlock-migration.md\`](docs/openbao-varlock-migration.md) for
+the initialization, migration, identity provisioning, verification, and final
+cutover sequence.
+
+Existing secrets are encrypted with [SOPS](https://github.com/mozilla/sops) + [age](https://github.com/FiloSottile/age).
 
 Each machine decrypts secrets via its host SSH key (\`/etc/ssh/ssh_host_ed25519_key\`). Age keys are defined in \`.sops.yaml\`.
 

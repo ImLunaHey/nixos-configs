@@ -16,6 +16,7 @@ let
       systemctl is-active --quiet docker-lancache.service || record_failure lancache
       systemctl is-active --quiet anvil.service || record_failure anvil
       systemctl is-active --quiet anvil-agent.service || record_failure anvil-agent
+      systemctl is-active --quiet openbao.service || record_failure openbao
 
       agent_fresh=$(runuser -u anvil -- psql -d anvil -Atc \
         "SELECT COALESCE(bool_or(last_seen_at > now() - interval '2 minutes'), false) FROM hosts WHERE name = 'lake';" \
@@ -37,6 +38,7 @@ let
           anvil) echo "Anvil is not running" ;;
           anvil-agent) echo "The Anvil agent service is not running" ;;
           anvil-registration) echo "Lake's Anvil agent has stopped checking in" ;;
+          openbao) echo "OpenBao is not running" ;;
           lancache-capacity) echo "Lancache has reached 90% of its 500GB quota" ;;
         esac
       }
