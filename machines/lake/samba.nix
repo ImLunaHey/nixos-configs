@@ -19,6 +19,7 @@ in
     "backups"
     "games"
     "rips"
+    "scans"
   ];
 
   systemd.services.lake-timemachine-dataset = {
@@ -79,6 +80,9 @@ in
       backups = share "/mnt/storage/backups";
       games = share "/mnt/storage/games";
       rips = share "/mnt/storage/rips";
+      scans = (share "/mnt/storage/scans") // {
+        comment = "TCG card scans";
+      };
       timemachine = (share "/mnt/storage/timemachine") // {
         "vfs objects" = "catia fruit streams_xattr";
         "fruit:metadata" = "stream";

@@ -288,6 +288,12 @@ The \`cloudflare-dns\` module reads \`services.caddy.virtualHosts\` at build tim
 
 $(while IFS= read -r domain; do echo "- \`$domain\`"; done < <(get_caddy_vhosts nova))
 
+### TCG card scans
+
+Lake exposes \`/mnt/storage/scans\` as the writable SMB share \`smb://lake/scans\`.
+Use the existing \`luna\` Samba login to save scanned TCG card images here.
+The directory is created automatically by NixOS; guest access is disabled.
+
 ### Movie and show storage
 
 Movies and shows live at \`lake:/mnt/storage/media/{movies,shows}\`. Lake's
