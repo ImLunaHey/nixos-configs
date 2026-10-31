@@ -1,8 +1,14 @@
 { ... }:
 {
-  # Keep movies separate from Void's media mount (shows, music, and YouTube).
+  # Keep Lake's movies and shows separate from Void's music and YouTube mount.
   fileSystems."/mnt/movies" = {
     device = "lake.localdomain:/mnt/storage/media/movies";
+    fsType = "nfs";
+    options = [ "ro" "vers=4.2" "proto=tcp" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+  };
+
+  fileSystems."/mnt/shows" = {
+    device = "lake.localdomain:/mnt/storage/media/shows";
     fsType = "nfs";
     options = [ "ro" "vers=4.2" "proto=tcp" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
