@@ -223,6 +223,12 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 - `watchstate.flaked.org`
 - `s3-console.flaked.org`
 
+### TCG card scans
+
+Lake exposes `/mnt/storage/scans` as the writable SMB share `smb://lake/scans`.
+Use the existing `luna` Samba login to save scanned TCG card images here.
+The directory is created automatically by NixOS; guest access is disabled.
+
 ### Movie and show storage
 
 Movies and shows live at `lake:/mnt/storage/media/{movies,shows}`. Lake's
