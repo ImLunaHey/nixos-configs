@@ -288,6 +288,24 @@ The \`cloudflare-dns\` module reads \`services.caddy.virtualHosts\` at build tim
 
 $(while IFS= read -r domain; do echo "- \`$domain\`"; done < <(get_caddy_vhosts nova))
 
+### Movie storage
+
+Movies live at \`lake:/mnt/storage/media/movies\`. Lake's existing SMB share exposes
+these at \`smb://lake/media/movies\`; reconnect movie SMB clients to Lake.
+Nova mounts Lake's read-only NFSv4 export at \`/mnt/movies\`, which Jellyfin and
+Watchstate bind to their existing \`/media/movies\` path. Shows, music, and YouTube
+continue to use Void via \`/mnt/media\`.
+
+For the migration, deploy Lake before Nova. Both hosts auto-upgrade independently;
+if Nova updates first, the movie consumers wait for Lake's export. Once Lake is
+ready, restart \`mnt-movies.mount\`, \`docker-jellyfin\`, and \`docker-watchstate\`
+on Nova if they failed while waiting.
+
+Before deleting Void's original movies, verify Nova's \`findmnt /mnt/movies\`
+points to Lake, check playback and Watchstate access, and verify the copied files
+still match the source (including any changes since the initial copy). This
+configuration change does not delete or redirect Void's original directory.
+
 ## Secrets Management
 
 Secrets are encrypted with [SOPS](https://github.com/mozilla/sops) + [age](https://github.com/FiloSottile/age).

@@ -12,6 +12,7 @@ in
 {
   systemd.tmpfiles.rules = map (name: "d /mnt/storage/${name} 0755 root root -") [
     "media"
+    "media/movies"
     "files"
     "photos"
     "backups"
