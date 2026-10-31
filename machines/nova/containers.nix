@@ -112,13 +112,13 @@ in
 
   # Containers must not bind the empty directories beneath an unmounted NFS path.
   systemd.services.docker-jellyfin = {
-    requires = [ "mnt-media.mount" ];
-    after = [ "mnt-media.mount" ];
+    requires = [ "mnt-media.mount" "mnt-movies.mount" ];
+    after = [ "mnt-media.mount" "mnt-movies.mount" ];
   };
 
   systemd.services.docker-watchstate = {
-    requires = [ "mnt-media.mount" ];
-    after = [ "mnt-media.mount" ];
+    requires = [ "mnt-media.mount" "mnt-movies.mount" ];
+    after = [ "mnt-media.mount" "mnt-movies.mount" ];
   };
 
   systemd.services.docker-ytdl-sub = {
@@ -208,7 +208,7 @@ in
         volumes = [
           "/var/lib/jellyfin/config:/config"
           "/var/lib/jellyfin/cache:/cache"
-          "/mnt/media/movies:/media/movies:ro"
+          "/mnt/movies:/media/movies:ro"
           "/mnt/media/shows:/media/shows:ro"
           "/mnt/media/music:/media/music:ro"
           "/mnt/media/youtube:/media/youtube:ro"
@@ -337,7 +337,7 @@ in
         ];
         volumes = [
           "/var/lib/watchstate/config:/config"
-          "/mnt/media/movies:/media/movies:ro"
+          "/mnt/movies:/media/movies:ro"
           "/mnt/media/shows:/media/shows:ro"
           "/mnt/media/music:/media/music:ro"
         ];
