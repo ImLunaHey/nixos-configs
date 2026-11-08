@@ -14,6 +14,7 @@ let
       t3codePkgs.aws-lc
       t3codePkgs.zstd
       t3codePkgs.oniguruma
+      t3codePkgs.sqlite
     ];
     env = (old.env or {}) // {
       AWS_LC_SYS_SYSTEM_DIR = t3codePkgs.runCommand "aws-lc-system" {} ''

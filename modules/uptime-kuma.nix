@@ -14,7 +14,24 @@ let
 
   monitorsJson = builtins.toJSON caddyMonitors;
 
-  pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ps.requests ]);
+  # The original 1.2.1 client predates Kuma 2 and can time out during login.
+  # The maintained continuation preserves its Python import/API names.
+  pythonEnv = pkgs.python3.withPackages (ps: [
+    (ps.uptime-kuma-api.overridePythonAttrs (old: rec {
+      pname = "uptime-kuma-api2";
+      version = "2.9.0";
+      src = pkgs.fetchPypi {
+        pname = "uptime_kuma_api2";
+        inherit version;
+        hash = "sha256-Bc7hLaDBp4b7Sorq8XcOZVZMuiNk7S7JCDaFWaLMbkc=";
+      };
+      propagatedBuildInputs = old.propagatedBuildInputs ++ [ ps.python-engineio ps.requests ];
+      meta = old.meta // {
+        homepage = "https://github.com/pbarone/uptime-kuma-api2";
+        changelog = "https://github.com/pbarone/uptime-kuma-api2/blob/v${version}/CHANGELOG.md";
+      };
+    }))
+  ]);
 
   syncScript = pkgs.writeShellScript "uptime-kuma-sync" ''
   USERNAME="luna"
