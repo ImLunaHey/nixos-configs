@@ -5,7 +5,7 @@ let
   service = name: {
     domain = "${name}.flaked.org";
     address = nova;
-    groups = [ "personal-devices" "homelab" ];
+    groups = [ "personal-devices" "homelab" "nixos:administrators" ];
   };
 in {
   novaIPv4 = nova;
