@@ -5,6 +5,7 @@ import pathlib
 import re
 import shlex
 import subprocess
+import sys
 import tempfile
 
 HOSTS = {
@@ -55,7 +56,7 @@ def main():
     # Hosts resolve only pinned inputs. No git pull, --refresh, input overrides,
     # automatic dependency updates, automatic reboot, or unreviewed branch tip.
     shell = f'''set -eu
-export PATH=/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin
+export PATH=/run/wrappers/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin
 cd {shlex.quote(remote)}
 sudo {tool} build --flake "$PWD#{args.host}" --no-write-lock-file
 '''
@@ -64,7 +65,7 @@ sudo {tool} build --flake "$PWD#{args.host}" --no-write-lock-file
 printf '%s\\n' "$PWD" > "$HOME/.local/state/nixos-configs/last-deployment"
 '''
     # A terminal allows sudo to prompt on Macs; source transfer is already done.
-    run("ssh", "-t", target, "sh -c " + shlex.quote(shell))
+    run("ssh", "-t" if sys.stdin.isatty() else "-T", target, "sh -c " + shlex.quote(shell))
     print(f"{'Built' if args.build_only else 'Activated'} {sha} on {args.host}")
 
 

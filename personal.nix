@@ -3,6 +3,7 @@
   imports = [
     ./modules/brrr-notify.nix
     ./modules/homelab-agent.nix
+    ./modules/netbird-client.nix
     ./modules/lake-cache-client.nix
   ];
 

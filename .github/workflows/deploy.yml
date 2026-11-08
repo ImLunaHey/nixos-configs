@@ -1,0 +1,87 @@
+name: Push Nix configurations
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    # Opt in enrolled hosts through this repository variable. No public fallback.
+    if: github.ref == 'refs/heads/main' && vars.NETBIRD_DEPLOY_TARGETS != '' && vars.NETBIRD_DEPLOY_TARGETS != '[]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include: ${{ fromJSON(vars.NETBIRD_DEPLOY_TARGETS || '[]') }}
+    concurrency:
+      group: deploy-${{ matrix.host }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install pinned NetBird client
+        run: |
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/netbird.tar.gz" \
+            https://github.com/netbirdio/netbird/releases/download/v0.81.3/netbird_0.81.3_linux_amd64.tar.gz
+          echo "cbdea310068e35449f034544d5137fefee8f6d948fffd020883ffc8b3bab63b1  $RUNNER_TEMP/netbird.tar.gz" | sha256sum --check
+          mkdir "$RUNNER_TEMP/netbird-bin"
+          tar -xzf "$RUNNER_TEMP/netbird.tar.gz" -C "$RUNNER_TEMP/netbird-bin" netbird
+          sudo install -m 0755 "$RUNNER_TEMP/netbird-bin/netbird" /usr/local/bin/netbird
+          sudo netbird service install
+          sudo netbird service start
+      - name: Join deployment network
+        env:
+          SETUP_KEY: ${{ secrets.NETBIRD_SETUP_KEY }}
+        run: |
+          test -n "$SETUP_KEY"
+          umask 077
+          printf '%s' "$SETUP_KEY" > "$RUNNER_TEMP/netbird-setup-key"
+          sudo netbird up --management-url https://netbird.flaked.org \
+            --setup-key-file "$RUNNER_TEMP/netbird-setup-key" \
+            --hostname "github-deploy-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          rm "$RUNNER_TEMP/netbird-setup-key"
+      - name: Configure deployment SSH identity
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+        run: |
+          test -n "$DEPLOY_KEY"
+          test -n "$KNOWN_HOSTS"
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<'CONFIG'
+          Host *
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            BatchMode yes
+            ConnectTimeout 20
+            ServerAliveInterval 15
+            ServerAliveCountMax 4
+          CONFIG
+      - name: Require NetBird transport and push deployment
+        env:
+          DEPLOY_HOST: ${{ matrix.host }}
+          DEPLOY_TARGET: ${{ matrix.target }}
+        run: |
+          python3 - <<'PY'
+          import ipaddress, json, os, subprocess
+          address = os.environ['DEPLOY_TARGET'].rsplit('@', 1)[-1]
+          ipaddress.ip_address(address)
+          route = json.loads(subprocess.check_output(['ip', '-j', 'route', 'get', address]))
+          if not route or route[0].get('dev') != 'wt0':
+              raise SystemExit('Refusing deployment: target route does not use NetBird wt0')
+          PY
+          python3 scripts/deploy.py "$DEPLOY_HOST" --target "$DEPLOY_TARGET" --revision "$GITHUB_SHA"
+      - name: Disconnect and remove runner credentials
+        if: always()
+        run: |
+          sudo netbird down || true
+          sudo netbird service stop || true
+          rm -f ~/.ssh/deploy_key "$RUNNER_TEMP/netbird-setup-key"

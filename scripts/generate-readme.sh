@@ -259,6 +259,10 @@ Applied to every host:
 
 ## Push deployments
 
+GitHub Actions can push over NetBird using a dedicated SSH deployment key.
+See [.github/DEPLOYMENT.md](.github/DEPLOYMENT.md) for enrolment, secrets, pinned
+host keys, and the opt-in target list. No public SSH fallback is used by CI.
+
 From a clean checkout with committed changes:
 
 \`\`\`console

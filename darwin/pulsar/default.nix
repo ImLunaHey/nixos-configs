@@ -18,8 +18,6 @@
     home = "/Users/xo";
   };
 
-
-
   environment.etc."ssh/ssh_known_hosts".text = ''
     [100.117.220.119]:2222 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINyifTj1clbav1qah98g296Unc5yjWUvlsZK96rSu77r
   '';

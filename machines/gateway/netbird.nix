@@ -126,5 +126,18 @@ in
 
   };
 
+  # The VPS is also a peer so CI can deploy over NetBird's private interface.
+  services.netbird = {
+    useRoutingFeatures = "client";
+    clients.default = {
+      name = "netbird";
+      interface = "wt0";
+      port = 51820;
+      hardened = true;
+      config.ManagementURL = "https://${domain}:443";
+    };
+  };
+  users.users.luna.extraGroups = [ "netbird" ];
+
   networking.firewall.allowedUDPPorts = [ 3478 ];
 }
