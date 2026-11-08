@@ -127,6 +127,7 @@ in
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
+        redir / /rustfs/console/ 302
         reverse_proxy 127.0.0.1:9001
       '';
     };

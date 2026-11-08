@@ -46,7 +46,7 @@ from uptime_kuma_api import UptimeKumaApi, MonitorType
 with open("/tmp/monitors.json") as f:
     monitors = json.load(f)
 
-with UptimeKumaApi("http://127.0.0.1:3001") as api:
+with UptimeKumaApi("http://127.0.0.1:3001", timeout=30) as api:
     api.login(os.environ.get("USERNAME"), os.environ.get("PASSWORD"))
     existing = {m["name"]: m for m in api.get_monitors()}
 
