@@ -62,7 +62,10 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.curl}/bin/curl -sf http://127.0.0.1:3001 > /dev/null; do sleep 2; done'";
+        # During a database upgrade, Kuma serves a migration page with HTTP 200
+        # before its API exists. Wait for Socket.IO rather than that page.
+        TimeoutStartSec = "1h";
+        ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.curl}/bin/curl --max-time 5 -sf \"http://127.0.0.1:3001/socket.io/?EIO=4&transport=polling\" > /dev/null; do sleep 2; done'";
         ExecStart = syncScript;
       };
     };
