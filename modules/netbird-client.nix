@@ -10,8 +10,9 @@
       port = 51820;
       hardened = true;
       config = {
-        ManagementURL = "https://netbird.flaked.org:443";
-        AdminURL = "https://netbird.flaked.org:443";
+        # The client config serializes Go's url.URL as an object.
+        ManagementURL = { Scheme = "https"; Host = "netbird.flaked.org:443"; };
+        AdminURL = { Scheme = "https"; Host = "netbird.flaked.org:443"; };
       };
     };
   };

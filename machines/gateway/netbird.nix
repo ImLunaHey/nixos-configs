@@ -135,7 +135,8 @@ in
       interface = "wt0";
       port = 51820;
       hardened = true;
-      config.ManagementURL = "https://${domain}:443";
+      # The client config serializes Go's url.URL as an object.
+      config.ManagementURL = { Scheme = "https"; Host = "${domain}:443"; };
     };
   };
   users.users.luna.extraGroups = [ "netbird" ];
