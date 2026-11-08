@@ -1,4 +1,4 @@
-{ config, pkgs, brrrNotify, ... }:
+{ config, pkgs, ... }:
 {
   imports = [
     ./modules/brrr-notify.nix
@@ -17,13 +17,7 @@
     };
     ssh.enable = true;
     vpn.provider = "tailscale";
-    autoUpgrade = {
-      enable = true;
-      flake = "github:imlunahey/nixos-configs";
-      dates = "*:0/15";
-      randomizedDelaySec = "5min";
-      allowReboot = true;
-    };
+    autoUpgrade.enable = false;
   };
 
   services.homelab-agent.enable = true;
@@ -60,22 +54,4 @@
     '';
   };
 
-  systemd.services.nixos-upgrade = {
-    preStart = ''readlink /nix/var/nix/profiles/system > /tmp/nixos-pre-upgrade-system'';
-    postStart = ''
-      pre=$(cat /tmp/nixos-pre-upgrade-system 2>/dev/null)
-      post=$(readlink /nix/var/nix/profiles/system)
-      if [ "$pre" != "$post" ]; then
-        ${brrrNotify} "NixOS Upgraded" "${config.networking.hostName} has been upgraded" active bubbly_success_ding nixos
-      fi
-      rm -f /tmp/nixos-pre-upgrade-system
-    '';
-    serviceConfig.ExecStopPost = [
-      "+${pkgs.writeShellScript "nixos-upgrade-notify-failure" ''
-        if [ "$SERVICE_RESULT" != "success" ]; then
-          ${brrrNotify} "NixOS Upgrade Failed" "${config.networking.hostName} failed to upgrade: $SERVICE_RESULT" time-sensitive warm_soft_error nixos
-        fi
-      ''}"
-    ];
-  };
 }

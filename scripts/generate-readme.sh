@@ -180,7 +180,7 @@ nixos-configs/
 ├── scripts/
 │   ├── generate-readme.sh # Regenerates this file
 │   ├── install-hooks.sh   # Installs git hooks
-│   ├── update.sh          # Pull + nixos-rebuild on current host
+│   ├── deploy.py          # Push a committed revision over SSH
 │   ├── install.sh         # Bootstrap any machine via nixos-anywhere
 │   └── sops.sh            # Secrets management helper
 ├── .githooks/
@@ -254,8 +254,37 @@ Applied to every host:
 - **Packages:** nano, tree, git, btop, wget, curl
 - **SSH:** password auth disabled, root login restricted; keys imported from GitHub
 - **Tailscale:** enabled on all hosts with routing features
-- **Auto-upgrade:** polls \`github:imlunahey/nixos-configs\` every 15 minutes, reboots if needed
-- **Gotify notification:** sent when a host successfully upgrades to a new generation
+- **Deployment:** explicitly push a committed revision with \`python3 scripts/deploy.py <host>\`; no periodic pull or automatic reboot
+- **Dependency updates:** explicitly update and review flake.lock before deployment
+
+## Push deployments
+
+From a clean checkout with committed changes:
+
+\`\`\`console
+python3 scripts/deploy.py gateway --build-only
+python3 scripts/deploy.py gateway
+python3 scripts/deploy.py lake --revision <commit>
+python3 scripts/deploy.py pulsar
+\`\`\`
+
+The command transfers a Git snapshot over SSH and uses the target's Nix installation
+and architecture. It builds before activating, never pulls a branch, never updates
+flake.lock, and does not reboot. It needs Git, Python 3, SSH, and SCP locally, plus
+sudo on the target. Override a destination with \`--target user@hostname\`.
+Private pinned inputs must be accessible to the target's build user; the old
+Pulsar input override is deliberately removed so it cannot silently deploy a newer
+Anvil revision than the reviewed lock file.
+
+Snapshots stay under \`~/.local/state/nixos-configs/releases/\`; the successful
+activation path is recorded in \`~/.local/state/nixos-configs/last-deployment\`.
+The gateway uses its standalone flake; other hosts use the repository root.
+Older snapshots can be removed after confirming rollback is no longer needed.
+For NixOS rollback, use \`sudo nixos-rebuild switch --rollback\` on the host.
+
+Existing NixOS timers must be stopped until this removal is deployed; a stop alone
+does not survive reboot. The macOS launchd scheduler must likewise be unloaded.
+Normal maintenance timers (backups, monitoring, garbage collection) remain enabled.
 
 ## Flake Inputs
 
@@ -269,7 +298,8 @@ $(flake_inputs)
 |--------|---------|
 | \`scripts/generate-readme.sh\` | Regenerate this README from repo structure |
 | \`scripts/install-hooks.sh\` | Configure git to use \`.githooks/\` |
-| \`scripts/update.sh\` | \`git pull\` then \`nixos-rebuild switch\` on the current host |
+| \`scripts/deploy.py <host>\` | Push a committed snapshot, build on the target, then activate it |
+| \`scripts/update.sh\` | Retired; directs callers to the push workflow |
 | \`scripts/install.sh <machine> <ip>\` | Bootstrap any machine from a NixOS live ISO via nixos-anywhere |
 | \`scripts/sops.sh <cmd>\` | list / get / set / delete / edit secrets |
 

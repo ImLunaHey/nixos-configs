@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
-  imports = [ ./hardware-configuration.nix ./killdeer.nix ];
+  imports = [ ./hardware-configuration.nix ./killdeer.nix ./netbird.nix ./pocket-id.nix ./ingress.nix ];
+
+  virtualisation.oci-containers.backend = "docker";
+  virtualisation.docker.enable = true;
 
   networking.hostName = "gateway";
   networking.firewall.enable = true;
@@ -30,7 +33,7 @@
     dates = "weekly";
     options = "--delete-older-than 14d";
   };
-  # Leave space for Nix evaluation on the 1 GB Micro VM.
+  # Leave space for Nix evaluation on the small VPS.
   zramSwap = { enable = true; memoryPercent = 100; };
   swapDevices = [{ device = "/swapfile"; size = 1024; }];
   services.journald.extraConfig = "SystemMaxUse=100M";

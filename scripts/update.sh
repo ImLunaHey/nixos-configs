@@ -1,14 +1,4 @@
 #!/usr/bin/env bash
-HOST=$(hostname)
-VALID_HOSTS=($(ls machines/))
-
-if [[ ! " ${VALID_HOSTS[@]} " =~ " ${HOST} " ]]; then
-  echo "Error: Unknown host '$HOST'. Valid hosts are: ${VALID_HOSTS[*]}"
-  exit 1
-fi
-
-echo "Pulling latest config..."
-git pull
-
-echo "Updating $HOST..."
-nixos-rebuild switch --flake ".#$HOST"
+set -euo pipefail
+printf '%s\n' 'Host-side pull updates have been retired.' 'From your checkout, use: python3 scripts/deploy.py <host>' >&2
+exit 1

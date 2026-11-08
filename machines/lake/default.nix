@@ -8,7 +8,6 @@
     ./monitoring.nix
     ./display.nix
     ./netbird.nix
-    ./pocket-id.nix
     ./networking.nix
     ./samba.nix
     ./services.nix
