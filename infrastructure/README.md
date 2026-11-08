@@ -286,3 +286,76 @@ and denied Nova TCP 443. Gateway could not initiate SSH to Lake/Nova/Void or
 HTTPS to Nova on TCP 443. The later public Jellyfin route deliberately adds only
 Nova TCP 9443; recheck both allowed and denied ports after applying it. All permanent servers report non-ephemeral registrations at
 their original IP addresses. Temporary test credentials and peers were removed.
+
+
+# November 2026 service rollout
+
+Service images use release tags plus manifest digests (Lancache publishes no
+release tags, so its reference is digest-only). Nix and development-tool inputs
+are locked. MariaDB stays on its current LTS line, 12.3.3; Immich's PostgreSQL
+14/VectorChord image remains the one recommended by Immich 3.3.6. Do not combine
+this application upgrade with an unplanned database-major upgrade.
+
+Stopped-state backups and logical dumps are retained under
+`/var/backups/service-updates-20261108` on Nova, Lake and Gateway. The final
+Nova checkpoint immediately before activation is
+`/var/backups/service-updates-final-20261108`, paired with Void snapshot
+`storage/photos@before-final-service-updates-20261108`; prefer this pair for
+rollback. It includes stopped container state and logical database dumps.
+Rehearsals use isolated copies under `/var/tmp/service-upgrade-test-20261108`
+and a Docker network with no external connectivity. Never restore those test
+databases over production or delete an overlay's mountpoint while mounted.
+
+Rollback after an application migration requires stopping the affected services,
+restoring their matching pre-upgrade state, and selecting the corresponding
+pinned images. Switching only the Nix generation does not undo database changes.
+The original MariaDB backup predates a directory-ownership repair: its data
+folder must be owned by remapped uid/gid 100999. A stale `tc.log` left after its
+confirmed clean shutdown was archived separately, not discarded without review.
+
+RustFS 1.0.4 uses remapped uid/gid 110001 and `/logs`. The container pre-start
+step reconciles ownership recursively, including existing objects. Container
+volume ownership is declared once in `containers.nix`; duplicate tmpfiles
+entries previously conflicted with these declarations. Its alpha-era usage index
+requires a one-time rebuild after upgrading. The rehearsed authenticated admin
+request is `POST /rustfs/admin/v3/scanner/usage-state/reset` with
+`{"mode":"full-rebuild"}`. Sign it using S3 SigV4 with the existing credentials;
+never put them in Git or logs. This rebuilds usage accounting, not stored
+objects. Confirm healthy scanner status and S3 object access afterwards. Do not
+run a reset on every service start.
+
+Watchstate requires an intermediate migration before 1.10.11 if its database
+reports that its migration state is inside a squashed range. With the production
+service stopped and its configuration backed up, run the following immutable
+intermediate image against `/var/lib/watchstate/config:/config` with `--user 0:0`,
+`--network none`, `-e DISABLE_CRON=1`, and no published ports:
+
+`ghcr.io/arabcoders/watchstate:v1.10.3@sha256:e26aef6772ad3a1a83e26cd5fb56c9798ab2c04de4d88806e4d76e8955eaac89`
+
+Wait for migrations to finish and the version startup message, stop and remove
+that temporary container, then start the pinned 1.10.11 service. Rehearse the
+same sequence on a separate copy first. Never expose the intermediate version
+or reset the database to bypass the migration guard.
+
+Caddy's public gateway explicitly sends `Host: jellyfin.flaked.org` to Nova's
+TLS upstream; setting TLS SNI alone does not preserve the HTTP virtual host.
+Nova declares the hostname's DNS-01 certificate policy only on the standard
+HTTPS listener. Its dedicated port 9443 reuses that certificate.
+
+Uptime Kuma 1→2 aggregates existing heartbeat history in the background. Its
+HTTP health check can pass while this is still running. Wait for the log entry
+`Aggregate Table Migration Completed` and verify the monitor/account counts;
+do not interrupt that migration merely because deployment has returned.
+
+Void's 2026-11-08 interruption was caused by fstab mount units racing native ZFS
+mounting. A failed required mount isolated emergency mode and stopped networking.
+The fix declares the parent filesystem and sets `canmount=noauto` for all seven
+systemd-managed datasets. A pre-mount service reconciles properties after pool
+import; a separate service applies permissions only after the shared datasets
+are mounted. Recovery also remounted Nova's NFS paths and restarted consumers to
+remove stale handles. Check actual media files, not just directory existence.
+
+Pulsar is deferred, with Darwin inputs unchanged. Gilbert is powered off; its
+base image and local image recipe are pinned, but its legacy apt/pip installation
+steps are not fully reproducible and have not been rebuilt or deployed. Private
+Anvil origins were unreachable, so their known source pins remain unchanged.

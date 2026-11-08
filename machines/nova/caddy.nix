@@ -50,10 +50,8 @@ in
     virtualHosts."jellyfin.flaked.org:9443" = {
       extraConfig = ''
         bind ${privateDNS.novaIPv4}
-        tls {
-          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-          resolvers 1.1.1.1
-        }
+        # The standard HTTPS listener declares this hostname's DNS-01 policy.
+        # Reuse its certificate instead of creating a duplicate policy.
         ${jellyfinProxy}
       '';
     };

@@ -86,13 +86,17 @@ in
     "d /var/lib/romm/assets      0755 100000 100000 -"
     "d /var/lib/romm/config      0755 100000 100000 -"
     "d /var/lib/rustfs/data      0755 110001 110001 -"
-    "Z /var/lib/rustfs/data      - 110001 110001 -"
     "d /var/lib/rustfs/logs      0755 110001 110001 -"
-    "Z /var/lib/rustfs/logs      - 110001 110001 -"
     "d /var/lib/immich/postgres  0755 100000 100000 -"
     "d /var/lib/immich/ml-cache  0755 100000 100000 -"
     "d /var/lib/watchstate/config 0755 100000 100000 -"
   ];
+
+  # RustFS now runs as uid 10001 rather than container root. Repair existing
+  # volumes too: duplicate d/Z tmpfiles entries do not apply recursively.
+  systemd.services.docker-rustfs.preStart = lib.mkBefore ''
+    ${pkgs.coreutils}/bin/chown -R 110001:110001 /var/lib/rustfs/data /var/lib/rustfs/logs
+  '';
 
   systemd.services.create-immich-network = {
     description = "Create immich Docker network";

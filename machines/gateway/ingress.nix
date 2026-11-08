@@ -40,6 +40,7 @@
       header X-Content-Type-Options "nosniff"
       header Referrer-Policy "same-origin"
       reverse_proxy https://100.66.196.73:9443 {
+        header_up Host jellyfin.flaked.org
         transport http {
           tls_server_name jellyfin.flaked.org
         }
