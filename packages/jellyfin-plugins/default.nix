@@ -41,6 +41,9 @@ let
       inherit (plugin) version;
       src = pkgs.fetchurl { inherit (source) url sha256; };
       patches = [ (./. + "/${source.name}.patch") ];
+      prePatch = lib.optionalString (source.name == "cinema") ''
+        sed -i 's/\r$//' ${project}
+      '';
       nativeBuildInputs = [ pkgs.dotnetCorePackages.sdk_10_0 pkgs.esbuild ];
       configurePhase = ''
         runHook preConfigure
