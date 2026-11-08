@@ -133,6 +133,34 @@ References: [Jellyfin 12 upgrade guidance](https://jellyfin.org/posts/jellyfin-r
 and [maintained SSO plugin](https://github.com/Buco7854/jellyfin-plugin-sso).
 
 
+# NetBird client updates
+
+Gateway, Lake, Nova and Void share the **0.82.0** client pin in
+`machines/gateway/netbird-client-package.nix`. It installs the checksum-verified
+upstream Linux amd64 binary and checks its version during the Nix build. The
+package lives inside Gateway's standalone flake so its deployment archive is
+self-contained. The GitHub deployment workflow pins the same archive and hash;
+update both pins together when upgrading clients.
+
+Deploy through `scripts/deploy.py`, one host at a time, using the existing
+Tailscale hostnames for home servers and Gateway's public SSH address. Restarting
+the client briefly interrupts its tunnel. Verify the daemon version, connection,
+existing peer ID/address, and permitted and denied traffic after activation.
+Client upgrades preserve stored registrations and do not require setup keys.
+They do not change the separately pinned management server or dashboard.
+
+The MacBook and iOS/tvOS apps are maintained outside these NixOS configurations.
+The MacBook already reports 0.82.0. Mobile apps can report a CI build identifier
+instead of the desktop/Linux version; use their App Store update status rather
+than comparing that identifier numerically.
+
+Validated on 2026-11-08: all four Linux daemons report 0.82.0 and retain their
+peer IDs and IPv4 addresses. Administrative SSH and Jellyfin HTTPS work. An
+isolated 0.82.0 client passes both the personal-device and deployment policy
+tests after group changes propagate; Gateway remains unable to initiate home
+server connections. The policy plan still reports zero changes. Temporary test
+peers and credentials were removed after validation.
+
 # NetBird access policies
 
 `netbird-access.nix` declares the static peer identities, groups and policies.
