@@ -203,7 +203,7 @@ in
 
   virtualisation.oci-containers.containers.ytdl-sub = {
     # Headless: runs `ytdl-sub sub` on a cron schedule. No web UI / port exposed.
-    image = "ghcr.io/jmbannon/ytdl-sub:latest";
+    image = "ghcr.io/jmbannon/ytdl-sub:2026.11.01@sha256:e67c50cbbf0c110208663aa2ab42d9adb8c098f2ab2f3328fd71c47f7bd6e444";
     volumes = [
       "/var/lib/ytdl-sub/config:/config"
       "${configYaml}:/config/config.yaml:ro"
@@ -221,7 +221,7 @@ in
       TZ = "Europe/London";
       CRON_SCHEDULE = "0 */6 * * *"; # check subscriptions for new content every 6h
       CRON_RUN_ON_START = "true";
-      UPDATE_YT_DLP_ON_START = "stable"; # yt-dlp breaks often as YouTube changes
+      UPDATE_YT_DLP_ON_START = "false"; # Use yt-dlp from the pinned image.
     };
   };
 }

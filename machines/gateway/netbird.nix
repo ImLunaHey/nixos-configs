@@ -76,7 +76,7 @@ in
   # Caddy terminates TLS and is the only trusted HTTP proxy.
   virtualisation.oci-containers.containers = {
     netbird-server = {
-      image = "netbirdio/netbird-server:0.81.3@sha256:541ecef7e98a66b17411d44e9d4dcfdb65913415f39b3b944b8e7e748f997f1d";
+      image = "netbirdio/netbird-server:0.82.0@sha256:7b5b53b2dc8bc25639f791cf72d47cf86911894ff3f8a97cb79bab9be958109c";
       volumes = [
         "${serverData}:/var/lib/netbird"
         "${configFile}:/etc/netbird/config.yaml:ro"
@@ -88,7 +88,7 @@ in
     };
 
     netbird-dashboard = {
-      image = "netbirdio/dashboard:v2.95.0@sha256:3d6adfee19dd8d34d795af51daee69d27d2081d2076a5a304cfdd14acc67d6f4";
+      image = "netbirdio/dashboard:v2.96.0@sha256:340b13c00b84349572a2acc5605e907cb09250a9e6461c757097eabdb8e02f2c";
       ports = [ "127.0.0.1:8080:80/tcp" ];
       environment = {
         NETBIRD_MGMT_API_ENDPOINT = "https://${domain}";

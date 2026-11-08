@@ -7,11 +7,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "pnpm";
-  version = "12.4.1";
+  version = "12.18.0";
 
   src = fetchurl {
     url = "https://registry.npmjs.org/@pnpm/exe.linux-x64/-/exe.linux-x64-${finalAttrs.version}.tgz";
-    hash = "sha256-YU0YvcsSGoRMAmCzFddrc35oc0bAAbjgk/0KkyAsLWs=";
+    hash = "sha256-Z53y7t8Vj2OdttHwDnE9dm0NevxqkxvFFJemJdHhvfc=";
   };
 
   nativeBuildInputs = [ autoPatchelfHook ];

@@ -79,7 +79,8 @@ in
     "d /var/lib/pihole/pihole    0755 100000 100000 -"
     "d /var/lib/pihole/dnsmasq   0755 100000 100000 -"
     "d /var/lib/uptime-kuma      0755 100000 100000 -"
-    "d /var/lib/romm-db           0755 100000 100000 -"
+    # MariaDB drops to uid 999; it must be able to unlink tc.log on shutdown.
+    "d /var/lib/romm-db           0755 100999 100999 -"
     "d /var/lib/romm/resources   0755 100000 100000 -"
     "d /var/lib/romm/redis-data  0755 100000 100000 -"
     "d /var/lib/romm/assets      0755 100000 100000 -"
@@ -219,7 +220,7 @@ in
         ];
       };
       pihole = {
-        image = "pihole/pihole:latest";
+        image = "pihole/pihole:2026.10.1@sha256:30f803ad5dd60ff96cc0a63008a2e9271af481c1b0399a182192b2e91152c1f9";
         ports = [
           "53:53/tcp"
           "53:53/udp"
@@ -241,7 +242,7 @@ in
         ];
       };
       uptime-kuma = {
-        image = "louislam/uptime-kuma:latest";
+        image = "louislam/uptime-kuma:2.5.9@sha256:e88415a90dd2f7efecdbc18de0490aff292764a3ac471531bf1d0481725591bd";
         extraOptions = [ "--network=host" "--userns=host" ]; # host network requires opting out of userns-remap
         volumes = [
           "/var/lib/uptime-kuma:/app/data"
@@ -251,7 +252,7 @@ in
         # Keep the server version in lockstep with the on-disk data format.
         # A floating `latest` tag plus an unclean shutdown can leave tc.log
         # unreadable by the next image and prevent MariaDB crash recovery.
-        image = "mariadb:12.2.2@sha256:310a2b521cdf1c3c1cfd2cb468e3f0843cc0d7b06d7325b7d48e197592f5d8bd";
+        image = "mariadb:12.3.3@sha256:d46e102fa8b9b72bfcdeb56f9dd538742092119dc8b11f31fe662605cd234cd9";
         volumes = [
           "/var/lib/romm-db:/var/lib/mysql"
         ];
@@ -259,6 +260,7 @@ in
         environment = {
           MARIADB_DATABASE = "romm";
           MARIADB_USER = "romm-user";
+          MARIADB_AUTO_UPGRADE = "1";
         };
         extraOptions = [
           "--network=romm-net"
@@ -266,7 +268,7 @@ in
         ];
       };
       romm = {
-        image = "rommapp/romm:latest";
+        image = "rommapp/romm:5.4.1@sha256:8677fb7b81b1d3db20b849e989a1dadc2a11159e51eb34a2acdcb01102274edf";
         ports = [
           "127.0.0.1:8083:8080"
         ];
@@ -287,7 +289,7 @@ in
         dependsOn = [ "romm-db" ];
       };
       immich-server = {
-        image = "ghcr.io/immich-app/immich-server:release";
+        image = "ghcr.io/immich-app/immich-server:v3.3.6@sha256:e1981983b1c13f6024b57d72e7ecae3342eed1581201ab09fb248932d86c593a";
         ports = [
           "127.0.0.1:2283:2283"
         ];
@@ -297,6 +299,8 @@ in
         ];
         environmentFiles = [ config.sops.secrets.immich_env.path ];
         environment = {
+          # Preserve the existing media root and database paths across v3.
+          IMMICH_MEDIA_LOCATION = "/usr/src/app/upload";
           DB_HOSTNAME = "immich-postgres";
           DB_USERNAME = "immich";
           DB_DATABASE_NAME = "immich";
@@ -306,18 +310,18 @@ in
         dependsOn = [ "immich-postgres" "immich-redis" ];
       };
       immich-machine-learning = {
-        image = "ghcr.io/immich-app/immich-machine-learning:release";
+        image = "ghcr.io/immich-app/immich-machine-learning:v3.3.6@sha256:14367bfb374b8576ddf49abd67c5ca0190a4c7fcf6303cdad65d7f7bf1a50bc2";
         volumes = [
           "/var/lib/immich/ml-cache:/cache"
         ];
         extraOptions = [ "--network=immich-net" ];
       };
       immich-redis = {
-        image = "redis:6.2-alpine";
+        image = "valkey/valkey:9.1.3@sha256:3add1a336a920ea54770a001ab6feb3da5fceea96a40373a3a2cd469b815f0b7";
         extraOptions = [ "--network=immich-net" ];
       };
       immich-postgres = {
-        image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0";
+        image = "ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23";
         volumes = [
           "/var/lib/immich/postgres:/var/lib/postgresql/data"
         ];
@@ -329,7 +333,7 @@ in
         extraOptions = [ "--network=immich-net" ];
       };
       watchstate = {
-        image = "ghcr.io/arabcoders/watchstate:latest";
+        image = "ghcr.io/arabcoders/watchstate:v1.10.11@sha256:2433ee5fb699390d1b2f551d6f6735f5733586459510bd907addc610e247d519";
         user = "0:0"; # image drops to uid 1000 by default; force root so userns-remap maps to host 100000
         ports = [
           "127.0.0.1:8087:8080"
@@ -346,7 +350,7 @@ in
         extraOptions = [ "--network=media-net" ];
       };
       rustfs = {
-        image = "rustfs/rustfs:latest";
+        image = "rustfs/rustfs:1.0.4@sha256:ed9210d6411d77ffceb70d94b964a3cb7d225983368bc25bebe01e995293dcc2";
         ports = [
           "127.0.0.1:9000:9000"
           "127.0.0.1:9001:9001"

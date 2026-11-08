@@ -9,7 +9,7 @@ in
   virtualisation.oci-containers = {
     backend = "docker";
     containers.lancache = {
-      image = "lancachenet/monolithic:latest";
+      image = "lancachenet/monolithic@sha256:155817065b13cc427aa0014acc34bbb389591400d7639c95abcfcfb2230ad7f0";
       ports = [
         "${lanAddress}:80:80/tcp"
         "${lanAddress}:443:443/tcp"

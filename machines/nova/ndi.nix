@@ -13,7 +13,7 @@ let
 in
 {
   # The NDI SDK contains a proprietary, redistributable runtime.
-  nixpkgs.config.allowUnfreePredicate = pkg: lib.getName pkg == "ndi";
+  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ "ndi" "ndi-6" ];
 
   services.avahi = {
     enable = true;
