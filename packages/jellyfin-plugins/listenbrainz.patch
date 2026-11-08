@@ -1,0 +1,116 @@
+diff --git a/src/Jellyfin.Plugin.ListenBrainz.Api/Jellyfin.Plugin.ListenBrainz.Api.csproj b/src/Jellyfin.Plugin.ListenBrainz.Api/Jellyfin.Plugin.ListenBrainz.Api.csproj
+index 55d1075..89e1712 100644
+--- a/src/Jellyfin.Plugin.ListenBrainz.Api/Jellyfin.Plugin.ListenBrainz.Api.csproj
++++ b/src/Jellyfin.Plugin.ListenBrainz.Api/Jellyfin.Plugin.ListenBrainz.Api.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+     <PropertyGroup>
+-        <TargetFramework>net9.0</TargetFramework>
++        <TargetFramework>net10.0</TargetFramework>
+         <ImplicitUsings>enable</ImplicitUsings>
+         <Nullable>enable</Nullable>
+         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+@@ -11,7 +11,7 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-      <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
++      <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+       <PackageReference Include="SmartAnalyzers.ExceptionAnalyzer" Version="1.0.10" />
+       <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" />
+diff --git a/src/Jellyfin.Plugin.ListenBrainz.Common/Jellyfin.Plugin.ListenBrainz.Common.csproj b/src/Jellyfin.Plugin.ListenBrainz.Common/Jellyfin.Plugin.ListenBrainz.Common.csproj
+index adb0869..0884275 100644
+--- a/src/Jellyfin.Plugin.ListenBrainz.Common/Jellyfin.Plugin.ListenBrainz.Common.csproj
++++ b/src/Jellyfin.Plugin.ListenBrainz.Common/Jellyfin.Plugin.ListenBrainz.Common.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+     <PropertyGroup>
+-        <TargetFramework>net9.0</TargetFramework>
++        <TargetFramework>net10.0</TargetFramework>
+         <ImplicitUsings>enable</ImplicitUsings>
+         <Nullable>enable</Nullable>
+         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+@@ -11,7 +11,7 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
++      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+       <PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
+       <PackageReference Include="SmartAnalyzers.ExceptionAnalyzer" Version="1.0.10" />
+       <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" />
+diff --git a/src/Jellyfin.Plugin.ListenBrainz.Http/Jellyfin.Plugin.ListenBrainz.Http.csproj b/src/Jellyfin.Plugin.ListenBrainz.Http/Jellyfin.Plugin.ListenBrainz.Http.csproj
+index 3747d36..cb92bbd 100644
+--- a/src/Jellyfin.Plugin.ListenBrainz.Http/Jellyfin.Plugin.ListenBrainz.Http.csproj
++++ b/src/Jellyfin.Plugin.ListenBrainz.Http/Jellyfin.Plugin.ListenBrainz.Http.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+     <PropertyGroup>
+-        <TargetFramework>net9.0</TargetFramework>
++        <TargetFramework>net10.0</TargetFramework>
+         <ImplicitUsings>enable</ImplicitUsings>
+         <Nullable>enable</Nullable>
+         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+@@ -11,8 +11,8 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
+-        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4" />
++        <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
++        <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />
+         <PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
+         <PackageReference Include="SmartAnalyzers.ExceptionAnalyzer" Version="1.0.10" />
+         <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" />
+diff --git a/src/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi.csproj b/src/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi.csproj
+index f342797..d935125 100644
+--- a/src/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi.csproj
++++ b/src/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi/Jellyfin.Plugin.ListenBrainz.MusicBrainzApi.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+     <PropertyGroup>
+-        <TargetFramework>net9.0</TargetFramework>
++        <TargetFramework>net10.0</TargetFramework>
+         <ImplicitUsings>enable</ImplicitUsings>
+         <Nullable>enable</Nullable>
+         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+@@ -11,7 +11,7 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-      <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
++      <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+       <PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
+       <PackageReference Include="SmartAnalyzers.ExceptionAnalyzer" Version="1.0.10" />
+       <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" />
+diff --git a/src/Jellyfin.Plugin.ListenBrainz/Jellyfin.Plugin.ListenBrainz.csproj b/src/Jellyfin.Plugin.ListenBrainz/Jellyfin.Plugin.ListenBrainz.csproj
+index 08349f3..7ddf83f 100644
+--- a/src/Jellyfin.Plugin.ListenBrainz/Jellyfin.Plugin.ListenBrainz.csproj
++++ b/src/Jellyfin.Plugin.ListenBrainz/Jellyfin.Plugin.ListenBrainz.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+     <PropertyGroup>
+-        <TargetFramework>net9.0</TargetFramework>
++        <TargetFramework>net10.0</TargetFramework>
+         <ImplicitUsings>enable</ImplicitUsings>
+         <Nullable>enable</Nullable>
+         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+@@ -11,9 +11,9 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-      <PackageReference Include="Jellyfin.Controller" Version="10.11.0-rc5" />
+-      <PackageReference Include="Jellyfin.Data" Version="10.11.0-rc5" />
+-      <PackageReference Include="Jellyfin.Model" Version="10.11.0-rc5" />
++      <PackageReference Include="Jellyfin.Controller" Version="12.0.0" />
++      <PackageReference Include="Jellyfin.Data" Version="12.0.0" />
++      <PackageReference Include="Jellyfin.Model" Version="12.0.0" />
+       <PackageReference Include="SerilogAnalyzer" Version="0.15.0" />
+       <PackageReference Include="SmartAnalyzers.ExceptionAnalyzer" Version="1.0.10" />
+       <PackageReference Include="SmartAnalyzers.MultithreadingAnalyzer" Version="1.1.31" />

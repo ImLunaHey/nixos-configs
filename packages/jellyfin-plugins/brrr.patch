@@ -1,0 +1,24 @@
+diff --git a/Jellyfin.Plugin.BrrrNow/Jellyfin.Plugin.BrrrNow.csproj b/Jellyfin.Plugin.BrrrNow/Jellyfin.Plugin.BrrrNow.csproj
+index 52aeba4..e488532 100644
+--- a/Jellyfin.Plugin.BrrrNow/Jellyfin.Plugin.BrrrNow.csproj
++++ b/Jellyfin.Plugin.BrrrNow/Jellyfin.Plugin.BrrrNow.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFramework>net8.0</TargetFramework>
++    <TargetFramework>net10.0</TargetFramework>
+     <RootNamespace>Jellyfin.Plugin.BrrrNow</RootNamespace>
+     <AssemblyVersion>1.0.0.0</AssemblyVersion>
+     <FileVersion>1.0.0.0</FileVersion>
+@@ -12,8 +12,8 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Jellyfin.Controller" Version="10.10.0" />
+-    <PackageReference Include="Jellyfin.Model" Version="10.10.0" />
++    <PackageReference Include="Jellyfin.Controller" Version="12.0.0" />
++    <PackageReference Include="Jellyfin.Model" Version="12.0.0" />
+   </ItemGroup>
+ 
+   <ItemGroup>

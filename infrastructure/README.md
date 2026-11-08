@@ -58,6 +58,62 @@ a destination of the GitHub deployment policy. Other Pocket ID users require
 explicit membership and NetBird approval; granting them Pocket ID access does
 not automatically make them NetBird administrators.
 
-This OIDC integration authenticates NetBird. Individual applications need their
-own OIDC clients if they are to use Pocket ID login; Jellyfin's native client
-login is unchanged.
+This OIDC integration authenticates NetBird. Individual applications use their
+own OIDC clients, including Jellyfin below.
+
+# Jellyfin upgrade and Pocket ID
+
+Nova pins Jellyfin **12.4** by container digest in `machines/nova/jellyfin.nix`.
+`packages/jellyfin-plugins` pins compatible plugin releases and builds four
+small compatibility ports from upstream source: brrr.now, Cinema Mode,
+SkinManager and ListenBrainz. The patches update .NET/Jellyfin dependencies;
+source archives and all NuGet packages are hash-locked. ListenBrainz's settings
+JavaScript is bundled from its TypeScript source during the Nix build.
+
+The SSO plugin is the maintained Buco7854 fork, **5.0.0.3**, for Jellyfin 12.
+The Pocket ID client uses:
+
+- Name: `Jellyfin`, confidential, with PKCE enabled.
+- Callback: `https://jellyfin.flaked.org/sso/OID/redirect/pocketid`
+- Allowed group: `jellyfin-users`.
+- Launch URL: `https://jellyfin.flaked.org/sso/OID/start/pocketid`.
+- Jellyfin provider: `pocketid`, issuer `https://id.flaked.org`.
+- Identity claim: `sub`, linked to the existing Jellyfin user, so changing a
+  Pocket ID display name does not create a new Jellyfin account.
+- Authorization/role synchronization disabled; existing Jellyfin permissions
+  and password authentication remain available. Live TV flags match the
+  existing user's policy.
+
+The client secret is stored in Jellyfin's private plugin configuration, not in
+Git or the Nix store. Administrator API keys used for initial setup are not
+needed for subsequent logins. Additional users must be allowed in Pocket ID;
+link their existing Jellyfin accounts at `/SSOViews/linking` before using SSO
+to preserve their library history. The login page offers **Sign in with Pocket
+ID**. Native clients can retain password login or use Jellyfin Quick Connect
+from an already signed-in browser; no authentication proxy intercepts the API.
+
+## Backup and rollback
+
+Jellyfin 12 rewrites the database. A system-generation rollback alone is not a
+safe downgrade. `install-jellyfin-plugins.py` runs while the container is stopped
+and saves `config` and `cache` before changing the pinned plugin bundle. It
+preserves plugin configurations and archives superseded binaries. Backups live
+in root-only `/var/backups/jellyfin/before-plugin-change-*/state.tar` directories.
+Unchanged bundles do not create another backup. Plugin auto-updates are disabled
+for the pinned plugins; update the Nix pins instead.
+
+The initial stopped-server backup is
+`/var/backups/jellyfin/pre-12.4-20261108/state.tar`, with a verified SHA-256 file,
+the previous image digest, and the previous NixOS system path alongside it.
+Before the live upgrade, the database migration was exercised on an isolated
+copy using `--mode MigrateSystem`, with third-party binaries removed.
+
+To roll back, stop `docker-jellyfin`, preserve the failed state in another
+directory, restore **both** `config` and `cache` from the chosen pre-upgrade tar
+with numeric ownership preserved, then activate the recorded old NixOS system.
+That system must use the old Jellyfin image and must not run the new plugin
+installer against restored data. The old image digest is
+`jellyfin/jellyfin@sha256:333b647716631443a43c7fabac4b0c46b4e2f036bad19547e00958f10f721b85`.
+Keep the backup until accounts, watched items, playback and client logins have
+been verified. Run a full library scan after upgrading, as required by Jellyfin
+12; the first scan can take longer than normal.

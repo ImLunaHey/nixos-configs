@@ -1,0 +1,34 @@
+[
+  {
+    "name": "brrr",
+    "repo": "ImLunaHey/jellyfin-plugin-brrr-now",
+    "rev": "2809d515ac1795ba0ab2d5afb3b7c61f64436d13",
+    "project": "BrrrNow",
+    "url": "https://github.com/ImLunaHey/jellyfin-plugin-brrr-now/archive/2809d515ac1795ba0ab2d5afb3b7c61f64436d13.tar.gz",
+    "sha256": "08daec08f29ffa37613d6360b78e07ca6017641d5e2e5143d9f5cce1645c9577"
+  },
+  {
+    "name": "cinema",
+    "repo": "CherryFloors/jellyfin-plugin-cinemamode",
+    "rev": "e7685f1c0f6cc09500c03ba71a16aaf201170a12",
+    "project": "CinemaMode",
+    "url": "https://github.com/CherryFloors/jellyfin-plugin-cinemamode/archive/e7685f1c0f6cc09500c03ba71a16aaf201170a12.tar.gz",
+    "sha256": "fe896bb7dce62d906df8de008c1451975f41f73d2f80a51935c0d056e39f2c88"
+  },
+  {
+    "name": "skin",
+    "repo": "danieladov/jellyfin-plugin-skin-manager",
+    "rev": "0e68847fff7770f769eb22f81c164362b29d7e8b",
+    "project": "SkinManager",
+    "url": "https://github.com/danieladov/jellyfin-plugin-skin-manager/archive/0e68847fff7770f769eb22f81c164362b29d7e8b.tar.gz",
+    "sha256": "9f63e73735c2836f2913ed54123310877fb3136299ae5991c10685fcd60a317f"
+  },
+  {
+    "name": "listenbrainz",
+    "repo": "lyarenei/jellyfin-plugin-listenbrainz",
+    "rev": "ec87ced3719f43a9a40d2fcbe4fd7482d0262957",
+    "project": "ListenBrainz",
+    "url": "https://github.com/lyarenei/jellyfin-plugin-listenbrainz/archive/ec87ced3719f43a9a40d2fcbe4fd7482d0262957.tar.gz",
+    "sha256": "3cb37dd8ea61962d68341946628df0f73da0989fc9b7172d0985487598b5e573"
+  }
+]

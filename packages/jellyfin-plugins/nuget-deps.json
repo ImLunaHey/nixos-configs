@@ -1,0 +1,252 @@
+[
+  {
+    "pname": "diacritics",
+    "version": "4.1.8",
+    "sha256": "2f2b17644a1e7b526edc71a2bdf5784ef7456334d8f9fd1cbbf214fc5a4e9f37"
+  },
+  {
+    "pname": "icu4n",
+    "version": "60.1.0-alpha.356",
+    "sha256": "d50c8e80eee934c7a812006d97aa3c206e28f75c03da11548112348ccd25b716"
+  },
+  {
+    "pname": "icu4n.transliterator",
+    "version": "60.1.0-alpha.356",
+    "sha256": "44b37040d56a373f0e99f6ff982febcd0595abc73bb829cd746daa8b8c4999db"
+  },
+  {
+    "pname": "j2n",
+    "version": "2.0.0",
+    "sha256": "62fb48584ae59b63b8f61837948466e476bcfe8c244247ccb9dcee95d0b71210"
+  },
+  {
+    "pname": "jellyfin.common",
+    "version": "12.0.0",
+    "sha256": "837d35af946bda9dd08c9a2f824c01d2c352f6cd6d5a319a9b5cd8f46ae5ca19"
+  },
+  {
+    "pname": "jellyfin.controller",
+    "version": "12.0.0",
+    "sha256": "eb406cd6a8b5335ca99167f38c73e20e2ebb2f9b74378f4a63b49d8d2a70e660"
+  },
+  {
+    "pname": "jellyfin.data",
+    "version": "12.0.0",
+    "sha256": "ff9a9b883a333302dbea00ddb4f721e7d618d4e7c6e60ba1a20fb98059943858"
+  },
+  {
+    "pname": "jellyfin.database.implementations",
+    "version": "12.0.0",
+    "sha256": "8852d9689f753f03b683ac4297f87f737634c602b57e2bc2e131af4e1feffc34"
+  },
+  {
+    "pname": "jellyfin.extensions",
+    "version": "12.0.0",
+    "sha256": "14d824e82a04adf855c0d89a179ecc1a8ffdaf41e7fb7163f8a12a4354f1a10a"
+  },
+  {
+    "pname": "jellyfin.mediaencoding.keyframes",
+    "version": "12.0.0",
+    "sha256": "21b7a46d5013eb3b231a0c09528c77443b0bb7bf92c97e4a49aa0b9b17334257"
+  },
+  {
+    "pname": "jellyfin.model",
+    "version": "12.0.0",
+    "sha256": "47d3cdedde4f8921b3c8a0a8e100c362bbca8d8377f859553965f73008f9255c"
+  },
+  {
+    "pname": "jellyfin.naming",
+    "version": "12.0.0",
+    "sha256": "699ac0648f96b9048873360a3534018d990b56f605f78ba7a6403b8ae6a8db32"
+  },
+  {
+    "pname": "microsoft.entityframeworkcore",
+    "version": "10.0.11",
+    "sha256": "8fe0cda62e5f774efb40630abb4f4b283ddf579a969acc2cbb2a69face601ffd"
+  },
+  {
+    "pname": "microsoft.entityframeworkcore.abstractions",
+    "version": "10.0.11",
+    "sha256": "1780a9e1d590c773173eed8c29a588f07ec92284cff09f204df81ec7737a4135"
+  },
+  {
+    "pname": "microsoft.entityframeworkcore.analyzers",
+    "version": "10.0.11",
+    "sha256": "597d99ec4df06170df434df60b7dde6d0a5b7c3f166ee15b2ffc94f17044c3b7"
+  },
+  {
+    "pname": "microsoft.entityframeworkcore.relational",
+    "version": "10.0.11",
+    "sha256": "68c7cea8d49771293dc899f35a2834f9993ca41976fd9f45c3a1b199f4e5b0c3"
+  },
+  {
+    "pname": "microsoft.extensions.caching.abstractions",
+    "version": "10.0.11",
+    "sha256": "8612c73c24b4e8e38640c9504f729753bc79752a7a04de3c9e3b0663f68e16a0"
+  },
+  {
+    "pname": "microsoft.extensions.caching.memory",
+    "version": "10.0.11",
+    "sha256": "d4b5e564add19f0231745a86fbc047d3e95cecd84a8c0f7dc4dd9f7bf9c8ab62"
+  },
+  {
+    "pname": "microsoft.extensions.caching.memory",
+    "version": "2.0.0",
+    "sha256": "d5f9cdbe9eb62abbe2570625a9597509b75a655a420da87d78265e3431836d63"
+  },
+  {
+    "pname": "microsoft.extensions.configuration",
+    "version": "10.0.0",
+    "sha256": "32c2ec9153e9902be8bf9f835886802c2b75a9f4515f8bb6dbc787c6fa44d1d8"
+  },
+  {
+    "pname": "microsoft.extensions.configuration",
+    "version": "10.0.11",
+    "sha256": "8615ecbad578a7331dcbc0821b5d8faa1e2357f7a6890b2e5949755a90a564eb"
+  },
+  {
+    "pname": "microsoft.extensions.configuration.abstractions",
+    "version": "10.0.0",
+    "sha256": "19c82b9d302278257b0154f5df3c8e8dfc302fce9ef7d8a23bf32230ec4f186d"
+  },
+  {
+    "pname": "microsoft.extensions.configuration.abstractions",
+    "version": "10.0.11",
+    "sha256": "831fda7ec738bfdcd10143ec8b24ade8171955231cf50244e2fa89310a6238f9"
+  },
+  {
+    "pname": "microsoft.extensions.configuration.binder",
+    "version": "10.0.0",
+    "sha256": "612896a00dd5411db693af9b484014a9e1bb503cd99497c75834ee6d43b957c5"
+  },
+  {
+    "pname": "microsoft.extensions.configuration.binder",
+    "version": "10.0.11",
+    "sha256": "a9c48a6beb8975a85a84cb9c6082143b5a60ff3ae5b0794ad6483f9561cffeaa"
+  },
+  {
+    "pname": "microsoft.extensions.dependencyinjection",
+    "version": "10.0.0",
+    "sha256": "2d89bd855968fd1f5cd9a00a1ec0d8279bd8f54d3edc9bdc9667b7a2edc1b6f4"
+  },
+  {
+    "pname": "microsoft.extensions.dependencyinjection",
+    "version": "10.0.11",
+    "sha256": "c6ec0681ef27ece8d2fae4bce50891d0b743391209d609bac3784c5edbee5a3f"
+  },
+  {
+    "pname": "microsoft.extensions.dependencyinjection.abstractions",
+    "version": "10.0.0",
+    "sha256": "f62a1d5cfdfd62a831a269ce3cec5dfe6cdb1b425f3925f3168354de8993d8fb"
+  },
+  {
+    "pname": "microsoft.extensions.dependencyinjection.abstractions",
+    "version": "10.0.11",
+    "sha256": "e4f65e4205a6568f0afbb1a028454077ac5c9fedd754d5734f8720fc306d8ea6"
+  },
+  {
+    "pname": "microsoft.extensions.diagnostics",
+    "version": "10.0.0",
+    "sha256": "a3b4240a2b04705221db6eea0547d615c8b69ece1c804a4baa95fb62f1c64e84"
+  },
+  {
+    "pname": "microsoft.extensions.diagnostics.abstractions",
+    "version": "10.0.0",
+    "sha256": "722c7b43143f837b23eab797bb78e7d1c46fd918a3cdc79a2cb91c844193b791"
+  },
+  {
+    "pname": "microsoft.extensions.http",
+    "version": "10.0.0",
+    "sha256": "827b0ef5eac48bbc4b4b743062e91caf33c3a5c5204643459c6ccf0111d58ebb"
+  },
+  {
+    "pname": "microsoft.extensions.logging",
+    "version": "10.0.0",
+    "sha256": "3feccf01a74b2fade4fc6a8adf8fea0a1a908d8f5a211c597f1941f65aac4abb"
+  },
+  {
+    "pname": "microsoft.extensions.logging",
+    "version": "10.0.11",
+    "sha256": "2bc32305e62cc5474ec98e7e42bc8ea2319f73802413f147aabc793314ae6615"
+  },
+  {
+    "pname": "microsoft.extensions.logging.abstractions",
+    "version": "10.0.0",
+    "sha256": "067860199734d47c134b1a206afabb51eab857b88c037c0f9db7d1c10e118469"
+  },
+  {
+    "pname": "microsoft.extensions.logging.abstractions",
+    "version": "10.0.11",
+    "sha256": "1dd507daae7995b03032cc0c7508d7d350eb81ac5e82d6f2328e1561ece1075a"
+  },
+  {
+    "pname": "microsoft.extensions.options",
+    "version": "10.0.0",
+    "sha256": "8f930ea9948a794b71c739998f364c1b2d2f10b1ddbcfadaab04d0410355b180"
+  },
+  {
+    "pname": "microsoft.extensions.options",
+    "version": "10.0.11",
+    "sha256": "76306a1d836c602e36ed435b932068f71f6502d5f62ece3ad22c5d46b49d31af"
+  },
+  {
+    "pname": "microsoft.extensions.options.configurationextensions",
+    "version": "10.0.0",
+    "sha256": "5c602ce43c4cbd69e68d7f1da91c0a634becb92e34487bec7c9a81d6b3b82fb9"
+  },
+  {
+    "pname": "microsoft.extensions.primitives",
+    "version": "10.0.0",
+    "sha256": "0eea74f0a729b4b8e59e9379b79ffffa9e27f0551381102ae27ff0d6ceaeb3e2"
+  },
+  {
+    "pname": "microsoft.extensions.primitives",
+    "version": "10.0.11",
+    "sha256": "e33f9b1dff2be1c1735f65705b71dd678e320636697e1633960ce47696d2ee8d"
+  },
+  {
+    "pname": "nebml",
+    "version": "1.1.0.5",
+    "sha256": "32b40b7a43facf9cbaadfaa709b2de7e462fe059bc762e07a99fc08984f3050e"
+  },
+  {
+    "pname": "newtonsoft.json",
+    "version": "13.0.3",
+    "sha256": "872fc189e638ab1056555b03aaa38f68bcb54286e221aa646eb1129babf63c77"
+  },
+  {
+    "pname": "polly",
+    "version": "8.7.0",
+    "sha256": "88c36eb165bee27b88be434b51aa2bbb6dd1a1ef6fa42d78d133881db2ef7b01"
+  },
+  {
+    "pname": "polly.core",
+    "version": "8.7.0",
+    "sha256": "d404f85f29bd867d80c20ba5f5612bc179366c13cde7c3fd5df444c6b20f22d8"
+  },
+  {
+    "pname": "seriloganalyzer",
+    "version": "0.15.0",
+    "sha256": "346d28b05361b952070d439ddd9529ca049dd1fa07dc2d90c0409444bf67034d"
+  },
+  {
+    "pname": "smartanalyzers.exceptionanalyzer",
+    "version": "1.0.10",
+    "sha256": "c58f1c6a329756727d4ac70f3b5405cd2c4a87e8a9bda94923c82650f91b35d3"
+  },
+  {
+    "pname": "smartanalyzers.multithreadinganalyzer",
+    "version": "1.1.31",
+    "sha256": "50e867e13f1fe5caa5fe2c7c20779cbcfeac1d4930d8f9a79847d5d233d165e2"
+  },
+  {
+    "pname": "stylecop.analyzers",
+    "version": "1.2.0-beta.556",
+    "sha256": "f7b61841caf9bd9c53be2dfaeb4f1e524035c1beb1965650ed47176e3ad821f5"
+  },
+  {
+    "pname": "stylecop.analyzers.unstable",
+    "version": "1.2.0.556",
+    "sha256": "695a29edaf6bf97d91b191138278019b7a903c42223c15a01f389c1924c4ca67"
+  }
+]

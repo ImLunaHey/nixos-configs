@@ -115,6 +115,7 @@ nixos-configs/
 | `default.nix` | Imports all machine modules |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `hardware.nix` | GPU drivers and hardware acceleration |
+| `jellyfin.nix` | |
 | `matrix.nix` | Matrix-Synapse homeserver + PostgreSQL |
 | `ndi.nix` | Elgato capture card to NDI sender |
 | `networking.nix` | DHCP, firewall, Tailscale |
