@@ -43,12 +43,24 @@ nixos-configs/
 
 | Host | IP | Purpose | Key Services |
 |------|----|---------|--------------|
+| `gateway` | `` | — | — |
 | `gilbert` | `DHCP` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
 | `lake` | `DHCP` | NAS / data lake | ZFS + SMART monitoring,T3 Code |
 | `nova` | `DHCP` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,NDI capture,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
 | `void` | `DHCP` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
 ## Machine Details
+
+### `gateway`
+
+**IP:** `` &nbsp; **Purpose:** —
+
+| File | Role |
+|------|------|
+| `configuration.nix` | |
+| `flake.nix` | |
+| `hardware-configuration.nix` | Generated hardware config (do not edit) |
+| `killdeer.nix` | |
 
 ### `gilbert`
 
