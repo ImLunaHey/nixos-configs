@@ -13,10 +13,13 @@ The workflow is inactive until `NETBIRD_DEPLOY_TARGETS` is configured. Bootstrap
 2. Deploy the NetBird client configuration to each Linux host over existing
    administrative SSH access, then enrol it with `sudo netbird up`. Install/enrol
    the NetBird macOS client before opting a Mac into CI. Keep Tailscale available.
-3. Generate a dedicated SSH deployment key on a trusted machine. Install only its
-   public key in the appropriate Nix user's `openssh.authorizedKeys.keys` (or
-   `authorizedKeyFiles`). The VPS admin keys are in `machines/gateway/admin.pub`;
-   other Linux hosts use `homelabBase.user.authorizedKeys` in `personal.nix`.
+3. The dedicated deployment public key is in `machines/gateway/deploy.pub`,
+   included for `luna` on the VPS and Linux hosts. Its authorized-key options
+   restrict source addresses to the current NetBird subnet (`100.66.0.0/16`) and
+   disable forwarding, PTYs, and user startup scripts. When rotating it, generate
+   a dedicated SSH key on a trusted machine, update this public-key file, and
+   deploy it before replacing the GitHub secret. Update the source restriction
+   too if the NetBird subnet changes.
    Do not reuse a personal private key in Actions. A deploy identity that can
    activate arbitrary Nix configurations is necessarily trusted with root access.
 4. Set repository secret `DEPLOY_SSH_PRIVATE_KEY` to the private key and
@@ -24,10 +27,14 @@ The workflow is inactive until `NETBIRD_DEPLOY_TARGETS` is configured. Bootstrap
    each host's NetBird IP. Never populate trust by unverified scanning in CI.
    CI also needs noninteractive sudo for the rebuild command on every target;
    Linux admin users already have it, while Macs require explicit setup.
-5. Create a reusable, expiring NetBird setup key with **ephemeral peers** enabled,
+5. Create a reusable NetBird setup key with **ephemeral peers** enabled,
    auto-assigned to a `github-deploy` group. Store it as `NETBIRD_SETUP_KEY`.
-   NetBird access policies should allow that group to reach deployment hosts on
-   TCP 22 only. Remove any broad default policy that overrides that restriction.
+   The current key has unlimited usage and no expiry. Permanent hosts use a
+   separate `homelab` key/group with ephemeral peers disabled.
+   NetBird access policies should allow `github-deploy` to initiate connections
+   to `homelab` on TCP 22 only. Preserve host-to-host access with a separate
+   `homelab` policy, then disable any broad default policy that overrides the
+   CI restriction.
 6. Set repository variable `NETBIRD_DEPLOY_TARGETS` to a JSON list of objects with
    `host` (the flake configuration name) and `target` (`user@NETBIRD_IP`). Add only
    enrolled, reachable hosts; do not enter public or Tailscale addresses. The

@@ -14,7 +14,7 @@
       authorizedKeyFiles = [(builtins.fetchurl {
         url = "https://github.com/ImLunaHey.keys";
         sha256 = "17b8ip05wyjvab7kl43ym19cv70vam05cwf4bnbin0pl3i1h1c7m";
-      })];
+      }) ./machines/gateway/deploy.pub];
     };
     ssh.enable = true;
     vpn.provider = "tailscale";

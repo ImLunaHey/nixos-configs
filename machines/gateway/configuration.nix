@@ -14,7 +14,7 @@
   users.users.luna = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
-    openssh.authorizedKeys.keyFiles = [ ./admin.pub ];
+    openssh.authorizedKeys.keyFiles = [ ./admin.pub ./deploy.pub ];
   };
   services.openssh.settings = {
     PasswordAuthentication = false;

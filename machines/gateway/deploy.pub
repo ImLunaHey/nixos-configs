@@ -1,0 +1,1 @@
+restrict,from="100.66.0.0/16" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGP/MZxCEvxoKZl0zC5ITkZ2jngg8wos+q7Qb215ITRp github-deploy@nixos-configs
