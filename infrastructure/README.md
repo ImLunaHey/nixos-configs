@@ -328,12 +328,14 @@ Watchstate requires an intermediate migration before 1.10.11 if its database
 reports that its migration state is inside a squashed range. With the production
 service stopped and its configuration backed up, run the following immutable
 intermediate image against `/var/lib/watchstate/config:/config` with `--user 0:0`,
-`--network none`, `-e DISABLE_CRON=1`, and no published ports:
+`--network none`, `-e DISABLE_CRON=1`, and no published ports. Pass
+`/opt/bin/console db:migrations --list` as its command so the entrypoint applies
+migrations and exits cleanly:
 
 `ghcr.io/arabcoders/watchstate:v1.10.3@sha256:e26aef6772ad3a1a83e26cd5fb56c9798ab2c04de4d88806e4d76e8955eaac89`
 
-Wait for migrations to finish and the version startup message, stop and remove
-that temporary container, then start the pinned 1.10.11 service. Rehearse the
+Wait for a successful exit and the applied migration list, remove the temporary
+container, then start the pinned 1.10.11 service. Rehearse the
 same sequence on a separate copy first. Never expose the intermediate version
 or reset the database to bypass the migration guard.
 
