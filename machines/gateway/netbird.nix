@@ -129,6 +129,7 @@ in
 
   # The VPS is also a peer so CI can deploy over NetBird's private interface.
   services.netbird = {
+    package = import ./netbird-client-package.nix { inherit pkgs; };
     useRoutingFeatures = "client";
     clients.default = {
       name = "netbird";

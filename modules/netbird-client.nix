@@ -1,7 +1,8 @@
-{ ... }:
+{ pkgs, ... }:
 {
   # Run the client alongside Tailscale until every peer and route has moved.
   services.netbird = {
+    package = import ../machines/gateway/netbird-client-package.nix { inherit pkgs; };
     useRoutingFeatures = "client";
 
     clients.default = {

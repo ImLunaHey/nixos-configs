@@ -62,6 +62,7 @@ nixos-configs/
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `ingress.nix` | |
 | `killdeer.nix` | |
+| `netbird-client-package.nix` | |
 | `netbird.nix` | |
 | `pocket-id.nix` | |
 
