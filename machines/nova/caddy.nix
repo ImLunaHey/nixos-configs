@@ -1,15 +1,30 @@
 { config, pkgs, ... }:
 let
   privateDNS = import ../../infrastructure/netbird-dns.nix;
+  jellyfinProxy = ''
+    handle /flaked-assets/forest.jpg {
+      root * ${../../infrastructure/jellyfin-assets}
+      rewrite * /forest.jpg
+      header Cache-Control "public, max-age=86400"
+      file_server
+    }
+    ${builtins.readFile ../../infrastructure/jellyfin-proxy.caddy}
+  '';
 in
 {
   sops.secrets.cloudflare_api_token = {};
 
   services.caddy = {
     enable = true;
+    globalConfig = ''
+      servers {
+        trusted_proxies static 100.66.248.2/32
+        trusted_proxies_strict
+      }
+    '';
     package = pkgs.caddy.withPlugins {
-      plugins = [ "github.com/caddy-dns/cloudflare@v0.2.3" ];
-      hash = "sha256-bL1cpMvDogD/pdVxGA8CAMEXazWpFDBiGBxG83SmXLA=";
+      plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
+      hash = "sha256-QSiwKqKvSxhksWBF4/MlBOpyXba5xOQ2sRwA0R7399E=";
     };
     virtualHosts."matrix.flaked.org" = {
       extraConfig = ''
@@ -28,7 +43,18 @@ in
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
-        reverse_proxy 127.0.0.1:8096
+        ${jellyfinProxy}
+      '';
+    };
+    # A separate listener prevents the VPS from reaching Nova's other sites.
+    virtualHosts."jellyfin.flaked.org:9443" = {
+      extraConfig = ''
+        bind ${privateDNS.novaIPv4}
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
+        }
+        ${jellyfinProxy}
       '';
     };
     virtualHosts."pihole.flaked.org" = {
@@ -104,7 +130,9 @@ in
     };
   };
 
-  networking.firewall.interfaces.wt0.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.interfaces.wt0.allowedTCPPorts = [ 80 443 9443 ];
+
+  services.cloudflare-dns.recordIPs."jellyfin.flaked.org" = "23.150.68.231";
 
   systemd.services.caddy = {
     after = [ "tailscaled.service" "tailscale-autoauth.service" "netbird.service" ];

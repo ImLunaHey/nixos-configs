@@ -24,6 +24,7 @@ in {
     "nixos:home-servers" = [ "lake" "nova" "void" ];
     "nixos:managed-servers" = [ "gateway" "lake" "nova" "void" ];
     "nixos:web-servers" = [ "nova" ];
+    "nixos:public-gateway" = [ "gateway" ];
   };
   # Membership in these groups is maintained by identity/setup-key enrolment.
   # Never replace their peer lists: CI runners and personal devices are dynamic.
@@ -31,6 +32,9 @@ in {
   personalUser = "CiRmOTAwM2NkOS05N2NmLTQ4ZDYtOTY0ZS0yOWJjOTQ4YzU2NmUSFGRibzhrNWk2bG81MDAwYzJqZ2pn";
   personalAutoGroups = [ "personal-devices" ];
   policies = [
+    (policy "jellyfin-ingress" "Public gateway to Nova's dedicated Jellyfin TLS listener only" [
+      (rule "Jellyfin ingress" [ "nixos:public-gateway" ] [ "nixos:web-servers" ] "tcp" [ "9443" ] false)
+    ])
     (policy "administration" "Approved administrator devices to managed servers over TCP" [
       (rule "Administrative TCP" [ "nixos:administrators" ] [ "nixos:managed-servers" ] "tcp" [] false)
     ])

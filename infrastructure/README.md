@@ -24,8 +24,9 @@ NetBird management and Pocket ID. Clients must enable NetBird DNS management.
 Server peers currently retain `--disable-dns` during migration; they do not use
 these records until DNS is deliberately enabled on them.
 
-Public Cloudflare records retain their existing NixOS sync to Tailscale while
-old clients remain in use. Public whole-zone management through Terranix/OpenTofu
+Public Cloudflare records are synchronized from Nix. Jellyfin overrides the
+default Tailscale destination with Gateway’s public address, `23.150.68.231`.
+NetBird clients still resolve Jellyfin directly to Nova. Public whole-zone management through Terranix/OpenTofu
 is still separate work; this manifest controls only the NetBird private answers.
 
 For Apple TV, install the official NetBird TV app (tvOS 17+), select the
@@ -82,8 +83,7 @@ The Pocket ID client uses:
 - Identity claim: `sub`, linked to the existing Jellyfin user, so changing a
   Pocket ID display name does not create a new Jellyfin account.
 - Authorization/role synchronization disabled; existing Jellyfin permissions
-  and password authentication remain available. Live TV flags match the
-  existing user's policy.
+  remain authoritative. New viewers receive explicit library permissions.
 
 The client secret is stored in Jellyfin's private plugin configuration, not in
 Git or the Nix store. The configuration directory is restricted to the remapped
@@ -91,8 +91,25 @@ container user and root. Administrator API keys used for initial setup are not
 needed for subsequent logins. Additional users must be allowed in Pocket ID;
 link their existing Jellyfin accounts at `/SSOViews/linking` before using SSO
 to preserve their library history. The login page offers **Sign in with Pocket
-ID**. Native clients can retain password login or use Jellyfin Quick Connect
-from an already signed-in browser; no authentication proxy intercepts the API.
+ID** on a forest-themed page, with its Unsplash image served locally. Password
+authentication and password recovery endpoints return 403 at both Caddy
+listeners; hiding the forms is only presentation. Existing sessions continue
+to work. Native clients use Jellyfin Quick Connect authorized from a Pocket ID
+session; no generic authentication proxy intercepts their API requests.
+
+The public route is Gateway HTTPS → Nova’s NetBird-only TCP 9443 listener, with
+upstream certificate verification for `jellyfin.flaked.org`. NetBird permits
+only that backend port from Gateway. Private devices use Nova TCP 443 directly.
+The backend remains bound to host loopback. Caddy trusts forwarded addresses
+only from Gateway, and Jellyfin trusts loopback plus the exact Docker bridge
+gateway. Local administrator recovery remains possible over SSH.
+
+The family accounts are linked by stable Pocket ID subjects. Hannah has only
+Movies and Shows, no administrator, deletion, download, Live TV or other-user
+control rights. Rachel retains her existing account and library history. Both
+belong only to `jellyfin-users`, which grants no NetBird access. Passkey
+onboarding uses private, expiring one-time links; credentials are never stored
+in this repository.
 
 ## Backup and rollback
 
@@ -173,12 +190,12 @@ Tailscale access remain separate controls.
 | Personal devices, including future Pocket ID enrolments | Nova | Initiate TCP 443 only |
 | GitHub deployment runners | Gateway, Lake, Nova, Void | Initiate TCP 22 only |
 | Lake, Nova, Void | Each other | All protocols, subject to host firewalls |
-| Gateway | Home servers | No initiated connections |
+| Gateway | Nova | Initiate TCP 9443 only (public Jellyfin backend) |
 
-Gateway currently proxies only its local NetBird and Pocket ID services. There
-is no private backend connection to authorize yet. When adding public ingress
-for a home service, add a separate policy for its specific destination and port.
-Do not put Gateway back in the home-server mesh.
+Gateway proxies its local NetBird and Pocket ID services plus Jellyfin through
+a dedicated Nova listener. Its `nixos:jellyfin-ingress` policy grants TCP 9443
+only; Gateway remains outside the home-server mesh and cannot initiate SSH or
+reach Nova’s other HTTPS sites.
 
 Nova's HTTPS sites share one address and port. The personal-device rule permits
 all of those HTTPS sites, not only Jellyfin; each application still authenticates
@@ -266,5 +283,6 @@ all four servers, and Jellyfin HTTPS still returned 200. An isolated personal
 peer could reach Nova TCP 443 but could not reach SSH on any server. Reassigning
 that test peer solely to `github-deploy` permitted TCP 22 on all four servers
 and denied Nova TCP 443. Gateway could not initiate SSH to Lake/Nova/Void or
-HTTPS to Nova. All permanent servers report non-ephemeral registrations at
+HTTPS to Nova on TCP 443. The later public Jellyfin route deliberately adds only
+Nova TCP 9443; recheck both allowed and denied ports after applying it. All permanent servers report non-ephemeral registrations at
 their original IP addresses. Temporary test credentials and peers were removed.

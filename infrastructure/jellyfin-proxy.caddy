@@ -1,0 +1,11 @@
+# Password sign-in and recovery are disabled at every Jellyfin ingress.
+# Match case-insensitively because ASP.NET routes are case-insensitive.
+@passwordLogin path_regexp passwordLogin (?i)^/+users/+(authenticatebyname|[^/]+/+authenticate|forgotpassword(/+pin)?)/?$
+respond @passwordLogin "Sign in with Pocket ID, or use Quick Connect from an authenticated device." 403
+
+# Do not publish the account directory on the login screen.
+@publicUsers path_regexp publicUsers (?i)^/+users/+public/?$
+header @publicUsers Content-Type "application/json"
+respond @publicUsers "[]" 200
+
+reverse_proxy 127.0.0.1:8096

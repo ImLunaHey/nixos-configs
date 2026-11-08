@@ -8,11 +8,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "t3code";
-  version = "0.1.6-nightly.20261030.3940";
+  version = "0.1.7";
 
   src = fetchurl {
     url = "https://github.com/pingdotgg/t3code/releases/download/v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-    hash = "sha256-nXtidxSIRPew7Ar/BbOjZy3s6bR/0x+noQPWFsFqYX0=";
+    hash = "sha256-wImJK/eSLi5zxvRKXR6hJcmfcON4wYNhy77S+6GSDmw=";
   };
 
   sourceRoot = "t3-${finalAttrs.version}-linux-x64";
@@ -22,6 +22,12 @@ stdenv.mkDerivation (finalAttrs: {
     autoPatchelfHook
   ];
   buildInputs = [ stdenv.cc.cc.lib ];
+
+  # The upstream archive also bundles an Alpine-only optional addon. NixOS
+  # uses the GNU variant; remove the incompatible musl binary before patching.
+  postUnpack = ''
+    rm -rf "$sourceRoot/node_modules/@yuuang/ffi-rs-linux-x64-musl"
+  '';
 
   # The CLI is a Bun self-contained executable. Stripping it removes embedded
   # embedded program data and leaves a binary that crashes at startup.
