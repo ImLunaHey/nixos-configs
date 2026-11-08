@@ -9,7 +9,8 @@ let
     inherit name;
     url = "https://${name}";
     type = "http";
-  }) config.services.caddy.virtualHosts;
+  }) (filterAttrs (name: _: builtins.match "[A-Za-z0-9.-]+" name != null)
+    config.services.caddy.virtualHosts);
 
   monitorsJson = builtins.toJSON caddyMonitors;
 
