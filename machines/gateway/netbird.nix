@@ -120,6 +120,7 @@ in
     };
 
     docker-netbird-server = {
+      restartTriggers = [ initialiseConfig ];
       requires = [ "netbird-control-plane-init.service" ];
       after = [ "netbird-control-plane-init.service" ];
     };
