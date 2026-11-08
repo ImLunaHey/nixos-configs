@@ -71,14 +71,33 @@ jobs:
           DEPLOY_TARGET: ${{ matrix.target }}
         run: |
           python3 - <<'PY'
-          import ipaddress, json, os, subprocess
-          address = os.environ['DEPLOY_TARGET'].rsplit('@', 1)[-1]
+          import ipaddress, json, os, subprocess, time
+          target = os.environ['DEPLOY_TARGET']
+          address = target.rsplit('@', 1)[-1]
           ipaddress.ip_address(address)
-          route = json.loads(subprocess.check_output(['ip', '-j', 'route', 'get', address]))
-          if not route or route[0].get('dev') != 'wt0':
-              raise SystemExit('Refusing deployment: target route does not use NetBird wt0')
+          # Enrolment and route installation can finish before the peer tunnel.
+          # Probe with the same identity and pinned host keys used for deployment.
+          for attempt in range(12):
+              route = json.loads(subprocess.check_output(
+                  ['ip', '-j', 'route', 'get', address], timeout=5))
+              if not route or route[0].get('dev') != 'wt0':
+                  raise SystemExit('Refusing deployment: target route does not use NetBird wt0')
+              try:
+                  result = subprocess.run(
+                      ['ssh', '-o', 'ConnectTimeout=5', target, 'true'], timeout=8)
+                  if result.returncode == 0:
+                      break
+              except subprocess.TimeoutExpired:
+                  pass
+              if attempt == 11:
+                  raise SystemExit('NetBird SSH connection did not become ready within 12 attempts')
+              print('Waiting for authenticated SSH over NetBird...', flush=True)
+              time.sleep(2)
           PY
           python3 scripts/deploy.py "$DEPLOY_HOST" --target "$DEPLOY_TARGET" --revision "$GITHUB_SHA"
+      - name: Diagnose failed NetBird deployment
+        if: failure()
+        run: sudo netbird status --detail || true
       - name: Disconnect and remove runner credentials
         if: always()
         run: |
