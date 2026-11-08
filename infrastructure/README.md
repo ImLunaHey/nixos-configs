@@ -85,7 +85,8 @@ The Pocket ID client uses:
   existing user's policy.
 
 The client secret is stored in Jellyfin's private plugin configuration, not in
-Git or the Nix store. Administrator API keys used for initial setup are not
+Git or the Nix store. The configuration directory is restricted to the remapped
+container user and root. Administrator API keys used for initial setup are not
 needed for subsequent logins. Additional users must be allowed in Pocket ID;
 link their existing Jellyfin accounts at `/SSOViews/linking` before using SSO
 to preserve their library history. The login page offers **Sign in with Pocket
@@ -117,3 +118,14 @@ installer against restored data. The old image digest is
 Keep the backup until accounts, watched items, playback and client logins have
 been verified. Run a full library scan after upgrading, as required by Jellyfin
 12; the first scan can take longer than normal.
+
+Deployment validation on 2026-11-08: Nova reports 12.4.0, all 11 third-party
+plugins are active, all three user IDs and policies are unchanged, and an HTTPS
+media range request through NetBird returned 206. The full library scan
+completed successfully. A watched alternate edition of `Selfie` S01E01 was
+consolidated into the episode's media sources, retaining its watched state.
+Pocket ID accepted the pushed authorization request; completing login with the
+user's passkey is the final browser check.
+
+References: [Jellyfin 12 upgrade guidance](https://jellyfin.org/posts/jellyfin-release-12.0/)
+and [maintained SSO plugin](https://github.com/Buco7854/jellyfin-plugin-sso).
