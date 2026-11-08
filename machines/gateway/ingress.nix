@@ -23,8 +23,22 @@
   services.caddy = {
     enable = true;
     email = "xo@wvvw.me";
+    # Caddy 2.11.7's server-wide read-idle guard overrides route timeouts.
+    # Disable it here and restore it for ordinary HTTP requests below, so
+    # authenticated, idle NetBird gRPC streams are not reset every minute.
+    globalConfig = ''
+      servers {
+        timeouts {
+          read_body_idle -1s
+        }
+      }
+    '';
     virtualHosts."netbird.flaked.org".extraConfig = ''
       import /var/lib/gateway-bootstrap/access.caddy
+      @ordinaryHTTP not header Content-Type application/grpc*
+      timeouts @ordinaryHTTP {
+        read_timeout 1m
+      }
       @grpc header Content-Type application/grpc*
       reverse_proxy @grpc h2c://127.0.0.1:8081
       @backend path /relay* /ws-proxy/* /api/* /oauth2/*
@@ -32,10 +46,16 @@
       reverse_proxy /* 127.0.0.1:8080
     '';
     virtualHosts."id.flaked.org".extraConfig = ''
+      timeouts {
+        read_timeout 1m
+      }
       import /var/lib/gateway-bootstrap/access.caddy
       reverse_proxy 127.0.0.1:1411
     '';
     virtualHosts."jellyfin.flaked.org".extraConfig = ''
+      timeouts {
+        read_timeout 1m
+      }
       # Public ingress exposes TCP/443, so do not advertise unavailable QUIC.
       header Alt-Svc "clear"
       header Strict-Transport-Security "max-age=31536000"
