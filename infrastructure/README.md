@@ -354,7 +354,9 @@ mounting. A failed required mount isolated emergency mode and stopped networking
 The fix declares the parent filesystem and sets `canmount=noauto` for all seven
 systemd-managed datasets. A pre-mount service reconciles properties after pool
 import; a separate service applies permissions only after the shared datasets
-are mounted. Recovery also remounted Nova's NFS paths and restarted consumers to
+are mounted. The import oneshot is not restarted during a live deployment:
+stopping it would also stop its dependent mounts. Import changes take effect at
+the next boot. Recovery also remounted Nova's NFS paths and restarted consumers to
 remove stale handles. Check actual media files, not just directory existence.
 
 Pulsar is deferred, with Darwin inputs unchanged. Gilbert is powered off; its

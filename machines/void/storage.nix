@@ -154,6 +154,11 @@ in
 
   # Only systemd's fstab units mount these datasets. Prepare properties after
   # importing the pool, before any mount starts, including on existing hosts.
+  # Stopping this oneshot also stops the mounts that require it. Keep an
+  # already-imported pool online when only unit ordering changes on deployment;
+  # updated import settings take effect at the next boot.
+  systemd.services.zfs-import-storage.restartIfChanged = false;
+
   systemd.services.void-storage-datasets = {
     description = "Prepare Void ZFS datasets for systemd mounts";
     requires = [ "zfs-import-storage.service" ];
