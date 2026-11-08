@@ -11,6 +11,6 @@ in {
     preStart = lib.mkBefore ''
       ${pkgs.python3}/bin/python3 ${../../scripts/install-jellyfin-plugins.py} --source ${plugins}
     '';
-    serviceConfig.TimeoutStartSec = 600;
+    serviceConfig.TimeoutStartSec = lib.mkForce 600;
   };
 }
