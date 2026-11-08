@@ -1,4 +1,8 @@
 { pkgs, ... }:
+let
+  # Rebuild the local Intel variant when its pinned base or recipe changes.
+  armImage = "arm-intel:${builtins.hashFile "sha256" ./arm-config/Dockerfile}";
+in
 {
   virtualisation.docker = {
     enable = true;
@@ -13,6 +17,7 @@
     description = "Build ARM Docker image with Ubuntu 24.04 and Intel QuickSync support";
     wantedBy = [ "multi-user.target" ];
     before = [ "docker-arm.service" ];
+    restartTriggers = [ ./arm-config/Dockerfile ];
 
     serviceConfig = {
       Type = "oneshot";
@@ -20,17 +25,22 @@
     };
 
     script = ''
-          if ! ${pkgs.docker}/bin/docker image inspect arm-intel:latest >/dev/null 2>&1; then
-            ${pkgs.docker}/bin/docker build --no-cache -t arm-intel:latest -f ${./arm-config/Dockerfile} /tmp
+          if ! ${pkgs.docker}/bin/docker image inspect ${armImage} >/dev/null 2>&1; then
+            ${pkgs.docker}/bin/docker build --no-cache -t ${armImage} -f ${./arm-config/Dockerfile} /tmp
           fi
     '';
+  };
+
+  systemd.services.docker-arm = {
+    requires = [ "build-arm-intel-image.service" ];
+    after = [ "build-arm-intel-image.service" ];
   };
 
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
       arm = {
-        image = "arm-intel:latest";
+        image = "${armImage}";
         ports = [ "8080:8080" ];
         environment = {
           LIBVA_DRIVER_NAME = "iHD";

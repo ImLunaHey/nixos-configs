@@ -1,4 +1,4 @@
-FROM automaticrippingmachine/automatic-ripping-machine:latest
+FROM automaticrippingmachine/automatic-ripping-machine:2.24.4@sha256:1747955336930722e87fdbffe3dd61c7bcc07795d900d7d0e7c9433baff793d1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NEEDRESTART_MODE=a
