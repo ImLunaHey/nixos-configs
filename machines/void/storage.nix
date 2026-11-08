@@ -1,4 +1,8 @@
 { pkgs, ... }:
+let
+  datasets = [ "media" "games" "rips" "backups" "files" "photos" ];
+  mountUnits = [ "mnt-storage.mount" ] ++ map (name: "mnt-storage-${name}.mount") datasets;
+in
 {
   # Disko declarative disk layout
   # Boot SSD + 3x 1TB data drives in RAIDZ1 (2TB usable, 1-drive fault tolerance)
@@ -102,30 +106,37 @@
           relatime = "on";
           "com.sun:auto-snapshot" = "false";
           mountpoint = "/mnt/storage";
+          canmount = "noauto";
         };
         datasets = {
           media = {
             type = "zfs_fs";
+            options.canmount = "noauto";
             mountpoint = "/mnt/storage/media";
           };
           games = {
             type = "zfs_fs";
+            options.canmount = "noauto";
             mountpoint = "/mnt/storage/games";
           };
           rips = {
             type = "zfs_fs";
+            options.canmount = "noauto";
             mountpoint = "/mnt/storage/rips";
           };
           backups = {
             type = "zfs_fs";
+            options.canmount = "noauto";
             mountpoint = "/mnt/storage/backups";
           };
           files = {
             type = "zfs_fs";
+            options.canmount = "noauto";
             mountpoint = "/mnt/storage/files";
           };
           photos = {
             type = "zfs_fs";
+            options.canmount = "noauto";
             mountpoint = "/mnt/storage/photos";
           };
         };
@@ -133,23 +144,58 @@
     };
   };
 
-  # Ensure ZFS datasets exist (disko only creates them at install time)
-  system.activationScripts.create-zfs-datasets.text = ''
-    for dataset in storage/media storage/games storage/rips storage/backups storage/files storage/photos; do
-      ${pkgs.zfs}/bin/zfs list "$dataset" > /dev/null 2>&1 || \
-        ${pkgs.zfs}/bin/zfs create -o compression=lz4 -o acltype=posixacl -o xattr=sa "$dataset"
-    done
-    # photos is written by nova's immich container running under userns-remap (container root = host uid 100000)
-    chown 100000:100000 /mnt/storage/photos
-    # youtube lives inside the media dataset (sibling of movies/shows/music) but is
-    # written by nova's ytdl-sub container under userns-remap (container root = host uid 100000)
-    mkdir -p /mnt/storage/media/youtube
-    chown 100000:100000 /mnt/storage/media/youtube
-    # music is the shared library — chown the dir (non-recursive) so ytdl-sub (host uid 100000)
-    # can add audio downloads; Samba uploads still work since smbd writes as local root
-    mkdir -p /mnt/storage/media/music
-    chown 100000:100000 /mnt/storage/media/music
-  '';
+  # Declare the parent as well as the child datasets, so systemd mounts it
+  # first instead of letting zfs-mount cover already-mounted children.
+  fileSystems."/mnt/storage" = {
+    device = "storage";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  # Only systemd's fstab units mount these datasets. Prepare properties after
+  # importing the pool, before any mount starts, including on existing hosts.
+  systemd.services.void-storage-datasets = {
+    description = "Prepare Void ZFS datasets for systemd mounts";
+    requires = [ "zfs-import-storage.service" ];
+    after = [ "zfs-import-storage.service" ];
+    requiredBy = mountUnits;
+    before = mountUnits;
+    unitConfig.DefaultDependencies = false;
+    serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
+    script = ''
+      set -eu
+      ${pkgs.zfs}/bin/zfs set canmount=noauto storage
+      for name in ${builtins.concatStringsSep " " datasets}; do
+        dataset="storage/$name"
+        ${pkgs.zfs}/bin/zfs list "$dataset" > /dev/null 2>&1 || \
+          ${pkgs.zfs}/bin/zfs create -o canmount=noauto -o compression=lz4 -o acltype=posixacl -o xattr=sa "$dataset"
+        ${pkgs.zfs}/bin/zfs set canmount=noauto "$dataset"
+      done
+    '';
+  };
+
+  # Never create directories or change ownership beneath unmounted datasets.
+  systemd.services.void-storage-permissions = {
+    description = "Prepare Void shared storage permissions";
+    wantedBy = [ "multi-user.target" ];
+    requiredBy = [ "nfs-server.service" "samba-smbd.service" ];
+    before = [ "nfs-server.service" "samba-smbd.service" ];
+    unitConfig.RequiresMountsFor = [ "/mnt/storage/photos" "/mnt/storage/media" ];
+    serviceConfig = { Type = "oneshot"; RemainAfterExit = true; };
+    script = ''
+      set -eu
+      # photos is written by nova's immich container running under userns-remap (container root = host uid 100000)
+      chown 100000:100000 /mnt/storage/photos
+      # youtube lives inside the media dataset (sibling of movies/shows/music) but is
+      # written by nova's ytdl-sub container under userns-remap (container root = host uid 100000)
+      mkdir -p /mnt/storage/media/youtube
+      chown 100000:100000 /mnt/storage/media/youtube
+      # music is the shared library — chown the dir (non-recursive) so ytdl-sub (host uid 100000)
+      # can add audio downloads; Samba uploads still work since smbd writes as local root
+      mkdir -p /mnt/storage/media/music
+      chown 100000:100000 /mnt/storage/media/music
+    '';
+  };
 
   # ZFS scrub — monthly, catches silent bit-rot
   services.zfs.autoScrub = {
