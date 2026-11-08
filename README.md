@@ -80,7 +80,9 @@ nixos-configs/
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `lancache.nix` | |
 | `monitoring.nix` | |
+| `netbird.nix` | |
 | `networking.nix` | DHCP, firewall, Tailscale |
+| `pocket-id.nix` | |
 | `samba.nix` | |
 | `services.nix` | SOPS secret declarations |
 | `smartd.nix` | SMART disk monitoring + notifications |
