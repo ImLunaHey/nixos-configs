@@ -35,6 +35,16 @@
       import /var/lib/gateway-bootstrap/access.caddy
       reverse_proxy 127.0.0.1:1411
     '';
+    virtualHosts."jellyfin.flaked.org".extraConfig = ''
+      header Strict-Transport-Security "max-age=31536000"
+      header X-Content-Type-Options "nosniff"
+      header Referrer-Policy "same-origin"
+      reverse_proxy https://100.66.196.73:9443 {
+        transport http {
+          tls_server_name jellyfin.flaked.org
+        }
+      }
+    '';
   };
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 }

@@ -5,7 +5,9 @@ with lib;
 let
   cfg = config.services.cloudflare-dns;
 
-  records = mapAttrsToList (name: _: name) config.services.caddy.virtualHosts;
+  # Internal listeners with explicit ports are not separate DNS records.
+  records = filter (name: builtins.match "[A-Za-z0-9.-]+" name != null)
+    (attrNames config.services.caddy.virtualHosts);
 
   syncScript = pkgs.writeShellScript "cloudflare-dns-sync" ''
     set -euo pipefail
@@ -37,18 +39,18 @@ let
           "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
           -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
           -H "Content-Type: application/json" \
-          -d "$payload" | ${pkgs.jq}/bin/jq -r '.success'
+          -d "$payload" | ${pkgs.jq}/bin/jq -e '.success == true'
       else
         echo "Updating A record: $name -> $content"
         ${pkgs.curl}/bin/curl -sf -X PATCH \
           "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$existing_id" \
           -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
           -H "Content-Type: application/json" \
-          -d "$payload" | ${pkgs.jq}/bin/jq -r '.success'
+          -d "$payload" | ${pkgs.jq}/bin/jq -e '.success == true'
       fi
     }
 
-    ${concatMapStringsSep "\n" (name: ''upsert_record "${name}" "${cfg.ip}"'') records}
+    ${concatMapStringsSep "\n" (name: ''upsert_record ${escapeShellArg name} ${escapeShellArg (cfg.recordIPs.${name} or cfg.ip)}'') records}
   '';
 in
 {
@@ -63,6 +65,11 @@ in
     ip = mkOption {
       type = types.str;
       description = "IP address for all A records";
+    };
+    recordIPs = mkOption {
+      type = types.attrsOf types.str;
+      default = {};
+      description = "Per-host A record overrides, such as a public gateway address.";
     };
   };
 

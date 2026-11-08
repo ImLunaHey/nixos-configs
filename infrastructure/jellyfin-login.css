@@ -1,0 +1,52 @@
+/* The password API is also blocked by Caddy; this styles only the login view. */
+#loginPage .manualLoginForm,
+#loginPage .visualLoginForm,
+#loginPage .btnManual,
+#loginPage .btnForgotPassword,
+#loginPage .btnQuick,
+#loginPage .btnSelectServer { display: none !important; }
+#loginPage {
+  background: linear-gradient(110deg, #071c17a8, #0b211b33 65%, #081a1559),
+    url('/flaked-assets/forest.jpg') center center / cover no-repeat, #18392f !important;
+  color: #faf8f0;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  padding-bottom: 32px !important;
+}
+#loginPage .readOnlyContent { width: calc(100% - 40px); max-width: 438px; }
+#loginPage .loginDisclaimerContainer { display: block !important; margin: 0; }
+#loginPage .loginDisclaimer { text-align: left; }
+#loginPage .padded-left.padded-right.padded-bottom-page { padding-top: 28px; }
+.flaked-login {
+  box-sizing: border-box; padding: 34px 36px 28px;
+  border: 1px solid #e5edda38; border-radius: 22px;
+  background: #102b24e8; backdrop-filter: blur(18px);
+  box-shadow: 0 24px 80px #04110f55;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.flaked-wordmark { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 650; letter-spacing: -.04em; margin-bottom: 38px; }
+.flaked-mark { width: 43px; height: 43px; display: grid; place-items: center; border: 1px solid #d8e3c552; border-radius: 50%; font: italic 30px Georgia, serif; color: #e1e8c9; }
+.flaked-wordmark-sub { display: block; font-size: 8px; letter-spacing: .18em; color: #bac8b9; margin-top: 4px; font-weight: 500; }
+.flaked-eyebrow { font-size: 9px; letter-spacing: .18em; font-weight: 600; color: #becdbb; margin: 0 0 17px; }
+.flaked-login h1 { font: 400 clamp(42px, 7vw, 52px)/1.06 Georgia, 'Times New Roman', serif; letter-spacing: -.045em; margin: 0 0 20px; color: #faf8f0; }
+.flaked-login h1 em { font-weight: 400; color: #dce6bf; }
+.flaked-intro { line-height: 1.7; font-size: 14px; color: #d0d9ce; margin: 0 0 29px; }
+.flaked-signin { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; box-sizing: border-box; padding: 14px 19px; border-radius: 9px; background: #e4ebd1; color: #16352a !important; font-size: 14px; font-weight: 650; text-decoration: none !important; transition: background .15s, transform .15s; }
+.flaked-signin:hover { background: #f1f5e6; transform: translateY(-1px); }
+.flaked-signin:focus-visible, .flaked-tv summary:focus-visible, .flaked-credit a:focus-visible { outline: 3px solid #f4e6ab; outline-offset: 5px; }
+.flaked-signin span { font-size: 21px; line-height: 1; }
+.flaked-passkey { text-align: center; color: #bdcdbd; font-size: 11px; line-height: 1.6; margin: 12px 0 25px; }
+.flaked-tv { border-top: 1px solid #dce6bf26; padding-top: 19px; }
+.flaked-tv summary { cursor: pointer; font-size: 13px; font-weight: 500; color: #e4eadb; padding: 3px 0; }
+.flaked-tv p { color: #ced9ca; font-size: 12px; line-height: 1.75; margin: 12px 0 0; }
+.flaked-tv strong { color: #f4f5eb; font-weight: 550; }
+.flaked-invite { color: #b9c9b7; font-size: 10px; line-height: 1.6; margin: 20px 0 0; }
+.flaked-credit { text-align: center; color: #f2f5ec; font: 10px/1.7 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-shadow: 0 1px 5px #000; margin: 22px -10px 0; }
+.flaked-credit a { color: inherit; text-decoration-color: #ffffff66; text-underline-offset: 3px; }
+@media (max-width: 420px) {
+  #loginPage .readOnlyContent { width: calc(100% - 28px); }
+  .flaked-login { padding: 28px 24px 24px; border-radius: 18px; }
+  .flaked-wordmark { margin-bottom: 30px; }
+  .flaked-credit { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .flaked-signin { transition: none; } }

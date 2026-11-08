@@ -16,6 +16,10 @@ in {
   systemd.services.docker-jellyfin = {
     preStart = lib.mkBefore ''
       ${pkgs.python3}/bin/python3 ${../../scripts/install-jellyfin-plugins.py} --source ${plugins}
+      ${pkgs.python3}/bin/python3 ${../../scripts/configure-jellyfin-login.py} \
+        --html ${../../infrastructure/jellyfin-login.html} \
+        --css ${../../infrastructure/jellyfin-login.css} \
+        --proxy-address "$(${pkgs.docker}/bin/docker network inspect media-net --format '{{(index .IPAM.Config 0).Gateway}}')"
     '';
     serviceConfig.TimeoutStartSec = lib.mkForce 600;
   };
