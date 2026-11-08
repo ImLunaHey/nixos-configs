@@ -124,8 +124,9 @@ plugins are active, all three user IDs and policies are unchanged, and an HTTPS
 media range request through NetBird returned 206. The full library scan
 completed successfully. A watched alternate edition of `Selfie` S01E01 was
 consolidated into the episode's media sources, retaining its watched state.
-Pocket ID accepted the pushed authorization request; completing login with the
-user's passkey is the final browser check.
+Pocket ID accepted the pushed authorization request. The user confirmed that a
+private-window passkey login opens the existing `luna` account and library over
+NetBird.
 
 References: [Jellyfin 12 upgrade guidance](https://jellyfin.org/posts/jellyfin-release-12.0/)
 and [maintained SSO plugin](https://github.com/Buco7854/jellyfin-plugin-sso).
