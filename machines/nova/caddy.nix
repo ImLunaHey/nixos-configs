@@ -1,4 +1,7 @@
 { config, pkgs, ... }:
+let
+  privateDNS = import ../../infrastructure/netbird-dns.nix;
+in
 {
   sops.secrets.cloudflare_api_token = {};
 
@@ -10,7 +13,7 @@
     };
     virtualHosts."matrix.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -20,7 +23,7 @@
     };
     virtualHosts."jellyfin.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -30,7 +33,7 @@
     };
     virtualHosts."pihole.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -41,7 +44,7 @@
     };
     virtualHosts."status.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -51,7 +54,7 @@
     };
     virtualHosts."s3.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -61,7 +64,7 @@
     };
     virtualHosts."romm.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -71,7 +74,7 @@
     };
     virtualHosts."immich.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -81,7 +84,7 @@
     };
     virtualHosts."watchstate.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -91,7 +94,7 @@
     };
     virtualHosts."s3-console.flaked.org" = {
       extraConfig = ''
-        bind 100.106.184.73
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
@@ -101,9 +104,11 @@
     };
   };
 
+  networking.firewall.interfaces.wt0.allowedTCPPorts = [ 80 443 ];
+
   systemd.services.caddy = {
-    after = [ "tailscaled.service" "tailscale-autoauth.service" ];
-    wants = [ "tailscaled.service" "tailscale-autoauth.service" ];
+    after = [ "tailscaled.service" "tailscale-autoauth.service" "netbird.service" ];
+    wants = [ "tailscaled.service" "tailscale-autoauth.service" "netbird.service" ];
     serviceConfig = {
       EnvironmentFile = config.sops.secrets.cloudflare_api_token.path;
       Restart = "on-failure";
