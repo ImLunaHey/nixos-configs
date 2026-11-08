@@ -26,8 +26,8 @@ jobs:
       - name: Install pinned NetBird client
         run: |
           curl --fail --location --retry 3 -o "$RUNNER_TEMP/netbird.tar.gz" \
-            https://github.com/netbirdio/netbird/releases/download/v0.81.3/netbird_0.81.3_linux_amd64.tar.gz
-          echo "cbdea310068e35449f034544d5137fefee8f6d948fffd020883ffc8b3bab63b1  $RUNNER_TEMP/netbird.tar.gz" | sha256sum --check
+            https://github.com/netbirdio/netbird/releases/download/v0.82.0/netbird_0.82.0_linux_amd64.tar.gz
+          echo "b569f65de303d21317bc716f3116002e2cf175ae22a9f6d2bed91200a2f5000b  $RUNNER_TEMP/netbird.tar.gz" | sha256sum --check
           mkdir "$RUNNER_TEMP/netbird-bin"
           tar -xzf "$RUNNER_TEMP/netbird.tar.gz" -C "$RUNNER_TEMP/netbird-bin" netbird
           sudo install -m 0755 "$RUNNER_TEMP/netbird-bin/netbird" /usr/local/bin/netbird
