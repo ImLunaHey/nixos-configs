@@ -36,6 +36,8 @@
       reverse_proxy 127.0.0.1:1411
     '';
     virtualHosts."jellyfin.flaked.org".extraConfig = ''
+      # Public ingress exposes TCP/443, so do not advertise unavailable QUIC.
+      header Alt-Svc "clear"
       header Strict-Transport-Security "max-age=31536000"
       header X-Content-Type-Options "nosniff"
       header Referrer-Policy "same-origin"

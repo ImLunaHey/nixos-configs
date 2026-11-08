@@ -2,6 +2,10 @@
 let
   privateDNS = import ../../infrastructure/netbird-dns.nix;
   jellyfinProxy = ''
+    encode zstd gzip
+    # UDP/443 is not exposed by the private access policy. Clear cached QUIC
+    # advertisements instead of making mobile clients try an unreachable port.
+    header Alt-Svc "clear"
     handle /flaked-assets/forest.jpg {
       root * ${../../infrastructure/jellyfin-assets}
       rewrite * /forest.jpg
