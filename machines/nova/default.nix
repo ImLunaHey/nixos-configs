@@ -6,6 +6,7 @@
     ./hardware.nix
     ./services.nix
     ./containers.nix
+    ./jellyfin.nix
     ./storage.nix
     ./matrix.nix
     ./ndi.nix

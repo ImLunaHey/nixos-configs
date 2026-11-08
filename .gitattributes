@@ -1,0 +1,2 @@
+# Preserve upstream line endings and unified-diff context in compatibility patches.
+packages/jellyfin-plugins/*.patch -text -whitespace

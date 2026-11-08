@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Open Subtitles",
+    "guid": "4b9ed42f-5185-48b5-9803-6ff2989014c4",
+    "version": "25.0.0.0",
+    "targetAbi": "12.0.0.0",
+    "sourceUrl": "https://repo.jellyfin.org/files/plugin/open-subtitles/open-subtitles_25.0.0.0.zip",
+    "sha256": "8f2251ee42067b8ff32a4b3bd373879f3603bf5ebf72ccb4756cee23a51b18b0"
+  },
+  {
+    "name": "Playback Reporting",
+    "guid": "5c534381-91a3-43cb-907a-35aa02eb9d2c",
+    "version": "19.0.0.0",
+    "targetAbi": "12.0.0.0",
+    "sourceUrl": "https://repo.jellyfin.org/files/plugin/playback-reporting/playback-reporting_19.0.0.0.zip",
+    "sha256": "6599f6d84406e170a176d5177ddea04af682ddb2f34fe9424392f2a81a511180"
+  },
+  {
+    "name": "Reports",
+    "guid": "d4312cd9-5c90-4f38-82e8-51da566790e8",
+    "version": "20.0.0.0",
+    "targetAbi": "12.2.0.0",
+    "sourceUrl": "https://repo.jellyfin.org/files/plugin/reports/reports_20.0.0.0.zip",
+    "sha256": "98375bba5c2dcfc753dfeb73b3f9f495c01acca567c50e7852cb99521a26cc5a"
+  },
+  {
+    "name": "Themerr",
+    "guid": "e41ef0c4-c413-41ba-b4fa-8c565dc3c969",
+    "version": "2026.1006.1228.21",
+    "targetAbi": "12.1.0.0",
+    "sourceUrl": "https://github.com/LizardByte/Themerr-jellyfin/releases/download/v2026.1006.1228.21/themerr-jellyfin.zip",
+    "sha256": "f5026e217615c0d7c145f4f629778083ca05c66a1d12ef036044cbc972b03fc3"
+  },
+  {
+    "name": "Jellyfin Enhanced",
+    "guid": "f69e946a-4b3c-4e9a-8f0a-8d7c1b2c4d9b",
+    "version": "12.15.0.0",
+    "targetAbi": "12.0.0.0",
+    "sourceUrl": "https://github.com/n00bcodr/Jellyfin-Enhanced/releases/download/12.15.0.0/Jellyfin.Plugin.JellyfinEnhanced_12.0.0.zip",
+    "sha256": "19c8b691557be4b342562069e610756e294bd4648eefe1f25504c3014d90e2fb"
+  },
+  {
+    "name": "File Transformation",
+    "version": "3.0.3.0",
+    "targetAbi": "12.4.0.0",
+    "sourceUrl": "https://github.com/IAmParadox27/jellyfin-plugin-file-transformation/releases/download/3.0.3.0/Release-12.4.0.zip",
+    "sha256": "c608b2ccf802a2cd5fa48632565488a3f0d3ac52cbb51a9ea0c1b8849f8819e9",
+    "guid": "5e87cc92-571a-4d8d-8d98-d2d4147f9f90"
+  },
+  {
+    "name": "SSO-Auth",
+    "guid": "505ce9d1-d916-42fa-86ca-673ef241d7df",
+    "version": "5.0.0.3",
+    "targetAbi": "12.0.0.0",
+    "sourceUrl": "https://github.com/Buco7854/jellyfin-plugin-sso/releases/download/v5.0.0.3/sso-auth_5.0.0.3.zip",
+    "sha256": "5e0eccead5bdceb7576fae839eecd4a9bf028a5049b9a4af3b9f4623b0195c20"
+  }
+]
