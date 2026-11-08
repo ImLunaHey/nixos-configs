@@ -33,3 +33,31 @@ self-hosted server `https://netbird.flaked.org`, and sign in. Assign the enrolle
 peer to the appropriate personal-device group before testing Jellyfin. Keep the
 Jellyfin client's native authentication; a generic web SSO proxy in front of its
 API can prevent TV clients from connecting.
+
+# Pocket ID login for NetBird
+
+NetBird uses Pocket ID (`https://id.flaked.org`) as an external OIDC provider
+named **Pocket ID**. The confidential **NetBird** client in Pocket ID has PKCE
+disabled as required by NetBird's embedded identity provider integration, with:
+
+- Callback: `https://netbird.flaked.org/oauth2/callback`
+- Logout callback: `https://netbird.flaked.org/oauth2/logout/callback`
+- Allowed Pocket ID group: `netbird-users`
+
+The client secret lives in the applications' state, outside Git and the Nix
+store. Back up both applications' state and encryption keys. The short-lived
+administrator API keys used to configure this integration are not login
+credentials and are not needed for normal operation.
+
+The local NetBird owner remains available for recovery. Pocket ID is a distinct
+identity: its first login requires approval in the existing NetBird account.
+The verified Pocket ID identity for Alexis Tyler is approved as an administrator;
+its newly enrolled devices automatically join `personal-devices`. This group
+can initiate connections to `homelab`, receives private service DNS, and is not
+a destination of the GitHub deployment policy. Other Pocket ID users require
+explicit membership and NetBird approval; granting them Pocket ID access does
+not automatically make them NetBird administrators.
+
+This OIDC integration authenticates NetBird. Individual applications need their
+own OIDC clients if they are to use Pocket ID login; Jellyfin's native client
+login is unchanged.
