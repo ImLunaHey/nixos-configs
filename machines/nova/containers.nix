@@ -359,7 +359,7 @@ in
         ];
         volumes = [
           "/var/lib/rustfs/data:/data"
-          "/var/lib/rustfs/logs:/app/logs"
+          "/var/lib/rustfs/logs:/logs"
         ];
         environmentFiles = [ config.sops.secrets.rustfs_env.path ];
         environment = {

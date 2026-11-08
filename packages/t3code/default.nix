@@ -23,6 +23,12 @@ stdenv.mkDerivation (finalAttrs: {
   ];
   buildInputs = [ stdenv.cc.cc.lib ];
 
+  # The upstream archive also bundles an Alpine-only optional addon. NixOS
+  # uses the GNU variant; remove the incompatible musl binary before patching.
+  postUnpack = ''
+    rm -rf "$sourceRoot/node_modules/@yuuang/ffi-rs-linux-x64-musl"
+  '';
+
   # The CLI is a Bun self-contained executable. Stripping it removes embedded
   # embedded program data and leaves a binary that crashes at startup.
   dontStrip = true;

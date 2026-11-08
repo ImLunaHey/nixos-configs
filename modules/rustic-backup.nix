@@ -1,6 +1,11 @@
 { config, pkgs, lib, ... }:
 let
   cfg = config.services.rustic-backup;
+  # This release requires system AWS-LC and zstd via pkg-config.
+  rustic = pkgs.rustic.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or []) ++ [ pkgs.pkg-config ];
+    buildInputs = (old.buildInputs or []) ++ [ pkgs.aws-lc pkgs.zstd ];
+  });
 in
 {
   options.services.rustic-backup = {
@@ -55,13 +60,13 @@ in
           ${lib.optionalString (cfg.preBackupScript != "") cfg.preBackupScript}
 
           # Init repo if not already initialised
-          [ -f "$REPO/config" ] || ${pkgs.rustic}/bin/rustic -r "$REPO" --password-file "$PASSWORD_FILE" init
+          [ -f "$REPO/config" ] || ${rustic}/bin/rustic -r "$REPO" --password-file "$PASSWORD_FILE" init
 
           # Backup configured paths
-          ${pkgs.rustic}/bin/rustic -r "$REPO" --password-file "$PASSWORD_FILE" backup ${lib.escapeShellArgs cfg.paths}
+          ${rustic}/bin/rustic -r "$REPO" --password-file "$PASSWORD_FILE" backup ${lib.escapeShellArgs cfg.paths}
 
           # Keep 7 daily, 4 weekly, 6 monthly snapshots and prune the rest
-          ${pkgs.rustic}/bin/rustic -r "$REPO" --password-file "$PASSWORD_FILE" forget \
+          ${rustic}/bin/rustic -r "$REPO" --password-file "$PASSWORD_FILE" forget \
             --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune
         '';
         User = "root";
