@@ -9,11 +9,29 @@ let
     inherit name;
     url = "https://${name}";
     type = "http";
-  }) config.services.caddy.virtualHosts;
+  }) (filterAttrs (name: _: builtins.match "[A-Za-z0-9.-]+" name != null)
+    config.services.caddy.virtualHosts);
 
   monitorsJson = builtins.toJSON caddyMonitors;
 
-  pythonEnv = pkgs.python3.withPackages (ps: [ ps.uptime-kuma-api ps.requests ]);
+  # The original 1.2.1 client predates Kuma 2 and can time out during login.
+  # The maintained continuation preserves its Python import/API names.
+  pythonEnv = pkgs.python3.withPackages (ps: [
+    (ps.uptime-kuma-api.overridePythonAttrs (old: rec {
+      pname = "uptime-kuma-api2";
+      version = "2.9.0";
+      src = pkgs.fetchPypi {
+        pname = "uptime_kuma_api2";
+        inherit version;
+        hash = "sha256-Bc7hLaDBp4b7Sorq8XcOZVZMuiNk7S7JCDaFWaLMbkc=";
+      };
+      propagatedBuildInputs = old.propagatedBuildInputs ++ [ ps.python-engineio ps.requests ];
+      meta = old.meta // {
+        homepage = "https://github.com/pbarone/uptime-kuma-api2";
+        changelog = "https://github.com/pbarone/uptime-kuma-api2/blob/v${version}/CHANGELOG.md";
+      };
+    }))
+  ]);
 
   syncScript = pkgs.writeShellScript "uptime-kuma-sync" ''
   USERNAME="luna"
@@ -28,7 +46,7 @@ from uptime_kuma_api import UptimeKumaApi, MonitorType
 with open("/tmp/monitors.json") as f:
     monitors = json.load(f)
 
-with UptimeKumaApi("http://127.0.0.1:3001") as api:
+with UptimeKumaApi("http://127.0.0.1:3001", timeout=30) as api:
     api.login(os.environ.get("USERNAME"), os.environ.get("PASSWORD"))
     existing = {m["name"]: m for m in api.get_monitors()}
 
@@ -61,7 +79,10 @@ in
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
-        ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.curl}/bin/curl -sf http://127.0.0.1:3001 > /dev/null; do sleep 2; done'";
+        # During a database upgrade, Kuma serves a migration page with HTTP 200
+        # before its API exists. Wait for Socket.IO rather than that page.
+        TimeoutStartSec = "1h";
+        ExecStartPre = "${pkgs.bash}/bin/bash -c 'until ${pkgs.curl}/bin/curl --max-time 5 -sf \"http://127.0.0.1:3001/socket.io/?EIO=4&transport=polling\" > /dev/null; do sleep 2; done'";
         ExecStart = syncScript;
       };
     };

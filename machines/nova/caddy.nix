@@ -2,6 +2,10 @@
 let
   privateDNS = import ../../infrastructure/netbird-dns.nix;
   jellyfinProxy = ''
+    encode zstd gzip
+    # UDP/443 is not exposed by the private access policy. Clear cached QUIC
+    # advertisements instead of making mobile clients try an unreachable port.
+    header Alt-Svc "clear"
     handle /flaked-assets/forest.jpg {
       root * ${../../infrastructure/jellyfin-assets}
       rewrite * /forest.jpg
@@ -50,10 +54,8 @@ in
     virtualHosts."jellyfin.flaked.org:9443" = {
       extraConfig = ''
         bind ${privateDNS.novaIPv4}
-        tls {
-          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
-          resolvers 1.1.1.1
-        }
+        # The standard HTTPS listener declares this hostname's DNS-01 policy.
+        # Reuse its certificate instead of creating a duplicate policy.
         ${jellyfinProxy}
       '';
     };
@@ -125,6 +127,7 @@ in
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
+        redir / /rustfs/console/ 302
         reverse_proxy 127.0.0.1:9001
       '';
     };

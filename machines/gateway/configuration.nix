@@ -8,6 +8,9 @@
   networking.hostName = "gateway";
   networking.firewall.enable = true;
   networking.firewall.allowedTCPPorts = [ 22 ];
+  # Keep long-distance HTTPS and NetBird relay streams usable under packet loss.
+  boot.kernelModules = [ "tcp_bbr" ];
+  boot.kernel.sysctl."net.ipv4.tcp_congestion_control" = "bbr";
   time.timeZone = "Europe/London";
 
   # Preserve the provider's cloud-init networking and recovery user.

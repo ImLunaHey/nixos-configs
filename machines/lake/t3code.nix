@@ -10,7 +10,12 @@ let
   pnpm_12 = t3codePkgs.callPackage ../../packages/pnpm-12 { };
   # aws-lc-sys must not mistake the separate OpenSSL dependency for AWS-LC.
   codexWithSystemCrypto = t3codePkgs.codex.overrideAttrs (old: {
-    buildInputs = (old.buildInputs or []) ++ [ t3codePkgs.aws-lc t3codePkgs.zstd ];
+    buildInputs = (old.buildInputs or []) ++ [
+      t3codePkgs.aws-lc
+      t3codePkgs.zstd
+      t3codePkgs.oniguruma
+      t3codePkgs.sqlite
+    ];
     env = (old.env or {}) // {
       AWS_LC_SYS_SYSTEM_DIR = t3codePkgs.runCommand "aws-lc-system" {} ''
         mkdir -p "$out"
