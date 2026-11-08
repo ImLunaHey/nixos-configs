@@ -1,4 +1,4 @@
-# ytdl-sub subscriptions — add entries here, then commit & push (auto-deploys within ~15 min).
+# ytdl-sub subscriptions — add entries here, then commit, review, then push-deploy Nova.
 #
 # Where each group lands (mapping lives in machines/nova/ytdl-sub.nix):
 #   channels -> /mnt/media/youtube   one show per channel, episodes by upload date

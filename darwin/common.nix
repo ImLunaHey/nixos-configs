@@ -4,7 +4,6 @@
 # Host-specific bits (hostname) live in darwin/<host>/default.nix.
 {
   imports = [
-    ./auto-upgrade.nix
     ../modules/lake-cache-client.nix
   ];
 
