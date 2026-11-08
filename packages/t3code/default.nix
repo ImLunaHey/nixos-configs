@@ -8,11 +8,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "t3code";
-  version = "0.1.1-nightly.20261018.3285";
+  version = "0.1.6-nightly.20261030.3940";
 
   src = fetchurl {
     url = "https://github.com/pingdotgg/t3code/releases/download/v${finalAttrs.version}/t3-${finalAttrs.version}-linux-x64.tar.gz";
-    hash = "sha256-IZ/E07er4QMRyecbE8YtgeJxebmfTt8gJwoyqASoRmA=";
+    hash = "sha256-nXtidxSIRPew7Ar/BbOjZy3s6bR/0x+noQPWFsFqYX0=";
   };
 
   sourceRoot = "t3-${finalAttrs.version}-linux-x64";

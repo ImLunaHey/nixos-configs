@@ -12,11 +12,14 @@ in
 {
   systemd.tmpfiles.rules = map (name: "d /mnt/storage/${name} 0755 root root -") [
     "media"
+    "media/movies"
+    "media/shows"
     "files"
     "photos"
     "backups"
     "games"
     "rips"
+    "scans"
   ];
 
   systemd.services.lake-timemachine-dataset = {
@@ -65,12 +68,21 @@ in
         "veto files" = "/._*/.DS_Store/";
         "delete veto files" = "yes";
       };
-      media = share "/mnt/storage/media";
+      media = (share "/mnt/storage/media") // {
+        # New SMB uploads must be readable by the NFS/container consumers.
+        "create mask" = "0644";
+        "force create mode" = "0644";
+        "directory mask" = "0755";
+        "force directory mode" = "0755";
+      };
       files = share "/mnt/storage/files";
       photos = share "/mnt/storage/photos";
       backups = share "/mnt/storage/backups";
       games = share "/mnt/storage/games";
       rips = share "/mnt/storage/rips";
+      scans = (share "/mnt/storage/scans") // {
+        comment = "TCG card scans";
+      };
       timemachine = (share "/mnt/storage/timemachine") // {
         "vfs objects" = "catia fruit streams_xattr";
         "fruit:metadata" = "stream";

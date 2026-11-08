@@ -273,6 +273,42 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 - `watchstate.flaked.org`
 - `s3-console.flaked.org`
 
+### TCG card scans
+
+Lake exposes `/mnt/storage/scans` as the writable SMB share `smb://lake/scans`.
+Use the existing `luna` Samba login to save scanned TCG card images here.
+The directory is created automatically by NixOS; guest access is disabled.
+
+### Movie and show storage
+
+Movies and shows live at `lake:/mnt/storage/media/{movies,shows}`. Lake's
+existing SMB share exposes them at `smb://lake/media/movies` and
+`smb://lake/media/shows`; reconnect relevant SMB clients to Lake.
+Nova mounts Lake's read-only NFSv4 exports at `/mnt/movies` and `/mnt/shows`.
+Jellyfin and Watchstate bind these to their existing `/media/movies` and
+`/media/shows` paths. Music and YouTube continue to use Void via `/mnt/media`.
+
+Lake's SMB media share creates files as 0644 and directories as 0755. The
+`lake-media-permissions` service adds missing read/traverse permissions before
+NFS/SMB start and every five minutes, including files imported with restrictive
+modes. It preserves ownership and write permissions and does not follow symlinks
+or cross into nested filesystems. Other shares are unaffected.
+For immediate access when copying media with rsync, include
+`--chmod=Da+rx,Fa+r` alongside `-a`. After other imports, run
+`sudo systemctl start lake-media-permissions.service` or wait for its timer.
+
+For the shows migration, pause Nova's `nixos-upgrade.timer` before merging,
+then deploy Lake before Nova and restore Nova's timer afterward. Both hosts
+otherwise auto-upgrade independently. If Nova updates first and fails waiting
+for Lake's export, restart `mnt-shows.mount`, `docker-jellyfin`, and
+`docker-watchstate` on Nova once Lake is ready.
+
+Before deleting Void's original shows, verify Nova's `findmnt /mnt/shows`
+points to Lake, check episode playback and Watchstate access, and verify the
+copied files still match the source (including any changes since the initial
+copy). This configuration change does not delete or redirect Void's original
+shows directory.
+
 ## Secrets Management
 
 Secrets are encrypted with [SOPS](https://github.com/mozilla/sops) + [age](https://github.com/FiloSottile/age).
