@@ -15,6 +15,7 @@ let
     insecure_oidc_skip_nonce = false;
     http_address = "127.0.0.1:4180";
     reverse_proxy = true;
+    trusted_proxies = [ "127.0.0.1/32" ];
     upstreams = [ "static://202" ];
     skip_provider_button = true;
     cookie_name = "__Host-flaked_session";

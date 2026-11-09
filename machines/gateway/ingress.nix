@@ -58,10 +58,6 @@
         route {
           forward_auth 127.0.0.1:4180 {
             uri /oauth2/auth
-            @unauthenticated status 401
-            handle_response @unauthenticated {
-              redir /oauth2/start?rd=%2Fservices 302
-            }
           }
           root * ${./portal}
           rewrite * /services.html

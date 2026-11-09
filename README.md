@@ -268,12 +268,10 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 
 - `matrix.flaked.org`
 - `jellyfin.flaked.org`
-- `jellyfin.flaked.org:9443`
 - `pihole.flaked.org`
 - `status.flaked.org`
 - `s3.flaked.org`
 - `romm.flaked.org`
-- `romm.flaked.org:9444`
 - `immich.flaked.org`
 - `watchstate.flaked.org`
 - `s3-console.flaked.org`

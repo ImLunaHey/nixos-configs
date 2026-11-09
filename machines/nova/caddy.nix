@@ -41,21 +41,14 @@ in
       '';
     };
     virtualHosts."jellyfin.flaked.org" = {
+      # One site block avoids overlapping TLS automation policies across ports.
+      serverAliases = [ "jellyfin.flaked.org:9443" ];
       extraConfig = ''
         bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
           dns cloudflare {env.CLOUDFLARE_API_TOKEN}
           resolvers 1.1.1.1
         }
-        ${jellyfinProxy}
-      '';
-    };
-    # A separate listener prevents the VPS from reaching Nova's other sites.
-    virtualHosts."jellyfin.flaked.org:9443" = {
-      extraConfig = ''
-        bind ${privateDNS.novaIPv4}
-        # The standard HTTPS listener declares this hostname's DNS-01 policy.
-        # Reuse its certificate instead of creating a duplicate policy.
         ${jellyfinProxy}
       '';
     };
@@ -91,6 +84,7 @@ in
       '';
     };
     virtualHosts."romm.flaked.org" = {
+      serverAliases = [ "romm.flaked.org:9444" ];
       extraConfig = ''
         bind 100.106.184.73 ${privateDNS.novaIPv4}
         tls {
@@ -100,13 +94,6 @@ in
         reverse_proxy 127.0.0.1:8083
       '';
     };
-    virtualHosts."romm.flaked.org:9444".extraConfig = ''
-      bind ${privateDNS.novaIPv4}
-      # Reuse the certificate policy declared by the private HTTPS listener.
-      encode zstd gzip
-      header Alt-Svc "clear"
-      reverse_proxy 127.0.0.1:8083
-    '';
     virtualHosts."immich.flaked.org" = {
       extraConfig = ''
         bind 100.106.184.73 ${privateDNS.novaIPv4}
