@@ -451,3 +451,14 @@ starts a fresh RomM login. RomM still requires actual verification; home and
 Jellyfin access do not assert that a user's email has been verified. The temporary
 Full access Resend setup key is not installed on a host and can be revoked after
 setup; keep the separately created `pocket-id-flaked-smtp` sending key.
+
+### RomM library layout
+
+Void's games share stores platform directories directly at its root (for
+example `gba/`), with firmware under `bios/<platform>/`. RomM 5.4's default
+`roms/{platform}/{game}` does not match that layout and causes game downloads
+to return 404 even while the catalog and covers load normally. Nova's RomM
+pre-start sets `filesystem.structure.default` to `{platform}/{game}` and
+`firmware` to `bios/{platform}`, preserving other configuration values and
+backing up the original file under `/var/backups/romm/`. No game files are moved
+and existing catalog IDs, saves and account data remain in place.

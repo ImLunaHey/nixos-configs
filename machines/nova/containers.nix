@@ -136,6 +136,22 @@ in
   systemd.services.docker-romm = {
     requires = [ "mnt-games.mount" ];
     after = [ "mnt-games.mount" ];
+    # The shared library has gba/, nds/, psx/, etc. directly at its root.
+    # RomM 5.4 defaults to roms/{platform}/{game}; declare the actual layout
+    # while preserving all other settings edited through RomM's UI.
+    preStart = ''
+      config_file=/var/lib/romm/config/config.yml
+      if [ -f "$config_file" ]; then
+        ${pkgs.coreutils}/bin/install -d -m 0700 /var/backups/romm
+        if [ ! -e /var/backups/romm/config-before-library-layout.yml ]; then
+          ${pkgs.coreutils}/bin/cp -p "$config_file" /var/backups/romm/config-before-library-layout.yml
+        fi
+      else
+        ${pkgs.coreutils}/bin/install -o 100000 -g 100000 -m 0644 /dev/null "$config_file"
+      fi
+      ${pkgs.yq-go}/bin/yq -i '.filesystem.structure.default = "{platform}/{game}" | .filesystem.structure.firmware = "bios/{platform}"' "$config_file"
+      ${pkgs.coreutils}/bin/chown 100000:100000 "$config_file"
+    '';
   };
 
   systemd.services.create-media-network = {
