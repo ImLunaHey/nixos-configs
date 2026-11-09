@@ -285,8 +285,21 @@ in
           "/var/lib/romm/config:/romm/config"
           "/mnt/games:/romm/library"
         ];
-        environmentFiles = [ config.sops.secrets.romm_env.path ];
+        environmentFiles = [ config.sops.secrets.romm_env.path config.sops.secrets.romm_oidc_env.path ];
         environment = {
+          ROMM_BASE_URL = "https://romm.flaked.org";
+          OIDC_ENABLED = "true";
+          OIDC_PROVIDER = "pocket-id";
+          OIDC_SERVER_APPLICATION_URL = "https://id.flaked.org";
+          OIDC_REDIRECT_URI = "https://romm.flaked.org/api/oauth/openid";
+          OIDC_USERNAME_ATTRIBUTE = "preferred_username";
+          OIDC_CLAIM_ROLES = "groups";
+          OIDC_ROLE_ADMIN = "romm-admins";
+          OIDC_ROLE_VIEWER = "romm-users";
+          # Pocket ID restricts this client to explicitly enrolled RomM users.
+          # New accounts inherit RomM's non-admin Viewer permission group.
+          OIDC_ALLOW_REGISTRATION = "true";
+          OIDC_AUTOLOGIN = "true";
           DB_HOST = "romm-db";
           DB_NAME = "romm";
           DB_USER = "romm-user";

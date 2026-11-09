@@ -9,6 +9,7 @@
       rustfs_env = {};
       brrr_token = {};
       romm_env = {};
+      romm_oidc_env = {};
       rustic_password = {};
       immich_env = {};
     };

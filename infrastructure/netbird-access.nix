@@ -32,8 +32,8 @@ in {
   personalUser = "CiRmOTAwM2NkOS05N2NmLTQ4ZDYtOTY0ZS0yOWJjOTQ4YzU2NmUSFGRibzhrNWk2bG81MDAwYzJqZ2pn";
   personalAutoGroups = [ "personal-devices" ];
   policies = [
-    (policy "jellyfin-ingress" "Public gateway to Nova's dedicated Jellyfin TLS listener only" [
-      (rule "Jellyfin ingress" [ "nixos:public-gateway" ] [ "nixos:web-servers" ] "tcp" [ "9443" ] false)
+    (policy "jellyfin-ingress" "Public gateway to Nova's dedicated Jellyfin and RomM TLS listeners only" [
+      (rule "Jellyfin and RomM ingress" [ "nixos:public-gateway" ] [ "nixos:web-servers" ] "tcp" [ "9443" "9444" ] false)
     ])
     (policy "administration" "Approved administrator devices to managed servers over TCP" [
       (rule "Administrative TCP" [ "nixos:administrators" ] [ "nixos:managed-servers" ] "tcp" [] false)

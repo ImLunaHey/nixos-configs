@@ -99,7 +99,7 @@ session; no generic authentication proxy intercepts their API requests.
 
 The public route is Gateway HTTPS → Nova’s NetBird-only TCP 9443 listener, with
 upstream certificate verification for `jellyfin.flaked.org`. NetBird permits
-only that backend port from Gateway. Private devices use Nova TCP 443 directly.
+only that backend port and RomM's dedicated TCP/9444 port from Gateway. Private devices use Nova TCP 443 directly.
 The backend remains bound to host loopback. Caddy trusts forwarded addresses
 only from Gateway, and Jellyfin trusts loopback plus the exact Docker bridge
 gateway. Local administrator recovery remains possible over SSH.
@@ -107,7 +107,7 @@ gateway. Local administrator recovery remains possible over SSH.
 The family accounts are linked by stable Pocket ID subjects. Hannah has only
 Movies and Shows, no administrator, deletion, download, Live TV or other-user
 control rights. Rachel retains her existing account and library history. Both
-belong only to `jellyfin-users`, which grants no NetBird access. Passkey
+belong to `jellyfin-users`, `home-users` and `romm-users`, which grant no NetBird access. Passkey
 onboarding uses private, expiring one-time links; credentials are never stored
 in this repository.
 
@@ -367,8 +367,8 @@ Anvil origins were unreachable, so their known source pins remain unchanged.
 ### Public landing page
 
 `https://flaked.org` serves the buildless static files in `machines/gateway/site`
-from Gateway's Caddy. It links only to Jellyfin and Pocket ID, with generic
-invitation and TV sign-in guidance. Do not add account names, invitation URLs,
+from Gateway's Caddy. It offers Pocket ID sign-in and generic invitation
+guidance; service links and TV help appear only after authentication. Do not add account names, invitation URLs,
 private service links, or credentials to this public directory. There are no
 scripts, analytics, remote fonts, or third-party asset requests. The locally
 served forest image is the same Luca Bravo photograph credited in
@@ -377,4 +377,77 @@ served forest image is the same Luca Bravo photograph credited in
 Nova's existing Cloudflare DNS sync manages the apex A record through
 `services.cloudflare-dns.recordIPs`; explicit records do not require a local
 Caddy listener. Gateway independently serves HTTPS and manages its certificate.
-The public page grants no access to either linked service.
+The public page grants no access to the services.
+
+### Authenticated home and RomM
+
+The public root is a sign-in page. `/services` and `/services/` require an
+OAuth2 Proxy session for the Pocket ID `home-users` group. The service document
+lives outside the public file-server root, and responses are not cached. The
+session cookie is Secure, HttpOnly, host-only, and uses SameSite=Lax. Authorization
+Code + PKCE and nonce validation are enabled. Pocket ID group membership is the
+access boundary; administrator-provisioned account emails are not used as an
+allowlist and are not required to have an email-verification flag.
+
+Provision the restricted `flaked home` OIDC client with callback
+`https://flaked.org/oauth2/callback`. Its client ID, secret and a random 32-byte
+base64 cookie secret belong in root-only `/var/lib/flaked-home/oauth2.env` as
+`OAUTH2_PROXY_CLIENT_ID`, `OAUTH2_PROXY_CLIENT_SECRET`, and
+`OAUTH2_PROXY_COOKIE_SECRET`. Back up this file with Gateway's other secrets;
+never commit it. Signing out of home clears only the home session, not sessions
+at Pocket ID or linked applications.
+
+RomM uses a separate Pocket ID client restricted to `romm-users`, with callback
+`https://romm.flaked.org/api/oauth/openid`. Credentials are encrypted in the
+SOPS `romm_oidc_env` secret. `romm-admins` contains only the administrator;
+`romm-users` maps everyone else to the ordinary User role and the default Viewer
+permission group. Check the existing administrator's email before first login
+so RomM links the existing account. Public registration is not granted: only
+members of the restricted OIDC client can auto-provision an account. Local
+administrator login remains available while end-to-end OIDC is being verified.
+
+RomM 5.4.1 requires `email_verified=true` from Pocket ID. Configure outgoing
+SMTP and enable optional email verification in Pocket ID, then have each user
+verify their own address before signing into RomM (Resend is configured below). An unverified account is
+rejected even when its group membership is correct. Do not enable the global
+`emailsVerified` override merely to bypass this requirement: users can edit
+their email addresses, and RomM initially matches existing accounts by email.
+The home page accepts administrator-provisioned group members without this
+verification, so successful home sign-in does not prove RomM sign-in works.
+
+Gateway reaches RomM through Nova's dedicated NetBird TCP/9444 listener. This
+shares the certificate from Nova's existing private RomM vhost; no other private
+web services are exposed by that listener. The managed ingress policy permits
+only TCP/9443 (Jellyfin) and TCP/9444 (RomM). The public RomM DNS record points at
+Gateway, while personal NetBird devices can still use Nova directly.
+
+Run `python3 scripts/check-home-access.py` after deploying home authentication.
+This checks that direct paths, forged cookies and identity headers cannot expose
+the services page, and that sign-in uses Pocket ID with PKCE, state and nonce.
+A real passkey sign-in is still required to confirm the authenticated flow.
+
+### Pocket ID email through Resend
+
+Resend sends from `no-reply@flaked.org` in `eu-west-1`. The four verification
+records are declared in `resend-dns.nix` and applied by Nova's Cloudflare sync.
+Static records are added when absent, left alone when their values match, and
+updated only when owned by `nixos:static`; conflicting unmanaged or multiple
+records fail closed. No records are deleted. Receiving mail is not enabled in
+Resend. Open/click tracking is disabled, and recipient TLS is enforced.
+
+Pocket ID's application configuration uses `smtp.resend.com`, port `465`, TLS,
+username `resend`, sender `no-reply@flaked.org`, and certificate verification.
+The SMTP password is a Resend `sending_access` key restricted to `flaked.org`.
+It lives in Pocket ID's private application state, alongside the existing OIDC
+configuration; back up Pocket ID's data and encryption key together. SMTP
+settings are managed through its admin API/UI. Environment overrides require
+replacing the entire UI configuration, so do not add isolated SMTP environment
+variables and assume they take effect.
+
+Email verification is **optional** at Pocket ID so existing applications remain
+available, and `emailsVerified` remains false. Each user opens Pocket ID's
+**My Account**, selects **Send email**, follows their verification link, then
+starts a fresh RomM login. RomM still requires actual verification; home and
+Jellyfin access do not assert that a user's email has been verified. The temporary
+Full access Resend setup key is not installed on a host and can be revoked after
+setup; keep the separately created `pocket-id-flaked-smtp` sending key.
