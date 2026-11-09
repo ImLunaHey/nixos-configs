@@ -462,3 +462,25 @@ pre-start sets `filesystem.structure.default` to `{platform}/{game}` and
 `firmware` to `bios/{platform}`, preserving other configuration values and
 backing up the original file under `/var/backups/romm/`. No game files are moved
 and existing catalog IDs, saves and account data remain in place.
+
+The existing RomM catalog also contained the old `roms/` prefix in `roms.fs_path`
+and `rom_files.file_path`. On 2026-11-09 all 31 game entries and 31 file entries
+were checked against the real files (including file sizes), then repaired in a
+transaction without changing their IDs. The database and original paths were
+saved in `/var/backups/romm/path-repair-20261109/` before updating them.
+
+### Public service outage page
+
+Gateway serves `machines/gateway/errors/unavailable.html` for browser GET/HEAD
+requests that accept HTML when a public service returns 502, 503 or 504, or
+when Caddy cannot reach its upstream. The self-contained page needs no working
+backend, external assets or JavaScript. It retains the original error status,
+is not cached, and contains no internal service details. Upstream API/POST
+responses pass through unchanged; 401/403/404 errors are not replaced.
+
+`error-pages.nix` supplies the shared handlers for home, Pocket ID, NetBird,
+Jellyfin and RomM. `scripts/check-gateway-error-pages.py` tests rendered handlers
+using an isolated loopback listener and fake upstream, covering backend errors,
+connection failures, API/POST responses and authentication errors. Pass the
+Caddy binary plus files containing the evaluated `handlers` and `proxy` strings
+using `--caddy`, `--handlers` and `--proxy`. It stops its test servers on exit.
