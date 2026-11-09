@@ -58,6 +58,7 @@ nixos-configs/
 | File | Role |
 |------|------|
 | `configuration.nix` | |
+| `error-pages.nix` | |
 | `flake.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `home.nix` | |

@@ -1,5 +1,7 @@
 { pkgs, ... }:
-{
+let
+  errors = import ./error-pages.nix;
+in {
   # Refuse public onboarding until the operator allows their IP at runtime.
   # Empty this file and reload Caddy once both initial admins are registered.
   systemd.services.gateway-bootstrap = {
@@ -34,6 +36,7 @@
       }
     '';
     virtualHosts."flaked.org".extraConfig = ''
+      ${errors.handlers}
       timeouts {
         read_timeout 1m
       }
@@ -51,7 +54,9 @@
       handle /oauth2/* {
         header Content-Security-Policy "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
         header Cache-Control "no-store"
-        reverse_proxy 127.0.0.1:4180
+        reverse_proxy 127.0.0.1:4180 {
+          ${errors.proxy}
+        }
       }
       @services path /services /services/
       handle @services {
@@ -70,6 +75,7 @@
       }
     '';
     virtualHosts."netbird.flaked.org".extraConfig = ''
+      ${errors.handlers}
       import /var/lib/gateway-bootstrap/access.caddy
       @ordinaryHTTP not header Content-Type application/grpc*
       timeouts @ordinaryHTTP {
@@ -78,17 +84,25 @@
       @grpc header Content-Type application/grpc*
       reverse_proxy @grpc h2c://127.0.0.1:8081
       @backend path /relay* /ws-proxy/* /api/* /oauth2/*
-      reverse_proxy @backend 127.0.0.1:8081
-      reverse_proxy /* 127.0.0.1:8080
+      reverse_proxy @backend 127.0.0.1:8081 {
+          ${errors.proxy}
+        }
+      reverse_proxy /* 127.0.0.1:8080 {
+          ${errors.proxy}
+        }
     '';
     virtualHosts."id.flaked.org".extraConfig = ''
+      ${errors.handlers}
       timeouts {
         read_timeout 1m
       }
       import /var/lib/gateway-bootstrap/access.caddy
-      reverse_proxy 127.0.0.1:1411
+      reverse_proxy 127.0.0.1:1411 {
+          ${errors.proxy}
+        }
     '';
     virtualHosts."romm.flaked.org".extraConfig = ''
+      ${errors.handlers}
       timeouts {
         read_timeout 1m
       }
@@ -97,6 +111,7 @@
       header X-Content-Type-Options "nosniff"
       header Referrer-Policy "same-origin"
       reverse_proxy https://100.66.196.73:9444 {
+        ${errors.proxy}
         header_up Host romm.flaked.org
         transport http {
           tls_server_name romm.flaked.org
@@ -104,6 +119,7 @@
       }
     '';
     virtualHosts."jellyfin.flaked.org".extraConfig = ''
+      ${errors.handlers}
       timeouts {
         read_timeout 1m
       }
@@ -113,6 +129,7 @@
       header X-Content-Type-Options "nosniff"
       header Referrer-Policy "same-origin"
       reverse_proxy https://100.66.196.73:9443 {
+        ${errors.proxy}
         header_up Host jellyfin.flaked.org
         transport http {
           tls_server_name jellyfin.flaked.org
