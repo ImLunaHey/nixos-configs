@@ -136,6 +136,7 @@ in
   networking.firewall.interfaces.wt0.allowedTCPPorts = [ 80 443 9443 ];
 
   services.cloudflare-dns.recordIPs."jellyfin.flaked.org" = "23.150.68.231";
+  services.cloudflare-dns.recordIPs."flaked.org" = "23.150.68.231";
 
   systemd.services.caddy = {
     after = [ "tailscaled.service" "tailscale-autoauth.service" "netbird.service" ];
