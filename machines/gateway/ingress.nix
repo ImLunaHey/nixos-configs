@@ -33,6 +33,22 @@
         }
       }
     '';
+    virtualHosts."flaked.org".extraConfig = ''
+      timeouts {
+        read_timeout 1m
+      }
+      root * ${./site}
+      encode zstd gzip
+      header {
+        Alt-Svc "clear"
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer"
+        Content-Security-Policy "default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+      }
+      file_server
+    '';
     virtualHosts."netbird.flaked.org".extraConfig = ''
       import /var/lib/gateway-bootstrap/access.caddy
       @ordinaryHTTP not header Content-Type application/grpc*

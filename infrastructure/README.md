@@ -363,3 +363,18 @@ Pulsar is deferred, with Darwin inputs unchanged. Gilbert is powered off; its
 base image and local image recipe are pinned, but its legacy apt/pip installation
 steps are not fully reproducible and have not been rebuilt or deployed. Private
 Anvil origins were unreachable, so their known source pins remain unchanged.
+
+### Public landing page
+
+`https://flaked.org` serves the buildless static files in `machines/gateway/site`
+from Gateway's Caddy. It links only to Jellyfin and Pocket ID, with generic
+invitation and TV sign-in guidance. Do not add account names, invitation URLs,
+private service links, or credentials to this public directory. There are no
+scripts, analytics, remote fonts, or third-party asset requests. The locally
+served forest image is the same Luca Bravo photograph credited in
+`jellyfin-assets/README.md`.
+
+Nova's existing Cloudflare DNS sync manages the apex A record through
+`services.cloudflare-dns.recordIPs`; explicit records do not require a local
+Caddy listener. Gateway independently serves HTTPS and manages its certificate.
+The public page grants no access to either linked service.

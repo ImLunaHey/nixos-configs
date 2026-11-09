@@ -6,8 +6,8 @@ let
   cfg = config.services.cloudflare-dns;
 
   # Internal listeners with explicit ports are not separate DNS records.
-  records = filter (name: builtins.match "[A-Za-z0-9.-]+" name != null)
-    (attrNames config.services.caddy.virtualHosts);
+  records = unique ((filter (name: builtins.match "[A-Za-z0-9.-]+" name != null)
+    (attrNames config.services.caddy.virtualHosts)) ++ attrNames cfg.recordIPs);
 
   syncScript = pkgs.writeShellScript "cloudflare-dns-sync" ''
     set -euo pipefail
@@ -69,7 +69,7 @@ in
     recordIPs = mkOption {
       type = types.attrsOf types.str;
       default = {};
-      description = "Per-host A record overrides, such as a public gateway address.";
+      description = "Explicit A records and per-vhost IP overrides, including sites hosted on the public gateway.";
     };
   };
 
