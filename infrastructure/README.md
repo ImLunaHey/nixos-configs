@@ -411,3 +411,8 @@ shares the certificate from Nova's existing private RomM vhost; no other private
 web services are exposed by that listener. The managed ingress policy permits
 only TCP/9443 (Jellyfin) and TCP/9444 (RomM). The public RomM DNS record points at
 Gateway, while personal NetBird devices can still use Nova directly.
+
+Run `python3 scripts/check-home-access.py` after deploying home authentication.
+This checks that direct paths, forged cookies and identity headers cannot expose
+the services page, and that sign-in uses Pocket ID with PKCE, state and nonce.
+A real passkey sign-in is still required to confirm the authenticated flow.
