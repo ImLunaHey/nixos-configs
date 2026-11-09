@@ -406,6 +406,15 @@ so RomM links the existing account. Public registration is not granted: only
 members of the restricted OIDC client can auto-provision an account. Local
 administrator login remains available while end-to-end OIDC is being verified.
 
+RomM 5.4.1 requires `email_verified=true` from Pocket ID. Configure outgoing
+SMTP and enable optional email verification in Pocket ID, then have each user
+verify their own address before signing into RomM. An unverified account is
+rejected even when its group membership is correct. Do not enable the global
+`emailsVerified` override merely to bypass this requirement: users can edit
+their email addresses, and RomM initially matches existing accounts by email.
+The home page accepts administrator-provisioned group members without this
+verification, so successful home sign-in does not prove RomM sign-in works.
+
 Gateway reaches RomM through Nova's dedicated NetBird TCP/9444 listener. This
 shares the certificate from Nova's existing private RomM vhost; no other private
 web services are exposed by that listener. The managed ingress policy permits
