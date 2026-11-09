@@ -47,7 +47,31 @@
         Content-Security-Policy "default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
         Permissions-Policy "camera=(), microphone=(), geolocation=()"
       }
-      file_server
+      # Keep the service document outside the public site's filesystem root.
+      handle /oauth2/* {
+        header Content-Security-Policy "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'"
+        header Cache-Control "no-store"
+        reverse_proxy 127.0.0.1:4180
+      }
+      @services path /services /services/
+      handle @services {
+        route {
+          forward_auth 127.0.0.1:4180 {
+            uri /oauth2/auth
+            @unauthenticated status 401
+            handle_response @unauthenticated {
+              redir /oauth2/start?rd=%2Fservices 302
+            }
+          }
+          root * ${./portal}
+          rewrite * /services.html
+          header Cache-Control "no-store"
+          file_server
+        }
+      }
+      handle {
+        file_server
+      }
     '';
     virtualHosts."netbird.flaked.org".extraConfig = ''
       import /var/lib/gateway-bootstrap/access.caddy
@@ -67,6 +91,21 @@
       }
       import /var/lib/gateway-bootstrap/access.caddy
       reverse_proxy 127.0.0.1:1411
+    '';
+    virtualHosts."romm.flaked.org".extraConfig = ''
+      timeouts {
+        read_timeout 1m
+      }
+      header Alt-Svc "clear"
+      header Strict-Transport-Security "max-age=31536000"
+      header X-Content-Type-Options "nosniff"
+      header Referrer-Policy "same-origin"
+      reverse_proxy https://100.66.196.73:9444 {
+        header_up Host romm.flaked.org
+        transport http {
+          tls_server_name romm.flaked.org
+        }
+      }
     '';
     virtualHosts."jellyfin.flaked.org".extraConfig = ''
       timeouts {

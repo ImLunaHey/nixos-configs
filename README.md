@@ -60,6 +60,7 @@ nixos-configs/
 | `configuration.nix` | |
 | `flake.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
+| `home.nix` | |
 | `ingress.nix` | |
 | `killdeer.nix` | |
 | `netbird-client-package.nix` | |
@@ -272,6 +273,7 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 - `status.flaked.org`
 - `s3.flaked.org`
 - `romm.flaked.org`
+- `romm.flaked.org:9444`
 - `immich.flaked.org`
 - `watchstate.flaked.org`
 - `s3-console.flaked.org`

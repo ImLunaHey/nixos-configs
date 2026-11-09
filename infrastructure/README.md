@@ -378,3 +378,36 @@ Nova's existing Cloudflare DNS sync manages the apex A record through
 `services.cloudflare-dns.recordIPs`; explicit records do not require a local
 Caddy listener. Gateway independently serves HTTPS and manages its certificate.
 The public page grants no access to either linked service.
+
+### Authenticated home and RomM
+
+The public root is a sign-in page. `/services` and `/services/` require an
+OAuth2 Proxy session for the Pocket ID `home-users` group. The service document
+lives outside the public file-server root, and responses are not cached. The
+session cookie is Secure, HttpOnly, host-only, and uses SameSite=Lax. Authorization
+Code + PKCE and nonce validation are enabled. Pocket ID group membership is the
+access boundary; administrator-provisioned account emails are not used as an
+allowlist and are not required to have an email-verification flag.
+
+Provision the restricted `flaked home` OIDC client with callback
+`https://flaked.org/oauth2/callback`. Its client ID, secret and a random 32-byte
+base64 cookie secret belong in root-only `/var/lib/flaked-home/oauth2.env` as
+`OAUTH2_PROXY_CLIENT_ID`, `OAUTH2_PROXY_CLIENT_SECRET`, and
+`OAUTH2_PROXY_COOKIE_SECRET`. Back up this file with Gateway's other secrets;
+never commit it. Signing out of home clears only the home session, not sessions
+at Pocket ID or linked applications.
+
+RomM uses a separate Pocket ID client restricted to `romm-users`, with callback
+`https://romm.flaked.org/api/oauth/openid`. Credentials are encrypted in the
+SOPS `romm_oidc_env` secret. `romm-admins` contains only the administrator;
+`romm-users` maps everyone else to the ordinary User role and the default Viewer
+permission group. Check the existing administrator's email before first login
+so RomM links the existing account. Public registration is not granted: only
+members of the restricted OIDC client can auto-provision an account. Local
+administrator login remains available while end-to-end OIDC is being verified.
+
+Gateway reaches RomM through Nova's dedicated NetBird TCP/9444 listener. This
+shares the certificate from Nova's existing private RomM vhost; no other private
+web services are exposed by that listener. The managed ingress policy permits
+only TCP/9443 (Jellyfin) and TCP/9444 (RomM). The public RomM DNS record points at
+Gateway, while personal NetBird devices can still use Nova directly.

@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  imports = [ ./hardware-configuration.nix ./killdeer.nix ./netbird.nix ./pocket-id.nix ./ingress.nix ];
+  imports = [ ./hardware-configuration.nix ./killdeer.nix ./netbird.nix ./pocket-id.nix ./ingress.nix ./home.nix ];
 
   virtualisation.oci-containers.backend = "docker";
   virtualisation.docker.enable = true;

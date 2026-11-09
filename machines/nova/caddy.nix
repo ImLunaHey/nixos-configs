@@ -100,6 +100,13 @@ in
         reverse_proxy 127.0.0.1:8083
       '';
     };
+    virtualHosts."romm.flaked.org:9444".extraConfig = ''
+      bind ${privateDNS.novaIPv4}
+      # Reuse the certificate policy declared by the private HTTPS listener.
+      encode zstd gzip
+      header Alt-Svc "clear"
+      reverse_proxy 127.0.0.1:8083
+    '';
     virtualHosts."immich.flaked.org" = {
       extraConfig = ''
         bind 100.106.184.73 ${privateDNS.novaIPv4}
@@ -133,9 +140,10 @@ in
     };
   };
 
-  networking.firewall.interfaces.wt0.allowedTCPPorts = [ 80 443 9443 ];
+  networking.firewall.interfaces.wt0.allowedTCPPorts = [ 80 443 9443 9444 ];
 
   services.cloudflare-dns.recordIPs."jellyfin.flaked.org" = "23.150.68.231";
+  services.cloudflare-dns.recordIPs."romm.flaked.org" = "23.150.68.231";
   services.cloudflare-dns.recordIPs."flaked.org" = "23.150.68.231";
 
   systemd.services.caddy = {
