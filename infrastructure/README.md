@@ -99,7 +99,7 @@ session; no generic authentication proxy intercepts their API requests.
 
 The public route is Gateway HTTPS → Nova’s NetBird-only TCP 9443 listener, with
 upstream certificate verification for `jellyfin.flaked.org`. NetBird permits
-only that backend port from Gateway. Private devices use Nova TCP 443 directly.
+only that backend port and RomM's dedicated TCP/9444 port from Gateway. Private devices use Nova TCP 443 directly.
 The backend remains bound to host loopback. Caddy trusts forwarded addresses
 only from Gateway, and Jellyfin trusts loopback plus the exact Docker bridge
 gateway. Local administrator recovery remains possible over SSH.
@@ -107,7 +107,7 @@ gateway. Local administrator recovery remains possible over SSH.
 The family accounts are linked by stable Pocket ID subjects. Hannah has only
 Movies and Shows, no administrator, deletion, download, Live TV or other-user
 control rights. Rachel retains her existing account and library history. Both
-belong only to `jellyfin-users`, which grants no NetBird access. Passkey
+belong to `jellyfin-users`, `home-users` and `romm-users`, which grant no NetBird access. Passkey
 onboarding uses private, expiring one-time links; credentials are never stored
 in this repository.
 
@@ -367,8 +367,8 @@ Anvil origins were unreachable, so their known source pins remain unchanged.
 ### Public landing page
 
 `https://flaked.org` serves the buildless static files in `machines/gateway/site`
-from Gateway's Caddy. It links only to Jellyfin and Pocket ID, with generic
-invitation and TV sign-in guidance. Do not add account names, invitation URLs,
+from Gateway's Caddy. It offers Pocket ID sign-in and generic invitation
+guidance; service links and TV help appear only after authentication. Do not add account names, invitation URLs,
 private service links, or credentials to this public directory. There are no
 scripts, analytics, remote fonts, or third-party asset requests. The locally
 served forest image is the same Luca Bravo photograph credited in
@@ -377,7 +377,7 @@ served forest image is the same Luca Bravo photograph credited in
 Nova's existing Cloudflare DNS sync manages the apex A record through
 `services.cloudflare-dns.recordIPs`; explicit records do not require a local
 Caddy listener. Gateway independently serves HTTPS and manages its certificate.
-The public page grants no access to either linked service.
+The public page grants no access to the services.
 
 ### Authenticated home and RomM
 
