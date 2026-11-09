@@ -408,7 +408,7 @@ administrator login remains available while end-to-end OIDC is being verified.
 
 RomM 5.4.1 requires `email_verified=true` from Pocket ID. Configure outgoing
 SMTP and enable optional email verification in Pocket ID, then have each user
-verify their own address before signing into RomM. An unverified account is
+verify their own address before signing into RomM (Resend is configured below). An unverified account is
 rejected even when its group membership is correct. Do not enable the global
 `emailsVerified` override merely to bypass this requirement: users can edit
 their email addresses, and RomM initially matches existing accounts by email.
@@ -425,3 +425,29 @@ Run `python3 scripts/check-home-access.py` after deploying home authentication.
 This checks that direct paths, forged cookies and identity headers cannot expose
 the services page, and that sign-in uses Pocket ID with PKCE, state and nonce.
 A real passkey sign-in is still required to confirm the authenticated flow.
+
+### Pocket ID email through Resend
+
+Resend sends from `no-reply@flaked.org` in `eu-west-1`. The four verification
+records are declared in `resend-dns.nix` and applied by Nova's Cloudflare sync.
+Static records are added when absent, left alone when their values match, and
+updated only when owned by `nixos:static`; conflicting unmanaged or multiple
+records fail closed. No records are deleted. Receiving mail is not enabled in
+Resend. Open/click tracking is disabled, and recipient TLS is enforced.
+
+Pocket ID's application configuration uses `smtp.resend.com`, port `465`, TLS,
+username `resend`, sender `no-reply@flaked.org`, and certificate verification.
+The SMTP password is a Resend `sending_access` key restricted to `flaked.org`.
+It lives in Pocket ID's private application state, alongside the existing OIDC
+configuration; back up Pocket ID's data and encryption key together. SMTP
+settings are managed through its admin API/UI. Environment overrides require
+replacing the entire UI configuration, so do not add isolated SMTP environment
+variables and assume they take effect.
+
+Email verification is **optional** at Pocket ID so existing applications remain
+available, and `emailsVerified` remains false. Each user opens Pocket ID's
+**My Account**, selects **Send email**, follows their verification link, then
+starts a fresh RomM login. RomM still requires actual verification; home and
+Jellyfin access do not assert that a user's email has been verified. The temporary
+Full access Resend setup key is not installed on a host and can be revoked after
+setup; keep the separately created `pocket-id-flaked-smtp` sending key.

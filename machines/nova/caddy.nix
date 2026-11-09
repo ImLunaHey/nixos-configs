@@ -129,6 +129,7 @@ in
 
   networking.firewall.interfaces.wt0.allowedTCPPorts = [ 80 443 9443 9444 ];
 
+  services.cloudflare-dns.staticRecords = import ../../infrastructure/resend-dns.nix;
   services.cloudflare-dns.recordIPs."jellyfin.flaked.org" = "23.150.68.231";
   services.cloudflare-dns.recordIPs."romm.flaked.org" = "23.150.68.231";
   services.cloudflare-dns.recordIPs."flaked.org" = "23.150.68.231";

@@ -51,6 +51,46 @@ let
     }
 
     ${concatMapStringsSep "\n" (name: ''upsert_record ${escapeShellArg name} ${escapeShellArg (cfg.recordIPs.${name} or cfg.ip)}'') records}
+
+    # Extra records are explicitly owned; never replace unrelated mail records.
+    upsert_static_record() {
+      local payload="$1" name record_type existing count id
+      name=$(printf '%s' "$payload" | ${pkgs.jq}/bin/jq -r .name)
+      record_type=$(printf '%s' "$payload" | ${pkgs.jq}/bin/jq -r .type)
+      existing=$(${pkgs.curl}/bin/curl -sf --get \
+        "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
+        --data-urlencode "name=$name" --data-urlencode "type=$record_type" \
+        -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+      printf '%s' "$existing" | ${pkgs.jq}/bin/jq -e '.success == true' >/dev/null
+      count=$(printf '%s' "$existing" | ${pkgs.jq}/bin/jq '.result | length')
+      if [ "$count" = 0 ]; then
+        echo "Creating $record_type record: $name"
+        ${pkgs.curl}/bin/curl -sf -X POST \
+          "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
+          -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+          -H "Content-Type: application/json" -d "$payload" \
+          | ${pkgs.jq}/bin/jq -e '.success == true'
+      elif [ "$count" = 1 ] && printf '%s' "$existing" | ${pkgs.jq}/bin/jq -e \
+        --argjson wanted "$payload" '.result[0] | .content == $wanted.content and (.priority // null) == ($wanted.priority // null)' >/dev/null; then
+        echo "Unchanged $record_type record: $name"
+      elif [ "$count" = 1 ] && printf '%s' "$existing" | ${pkgs.jq}/bin/jq -e '.result[0].comment == "nixos:static"' >/dev/null; then
+        id=$(printf '%s' "$existing" | ${pkgs.jq}/bin/jq -r '.result[0].id')
+        echo "Updating $record_type record: $name"
+        ${pkgs.curl}/bin/curl -sf -X PATCH \
+          "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records/$id" \
+          -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+          -H "Content-Type: application/json" -d "$payload" \
+          | ${pkgs.jq}/bin/jq -e '.success == true'
+      else
+        echo "Refusing to replace unmanaged or multiple $record_type records: $name" >&2
+        return 1
+      fi
+    }
+    ${concatMapStringsSep "\n" (record: "upsert_static_record " + escapeShellArg (builtins.toJSON (
+      (removeAttrs record [ "priority" ])
+      // optionalAttrs (record.priority != null) { inherit (record) priority; }
+      // { ttl = 1; comment = "nixos:static"; }
+    ))) cfg.staticRecords}
   '';
 in
 {
@@ -70,6 +110,18 @@ in
       type = types.attrsOf types.str;
       default = {};
       description = "Explicit A records and per-vhost IP overrides, including sites hosted on the public gateway.";
+    };
+    staticRecords = mkOption {
+      default = [];
+      description = "Explicit mail/DNS verification records. Conflicting unmanaged records cause failure; no records are deleted.";
+      type = types.listOf (types.submodule {
+        options = {
+          name = mkOption { type = types.str; };
+          type = mkOption { type = types.enum [ "TXT" "MX" "CNAME" ]; };
+          content = mkOption { type = types.str; };
+          priority = mkOption { type = types.nullOr types.ints.unsigned; default = null; };
+        };
+      });
     };
   };
 
