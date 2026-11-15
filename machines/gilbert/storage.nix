@@ -1,9 +1,9 @@
 { ... }:
 {
   fileSystems."/mnt/rips" = {
-    device = "void:/mnt/storage/rips";
+    device = "lake:/mnt/storage/rips";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+    options = [ "vers=4.2" "proto=tcp" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
 
 }

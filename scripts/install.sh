@@ -129,7 +129,7 @@ fi
 # Restore from rustic backup if this machine has one
 if [[ -f "$FLAKE_DIR/machines/$MACHINE/backups.nix" ]]; then
   echo ""
-  read -rp "Restore $MACHINE from rustic backup on void? (yes/no): " restore_confirm
+  read -rp "Restore $MACHINE from rustic backup on lake? (yes/no): " restore_confirm
   if [[ "$restore_confirm" == "yes" ]]; then
     RUSTIC_REPO="/mnt/backups/$MACHINE"
     RUSTIC_PASSWORD_FILE="/run/secrets/rustic_password"
