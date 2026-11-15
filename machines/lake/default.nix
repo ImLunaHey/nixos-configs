@@ -2,7 +2,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./imported-storage.nix
     ./anvil.nix
     ./cache.nix
     ./lancache.nix

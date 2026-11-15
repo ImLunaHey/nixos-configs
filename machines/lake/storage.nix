@@ -1,28 +1,35 @@
 { pkgs, ... }:
 {
-  # Movies and shows are stored on Lake; Nova mounts these exports for Jellyfin and Watchstate.
-  # SMB clients use the existing media share's movies and shows directories.
+  # Shared storage for Nova, Gilbert and their backups. SMB uses the same paths.
   services.nfs.server = {
     enable = true;
     exports = ''
       /mnt/storage/media/movies 10.0.0.0/24(ro,sync,no_subtree_check,root_squash)
       /mnt/storage/media/shows 10.0.0.0/24(ro,sync,no_subtree_check,root_squash)
+      /mnt/storage/media 10.0.0.0/24(rw,sync,no_subtree_check,root_squash)
+      /mnt/storage/games 10.0.0.0/24(rw,sync,no_subtree_check,root_squash)
+      /mnt/storage/photos 10.0.0.0/24(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/storage/rips gilbert(rw,sync,no_subtree_check,no_root_squash)
+      /mnt/storage/backups 10.0.0.0/24(rw,sync,no_subtree_check,no_root_squash) gilbert(rw,sync,no_subtree_check,no_root_squash)
     '';
   };
 
-  # Imports may preserve restrictive modes (e.g. rsync -a). Keep media readable
-  # by remapped container users without changing ownership or write permissions.
+  # Keep media readable and let remapped containers write photos, music and YouTube.
   systemd.services.lake-media-permissions = {
-    description = "Ensure shared media is readable";
+    description = "Prepare shared storage permissions";
     after = [ "zfs-mount.service" "systemd-tmpfiles-setup.service" ];
     requires = [ "zfs-mount.service" ];
     before = [ "nfs-server.service" "samba-smbd.service" ];
     unitConfig = {
-      RequiresMountsFor = [ "/mnt/storage/media" ];
+      RequiresMountsFor = [ "/mnt/storage/media" "/mnt/storage/photos" ];
       ConditionPathIsMountPoint = "/mnt/storage";
     };
     serviceConfig.Type = "oneshot";
     script = ''
+      # Immich and ytdl-sub use Docker's remapped root (uid/gid 100000).
+      ${pkgs.coreutils}/bin/mkdir -p /mnt/storage/photos /mnt/storage/media/music /mnt/storage/media/youtube
+      ${pkgs.coreutils}/bin/chown 100000:100000 \
+        /mnt/storage/photos /mnt/storage/media/music /mnt/storage/media/youtube
       ${pkgs.findutils}/bin/find /mnt/storage/media -xdev -type d ! -perm -0555 \
         -exec ${pkgs.coreutils}/bin/chmod a+rx -- {} +
       ${pkgs.findutils}/bin/find /mnt/storage/media -xdev -type f ! -perm -0444 \
