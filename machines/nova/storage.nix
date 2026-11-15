@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Keep Lake's movies and shows separate from Void's music and YouTube mount.
+  # Lake's original movies/shows stay separate from the imported music/YouTube library.
   fileSystems."/mnt/movies" = {
     device = "lake.localdomain:/mnt/storage/media/movies";
     fsType = "nfs";
@@ -14,21 +14,21 @@
   };
 
   fileSystems."/mnt/media" = {
-    device = "void.localdomain:/mnt/storage/media";
+    device = "lake.localdomain:/mnt/storage/void/media";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+    options = [ "vers=4.2" "proto=tcp" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
 
   fileSystems."/mnt/games" = {
-    device = "void.localdomain:/mnt/storage/games";
+    device = "lake.localdomain:/mnt/storage/void/games";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+    options = [ "vers=4.2" "proto=tcp" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
 
   fileSystems."/mnt/photos" = {
-    device = "void.localdomain:/mnt/storage/photos";
+    device = "lake.localdomain:/mnt/storage/void/photos";
     fsType = "nfs";
-    options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+    options = [ "vers=4.2" "proto=tcp" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
   };
 
 }

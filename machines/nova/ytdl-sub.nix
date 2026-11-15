@@ -215,7 +215,7 @@ in
     ];
     environment = {
       # PUID/PGID 0 -> container root -> host uid 100000 under userns-remap,
-      # matching the /config dir and the media dirs' ownership on void
+      # matching the /config dir and the imported media dirs' ownership on lake
       PUID = "0";
       PGID = "0";
       TZ = "Europe/London";

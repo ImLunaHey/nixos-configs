@@ -9,7 +9,7 @@ let
 in
 {
   options.services.rustic-backup = {
-    enable = lib.mkEnableOption "rustic backup to void";
+    enable = lib.mkEnableOption "rustic backup to lake";
 
     repoName = lib.mkOption {
       type = lib.types.str;
@@ -37,15 +37,15 @@ in
 
   config = lib.mkIf cfg.enable {
     fileSystems."/mnt/backups" = {
-      device = "void:/mnt/storage/backups";
+      device = "lake:/mnt/storage/void/backups";
       fsType = "nfs";
-      options = [ "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
+      options = [ "vers=4.2" "proto=tcp" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=600" ];
     };
 
     systemd.tmpfiles.rules = [ "d /mnt/backups 0755 root root -" ];
 
     systemd.services.rustic-backup = {
-      description = "Rustic backup to void";
+      description = "Rustic backup to lake";
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
       serviceConfig = {
