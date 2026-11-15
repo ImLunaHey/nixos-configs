@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./anvil.nix
     ./cache.nix
+    ./kache.nix
     ./lancache.nix
     ./monitoring.nix
     ./display.nix
