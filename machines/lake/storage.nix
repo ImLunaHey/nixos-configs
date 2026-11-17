@@ -1,5 +1,27 @@
 { pkgs, ... }:
 {
+  # Lake / AOOSTAR WTR MAX SATA drive inventory (checked 2026-11-17).
+  # Physical front slots are numbered 1-7, left to right when facing the front.
+  # Slot 1 is the SSD/NVMe sled; slots 2-7 are the six SATA HDD bays.
+  # Match the serial on the drive label before removal; /dev/sdX can change.
+  #
+  # Confirmed physical slot | Serial         | Model
+  # 1                      | SSD/NVMe sled; individual SSD positions unverified
+  # 2 (leftmost SATA bay)   | WD-WX12D462V2CD | WDC WD20EFPX-68C4TN0, 2 TB
+  # 3-7                    | Not yet physically verified
+  # Slot 2 was confirmed by the owner after replacing JP2930HQ3NWEWH.
+  #
+  # Remaining pool drives; physical slots must be filled in after inspection:
+  # Serial        | Model                  | Observed Linux ATA port
+  # JP2911HQ3JV4KH | Hitachi HDS721010CLA332 | ata1
+  # JP2930HQ3NW7WH | Hitachi HDS721010CLA332 | ata2
+  # 959SN05NS      | TOSHIBA DT01ACA100      | ata3
+  # W9AML1H5       | ST1000DM010-2EP102      | ata4
+  # JP2940HD09MAJC | Hitachi HDS721010CLA332 | ata5
+  # Slot 2's WD is on ata6. ATA port numbers are NOT physical slot numbers;
+  # do not extrapolate the unverified bay order from this single mapping.
+  # The system NVMe is separate: Samsung 990 PRO, serial S6Z2NJ0TA25178W.
+
   # Shared storage for Nova, Gilbert and their backups. SMB uses the same paths.
   services.nfs.server = {
     enable = true;
