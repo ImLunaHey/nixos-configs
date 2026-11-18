@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  # Lake / AOOSTAR WTR MAX SATA drive inventory (checked 2026-11-17).
+  # Lake / AOOSTAR WTR MAX SATA drive inventory (checked 2026-11-18).
   # Physical front slots are numbered 1-7, left to right when facing the front.
   # Slot 1 is the SSD/NVMe sled; slots 2-7 are the six SATA HDD bays.
   # Match the serial on the drive label before removal; /dev/sdX can change.
@@ -9,12 +9,13 @@
   # 1    | SSD/NVMe sled; individual SSD positions unverified
   # 2    | WD-WX12D462V2CD | WDC WD20EFPX-68C4TN0, 2 TB | ata6 | Confirmed
   # 3    | JP2940HD09MAJC  | Hitachi HDS721010CLA332    | ata5 | Inferred
-  # 4    | W9AML1H5        | ST1000DM010-2EP102         | ata4 | Inferred
+  # 4    | WD-WXB2D36HV3J4 | WDC WD20EFPX-68C4TN0, 2 TB | ata4 | Inferred
   # 5    | 959SN05NS       | TOSHIBA DT01ACA100         | ata3 | Inferred
   # 6    | JP2930HQ3NW7WH  | Hitachi HDS721010CLA332    | ata2 | Inferred
   # 7    | WD-WXB2D36HVTNA | WDC WD20EFPX-68C4TN0, 2 TB | ata1 | Confirmed
   # Owner confirmed slot 2 (leftmost SATA) after replacing JP2930HQ3NWEWH,
   # and slot 7 (rightmost SATA) after replacing JP2911HQ3JV4KH.
+  # WD-WXB2D36HV3J4 replaced W9AML1H5 on ata4; slot 4 remains inferred.
   # Slots 3-6 assume reverse ATA order from those endpoints; this is not proof
   # of the intervening wiring. Physically verify each serial before removal.
   # The system NVMe is separate: Samsung 990 PRO, serial S6Z2NJ0TA25178W.
