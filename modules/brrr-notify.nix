@@ -11,6 +11,7 @@
 
 {
   _module.args.brrrNotify = pkgs.writeShellScript "brrr-notify" ''
+    set -o pipefail
     title="$1"
     message="$2"
     level="''${3:-active}"
@@ -24,11 +25,11 @@
       --arg sound "$sound" \
       --arg thread "$thread" \
       '{title: $title, message: $message, thread_id: $thread, sound: $sound, interruption_level: $level}' \
-      | ${pkgs.curl}/bin/curl -sf \
+      | ${pkgs.curl}/bin/curl -sf --connect-timeout 5 --max-time 10 --retry 2 --retry-max-time 25 \
         -H "Authorization: Bearer $(cat ${config.sops.secrets.brrr_token.path})" \
         -H "Content-Type: application/json" \
         --data-binary @- \
         "https://api.brrr.now/v1/send" \
-      || true
+      || echo "brrr notification delivery failed" >&2
   '';
 }
