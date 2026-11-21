@@ -412,6 +412,18 @@ git add flake.lock
 git commit -m "chore: update flake.lock"
 \`\`\`
 
+## Machine notifications
+
+Nova, Gilbert, Void, and Lake send brrr.now push notifications at startup and
+before an orderly shutdown or reboot, using their existing encrypted brrr token.
+The first deployment also sends a startup notification. Normal configuration
+switches do not restart the lifecycle notifier.
+
+Delivery is best-effort, with bounded connection/request timeouts and retries so
+an unavailable notification service cannot indefinitely delay shutdown. Crashes,
+power loss, and lost networking are not monitored. macOS hosts and the standalone
+Gateway are not included. No extra credentials or public listeners are needed.
+
 ## License
 
 MIT
