@@ -10,7 +10,7 @@ import tempfile
 
 HOSTS = {
     "nova": "luna@nova", "gilbert": "luna@gilbert", "void": "luna@void",
-    "lake": "luna@lake", "gateway": "luna@23.150.68.231",
+    "lake": "luna@lake", "tower": "luna@tower", "gateway": "luna@23.150.68.231",
     "pulsar": "xo@pulsar", "comet": "luna@comet",
 }
 

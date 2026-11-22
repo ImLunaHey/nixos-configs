@@ -8,23 +8,7 @@ let
   lumenT3CodeInstallationId = "169973417";
   t3code = t3codePkgs.callPackage ../../packages/t3code { };
   pnpm_12 = t3codePkgs.callPackage ../../packages/pnpm-12 { };
-  # aws-lc-sys must not mistake the separate OpenSSL dependency for AWS-LC.
-  codexWithSystemCrypto = t3codePkgs.codex.overrideAttrs (old: {
-    buildInputs = (old.buildInputs or []) ++ [
-      t3codePkgs.aws-lc
-      t3codePkgs.zstd
-      t3codePkgs.oniguruma
-      t3codePkgs.sqlite
-    ];
-    env = (old.env or {}) // {
-      AWS_LC_SYS_SYSTEM_DIR = t3codePkgs.runCommand "aws-lc-system" {} ''
-        mkdir -p "$out"
-        ln -s ${t3codePkgs.lib.getDev t3codePkgs.aws-lc}/include/aws-lc "$out/include"
-        ln -s ${t3codePkgs.lib.getLib t3codePkgs.aws-lc}/lib "$out/lib"
-        ln -s ${t3codePkgs.lib.getDev t3codePkgs.aws-lc}/share "$out/share"
-      '';
-    };
-  });
+  codexWithSystemCrypto = t3codePkgs.callPackage ../../packages/codex { };
   lumenT3CodeToken = pkgs.writeShellApplication {
     name = "lumen-t3code-token";
     runtimeInputs = with pkgs; [ coreutils curl jq openssl ];
