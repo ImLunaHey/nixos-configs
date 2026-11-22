@@ -85,6 +85,7 @@ nixos-configs/
 | `networking.nix` | DHCP, firewall, Tailscale |
 | `services.nix` | SOPS secret declarations |
 | `storage.nix` | Disk mounts and NFS |
+| `telemetry.nix` | |
 | `arm-config/` | ARM app config (`arm.yaml`) + `Dockerfile` |
 
 ### `lake`
@@ -160,6 +161,7 @@ nixos-configs/
 | `services.nix` | SOPS secret declarations |
 | `smartd.nix` | SMART disk monitoring + notifications |
 | `storage.nix` | Disk mounts and NFS |
+| `telemetry.nix` | |
 
 ### T3 Code on Lake
 

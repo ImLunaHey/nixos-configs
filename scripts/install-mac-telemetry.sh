@@ -18,7 +18,7 @@ cat > "$plist" <<PLIST
 <key>METRICS_NAME</key><string>$name</string>
 <key>METRICS_BIND</key><string>$address</string>
 <key>METRICS_INTERFACE</key><string>$interface</string>
-<key>METRICS_ALLOWED_CLIENTS</key><string>100.75.169.97,127.0.0.1</string>
+<key>METRICS_ALLOWED_CLIENTS</key><string>10.0.0.161,100.75.169.97,127.0.0.1</string>
 </dict>
 <key>RunAtLoad</key><true/><key>KeepAlive</key><true/>
 <key>ThrottleInterval</key><integer>5</integer>
