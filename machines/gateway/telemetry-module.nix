@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.services.fleetTelemetry;
-  collector = pkgs.callPackage ./packages/hardware-telemetry { };
 in {
   options.services.fleetTelemetry = {
     enable = lib.mkEnableOption "read-only Go fleet telemetry";
@@ -19,30 +18,14 @@ in {
     networking.firewall.extraStopCommands = ''
       iptables -D nixos-fw -i ${cfg.firewallInterface} -s ${cfg.client} -p tcp --dport 8099 -j nixos-fw-accept 2>/dev/null || true
     '';
-    systemd.services.hardware-telemetry = {
-      description = "Read-only Go hardware telemetry";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
-      environment = {
-        METRICS_NAME = config.networking.hostName;
-        METRICS_BIND = cfg.bind;
-        METRICS_INTERFACE = cfg.interface;
-        METRICS_ALLOWED_CLIENTS = "127.0.0.1,${cfg.client}";
-      } // cfg.extraEnvironment;
-      serviceConfig = {
-        ExecStart = lib.getExe collector;
-        DynamicUser = true;
-        Restart = "always";
-        RestartSec = "5s";
-        NoNewPrivileges = true;
-        ProtectSystem = "strict";
-        ProtectHome = true;
-        PrivateTmp = true;
-        AmbientCapabilities = lib.optionals cfg.intelGPU [ "CAP_PERFMON" ];
-        CapabilityBoundingSet = lib.optionals cfg.intelGPU [ "CAP_PERFMON" ];
-      };
-      unitConfig.StartLimitIntervalSec = 0;
+    services.fleet-monitor = {
+      enable = true;
+      mode = "agent";
+      listenAddress = cfg.bind;
+      interface = cfg.interface;
+      allowedClients = [ "127.0.0.1" cfg.client ];
+      intelGPU = cfg.intelGPU;
+      environment = cfg.extraEnvironment;
     };
   };
 }

@@ -73,47 +73,50 @@ The lower rows show disk free space, physical-device read/write rates and IOPS;
 RAM usage appears only once. Low disk space, ZFS drive state, errors and high
 drive activity use restrained status colours, with a rebuild progress bar.
 
-The collector is Go, shared from
-`machines/gateway/packages/hardware-telemetry` so Gateway's standalone flake
-can build the same source. Each host samples every two seconds. NVIDIA uses
-nvidia-smi, Lake uses AMD sysfs counters, Nova uses i915 PMU engine counters
-(the service receives only CAP_PERFMON), and Apple silicon uses unprivileged
-IORegistry AGX statistics. Intel usage is the busiest engine, not the sum of
-concurrent engines. Apple GPU memory is used/shared system capacity, not
-separate VRAM; AMD reports reserved UMA. Unsupported fields remain unavailable,
-and a missing hardware GPU is distinguished from failed collection.
-Mac disk activity resolves the APFS Data volume to its physical backing stores,
-so virtual volume identifiers are not mistaken for missing device counters.
-Intel shared-memory usage is labelled unavailable when the driver does not
-expose it to the collector; it is not presented as zero or dedicated VRAM.
+The implementation lives in [ImLunaHey/fleet-monitor](https://github.com/ImLunaHey/fleet-monitor),
+pinned by this repository's flake lock. Its public NixOS module supplies the Go
+agent, React/Tailwind dashboard, TanStack Query polling, TanStack Table storage
+tables, and optional Cage/Chromium kiosk. This repository contains only host
+configuration and source-specific firewall policy.
 
-Lake's ZFS section polls zpool JSON and dataset usage every ten seconds. It
-shows pool and scan health, raw used/total, numbered SATA ports, device names,
-per-drive capacity, temperature, read/write rates, IOPS, busy time, and
-read/write/checksum errors. The old and new members of a replacement share the
-same port number. Drive activity comes from kernel counters; temperatures reuse
-Lake's existing SMART sensor service. Dataset capacity is used plus currently
-available shared space, not dedicated capacity. No storage settings are changed.
+Tower uses `services.fleet-monitor.mode = "dashboard"`; other machines use
+agent mode. The upstream module is imported by each NixOS/nix-darwin configuration,
+including Gateway's independent flake. Tower's display settings are in
+`machines/tower/display.nix`. Change frontend components and collector code in
+the upstream repository, run its Go/component tests and Nix package builds,
+push, then update the pinned `fleet-monitor` input here before deploying.
 
-Tower's `tower-dashboard.service` binds only `127.0.0.1:8099`. It polls fixed
-peer URLs server-side with short timeouts; a failed host does not block others.
-Lake, Nova, Pulsar and Comet expose read-only metrics on their private LAN
-addresses, restricted to Tower's source address. Linux also enforces this in
-the firewall. Addresses must remain stable. The endpoints have no separate API
-key: they trust the private network and source-address restrictions. Gateway
-binds only its NetBird address and accepts Lake, which relays its metrics to
-Tower; this requires a Lake-to-Gateway TCP 8099 NetBird policy. Gilbert and Void
-have collector configurations, but deployment awaits their return online.
+`fleet-monitor.service` on Tower binds only `127.0.0.1:8099` and polls fixed
+private endpoints with independent timeouts. Lake/Nova bind their LAN addresses
+and retain source-specific firewall rules allowing Tower; Macs use the source
+allowlist in the agent. Addresses must remain stable. There is no separate API
+key. Gateway binds its NetBird address and accepts Lake, but its Lake-to-Gateway
+TCP 8099 mesh policy remains pending at the user's request. Gilbert and Void
+are configured but still unreachable and have not received this deployment.
 
-Macs have a nix-darwin user LaunchAgent module. Before their next full Darwin
-activation, `scripts/install-mac-telemetry.sh` installs the same Go executable
-as a per-user LaunchAgent without sudo. Remove the bootstrap plist before
-adopting the nix-darwin-managed agent to avoid duplicate launchd labels.
+The UI shows NVIDIA dedicated VRAM, AMD reserved UMA, and Apple shared-memory
+usage separately. Intel i915 utilization works with CAP_PERFMON; shared-memory
+usage is explicitly unavailable. Both Macs expose SMC CPU/GPU temperatures;
+Comet shows battery charge/charging state. Mac disk activity resolves APFS to
+the physical SSD. CPU/GPU percentage-axis labels are intentionally smaller than
+main values; all graphs label the two-minute time window.
 
-`cage-tty1.service` runs Chromium as the dedicated unprivileged dashboard user.
-Software rendering preserves GPU memory for inference. The screen stays awake;
-the kiosk restarts if closed. Stale samples become offline; missing readings do
-not become zero. Use Ctrl+Alt+F2 for a login console and Alt+F1 to return.
+Lake's ZFS panel reports scan/pool health, raw used/total, SATA port numbers,
+capacity, temperatures, read/write rates, IOPS, busy time and errors. The old and
+new replacement members share a port number. Drive temperatures come from the
+existing SMART sensor service. Dataset totals include currently available
+shared space; no storage configuration is changed.
+
+Macs currently run upstream's standalone per-user LaunchAgent, installed with
+`fleet-monitor/scripts/install-macos-agent.sh`. The old bootstrap plist was
+moved out of LaunchAgents; the new label is `org.fleet-monitor.agent`.
+Before adopting the nix-darwin-managed agent, remove the standalone plist to
+avoid duplicate labels. The nix-darwin module was evaluated independently;
+full host adoption still depends on the existing private Anvil input.
+
+`cage-tty1.service` runs Chromium as `fleet-monitor-kiosk`. Software rendering
+preserves GPU memory for inference. The screen stays awake and restarts if
+closed. Use Ctrl+Alt+F2 for a login console and Alt+F1 to return.
 
 ## Coding access
 

@@ -267,7 +267,7 @@ Normal maintenance timers (backups, monitoring, garbage collection) remain enabl
 
 | Input | Source |
 |-------|--------|
-| `inputs` | github:NixOS/nixpkgs/nixos-unstable |
+| `inputs` | github:ImLunaHey/fleet-monitor |
 
 ## Scripts
 

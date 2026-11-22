@@ -1,6 +1,11 @@
 {
   description = "Luna's Nix configurations (NixOS servers + macOS/nix-darwin)";
   inputs = {
+    fleet-monitor = {
+      url = "github:ImLunaHey/fleet-monitor";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # NixOS servers track nixos-unstable.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -70,13 +75,14 @@
       tower = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs.t3codePkgs = nixpkgs-t3code.legacyPackages.x86_64-linux;
-        modules = [ ./profiles/base.nix ./machines/tower ];
+        modules = [ inputs.fleet-monitor.nixosModules.default ./profiles/base.nix ./machines/tower ];
       };
 
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit cache-domains; };
         modules = [
+          inputs.fleet-monitor.nixosModules.default
           ./common.nix
           ./machines/nova
           sops-nix.nixosModules.sops
@@ -86,6 +92,7 @@
       gilbert = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          inputs.fleet-monitor.nixosModules.default
           ./common.nix
           ./machines/gilbert
           sops-nix.nixosModules.sops
@@ -96,6 +103,7 @@
       void = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
+          inputs.fleet-monitor.nixosModules.default
           ./common.nix
           ./machines/void
           sops-nix.nixosModules.sops
@@ -107,6 +115,7 @@
         system = "x86_64-linux";
         specialArgs.t3codePkgs = nixpkgs-t3code.legacyPackages.x86_64-linux;
         modules = [
+          inputs.fleet-monitor.nixosModules.default
           ./common.nix
           ./machines/lake
           sops-nix.nixosModules.sops
@@ -123,6 +132,7 @@
       pulsar = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
+          inputs.fleet-monitor.darwinModules.default
           ./darwin/common.nix
           ./darwin/pulsar
           home-manager.darwinModules.home-manager
@@ -134,6 +144,7 @@
       comet = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
+          inputs.fleet-monitor.darwinModules.default
           ./darwin/common.nix
           ./darwin/comet
           home-manager.darwinModules.home-manager

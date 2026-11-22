@@ -1,10 +1,11 @@
 {
   description = "Killdeer public gateway bootstrap (independent of Lake)";
   inputs.nixpkgs.url = "https://channels.nixos.org/nixos-26.05/nixexprs.tar.xz";
-  outputs = { nixpkgs, ... }: {
+  inputs.fleet-monitor = { url = "github:ImLunaHey/fleet-monitor"; inputs.nixpkgs.follows = "nixpkgs"; };
+  outputs = inputs@{ nixpkgs, ... }: {
     nixosConfigurations.gateway = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [ ./configuration.nix ];
+      modules = [ inputs.fleet-monitor.nixosModules.default ./configuration.nix ];
     };
   };
 }
