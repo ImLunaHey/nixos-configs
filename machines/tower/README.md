@@ -61,13 +61,21 @@ State persists across reboots. After a reinstall, enrol the node again.
 
 ## Local screen
 
-The first virtual console runs a live `btop` dashboard automatically, showing
-CPU load and temperatures, GPU load and VRAM, RAM, disk space and I/O, and LAN
-traffic. The screen stays awake. `tower-display.service` runs as a dedicated
-unprivileged user and restarts if the dashboard exits.
+The local monitor automatically opens a fullscreen graphical dashboard with
+CPU/GPU history graphs, temperatures, GPU power and VRAM, memory, disk space,
+LAN traffic, and inference/T3 health. It uses a dark layout sized for the
+3440×1440 monitor, with no external assets or cloud services.
 
-Use `Alt+F2` for a regular login console and `Alt+F1` to return to the dashboard.
-SSH access is unchanged. Inspect it with `systemctl status tower-display`.
+`tower-dashboard.service` samples hardware every two seconds and serves a
+read-only page and metrics endpoint on `127.0.0.1:8099`. `cage-tty1.service`
+runs Chromium in kiosk mode as a dedicated unprivileged user. The browser and
+compositor use software rendering to preserve GPU memory for inference.
+The screen stays awake and the kiosk restarts if closed. Stale telemetry and
+unavailable GPU metrics are explicitly marked rather than reported as zero.
+
+Use `Ctrl+Alt+F2` for a regular login console and `Alt+F1` to return to the
+dashboard. SSH access is unchanged. Inspect the two services with `systemctl`
+and `journalctl`; neither requires another firewall port.
 
 ## Coding access
 

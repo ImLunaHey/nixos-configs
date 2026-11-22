@@ -1,69 +1,79 @@
 { pkgs, ... }:
 let
-  dashboardConfig = pkgs.writeText "tower-btop.conf" ''
-    shown_boxes = "cpu mem net gpu0"
-    update_ms = 2000
-    truecolor = false
-    graph_symbol = "tty"
-    custom_cpu_name = "tower — Ryzen 7 9700X"
-    clock_format = "%H:%M:%S"
-    check_temp = true
-    show_coretemp = true
-    show_gpu_info = "On"
-    show_disks = true
-    use_fstab = true
-    disks_filter = "/ /boot"
-    show_io_stat = true
-    net_iface = "enp7s0"
-    show_battery = false
+  python = pkgs.python3.withPackages (p: [ p.psutil ]);
+  kiosk = pkgs.writeShellScript "tower-dashboard-kiosk" ''
+    until ${pkgs.curl}/bin/curl --silent --fail http://127.0.0.1:8099/ >/dev/null; do
+      sleep 1
+    done
+    exec ${pkgs.chromium}/bin/chromium \
+      --kiosk --no-first-run --no-default-browser-check \
+      --disable-session-crashed-bubble --disable-infobars \
+      --disable-background-networking --disable-component-update \
+      --disable-gpu --ozone-platform=wayland \
+      --password-store=basic --user-data-dir=/var/lib/tower-dashboard/chromium \
+      http://127.0.0.1:8099/
   '';
 in
 {
   boot.kernelParams = [ "consoleblank=0" ];
+  fonts.packages = [ pkgs.inter ];
+  services.udev.extraRules = ''
+    SUBSYSTEM=="drm", KERNEL=="card[0-9]*", KERNELS=="0000:01:00.0", SYMLINK+="dri/tower-display"
+  '';
 
   users.groups.tower-dashboard = { };
   users.users.tower-dashboard = {
     isSystemUser = true;
     group = "tower-dashboard";
     extraGroups = [ "video" "render" ];
+    home = "/var/lib/tower-dashboard";
+    createHome = true;
   };
 
-  # Reserve the first console for the dashboard; other VTs retain login prompts.
-  systemd.services."getty@tty1".enable = false;
-  systemd.services.tower-display = {
-    description = "Tower local hardware dashboard";
+  # A local-only, read-only metrics endpoint; no extra firewall ports.
+  systemd.services.tower-dashboard = {
+    description = "Tower hardware dashboard metrics";
     wantedBy = [ "multi-user.target" ];
-    after = [ "systemd-user-sessions.service" ];
-    conflicts = [ "getty@tty1.service" ];
     environment = {
-      TERM = "linux";
-      HOME = "/run/tower-dashboard";
-      LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+      NVIDIA_SMI = "/run/current-system/sw/bin/nvidia-smi";
+      DASHBOARD_HTML = "${./dashboard/index.html}";
     };
-    # Use a writable copy because btop saves settings when it exits.
-    preStart = ''
-      ${pkgs.coreutils}/bin/install -m 0600 ${dashboardConfig} /run/tower-dashboard/btop.conf
-    '';
     serviceConfig = {
       User = "tower-dashboard";
       Group = "tower-dashboard";
-      SupplementaryGroups = [ "video" "render" ];
-      RuntimeDirectory = "tower-dashboard";
-      RuntimeDirectoryMode = "0700";
-      ExecStart = "${pkgs.btop}/bin/btop --tty --config /run/tower-dashboard/btop.conf";
-      StandardInput = "tty";
-      StandardOutput = "tty";
-      StandardError = "journal";
-      TTYPath = "/dev/tty1";
-      TTYReset = true;
-      TTYVHangup = true;
-      TTYVTDisallocate = true;
+      ExecStart = "${python}/bin/python ${./dashboard/server.py}";
       Restart = "always";
       RestartSec = "2s";
       NoNewPrivileges = true;
       ProtectSystem = "strict";
       ProtectHome = true;
       PrivateTmp = true;
+    };
+  };
+
+  # Cage supplies a single fullscreen Wayland window, with no desktop shell.
+  systemd.services."getty@tty1".enable = false;
+  services.cage = {
+    enable = true;
+    user = "tower-dashboard";
+    program = kiosk;
+    restartIfChanged = true;
+    # Allow switching to a login VT, and hide the unused mouse pointer.
+    extraArguments = [ "-s" "-d" ];
+    environment = {
+      WLR_LIBINPUT_NO_DEVICES = "1";
+      # The monitor is attached to NVIDIA; avoid selecting the unused iGPU.
+      WLR_DRM_DEVICES = "/dev/dri/tower-display";
+      # Render this small UI on the CPU, preserving VRAM for inference.
+      WLR_RENDERER = "pixman";
+    };
+  };
+  systemd.services.cage-tty1 = {
+    after = [ "tower-dashboard.service" ];
+    wants = [ "tower-dashboard.service" ];
+    serviceConfig = {
+      Restart = "always";
+      RestartSec = "3s";
     };
   };
 }
