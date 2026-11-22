@@ -56,6 +56,7 @@ in
 
   # Cage supplies a single fullscreen Wayland window, with no desktop shell.
   systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
   services.cage = {
     enable = true;
     user = "tower-dashboard";
