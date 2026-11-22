@@ -1,6 +1,7 @@
 """Read-only hardware telemetry for Tower's local kiosk."""
 
 import csv
+import socket
 import json
 import math
 import os
@@ -14,7 +15,38 @@ from urllib.request import urlopen
 import psutil
 
 
-PAGE = Path(os.environ.get("DASHBOARD_HTML", Path(__file__).with_name("index.html"))).read_bytes()
+PAGE = Path(os.environ["DASHBOARD_HTML"]).read_bytes() if "DASHBOARD_HTML" in os.environ else None
+INTERFACE = os.environ.get("METRICS_INTERFACE", "enp7s0")
+PEERS = json.loads(os.environ.get("DASHBOARD_PEERS", "{}"))
+remote_snapshots = {}
+CPU_NAME = next((line.split(":", 1)[1].strip() for line in Path("/proc/cpuinfo").read_text().splitlines() if line.startswith("model name")), "CPU")
+
+
+def poll_peer(name, url):
+    while True:
+        try:
+            with urlopen(url, timeout=2) as response:
+                data = json.loads(response.read(1024 * 1024))
+            if not isinstance(data.get("timestamp"), (int, float)) or abs(time.time() - data["timestamp"]) > 10:
+                raise ValueError("stale telemetry")
+            remote_snapshots[name] = {"online": True, "metrics": data}
+        except (OSError, ValueError):
+            remote_snapshots[name] = {"online": False, "metrics": None}
+        time.sleep(2)
+
+
+def sensor_lines():
+    path = os.environ.get("METRICS_SENSOR_FILE")
+    if not path:
+        return None
+    try:
+        sensor_file = Path(path)
+        if time.time() - sensor_file.stat().st_mtime > 120:
+            return {"status": "Sensor readings are stale"}
+        return dict(line.split(": ", 1) for line in sensor_file.read_text().splitlines() if ": " in line)
+    except OSError:
+        return {"status": "Sensor readings unavailable"}
+
 snapshot = {}
 
 
@@ -54,7 +86,7 @@ def healthy(url):
 
 def sample_forever():
     global snapshot
-    previous_network = psutil.net_io_counters(pernic=True).get("enp7s0")
+    previous_network = psutil.net_io_counters(pernic=True).get(INTERFACE)
     previous_time = time.monotonic()
     root_partition = next(p.device for p in psutil.disk_partitions() if p.mountpoint == "/")
     root_block = Path("/sys/class/block") / Path(os.path.realpath(root_partition)).name
@@ -76,7 +108,7 @@ def sample_forever():
             if cpu_temperature is None and cpu_sensors:
                 cpu_temperature = cpu_sensors[0].current
             frequency = psutil.cpu_freq()
-            network = psutil.net_io_counters(pernic=True).get("enp7s0")
+            network = psutil.net_io_counters(pernic=True).get(INTERFACE)
             elapsed = max(started - previous_time, 0.001)
             rates = {"download": None, "upload": None}
             if network and previous_network:
@@ -103,9 +135,9 @@ def sample_forever():
                                       "cpu": info["cpu_percent"] / len(cores),
                                       "memory": info["memory_info"].rss})
             processes.sort(key=lambda p: (p["cpu"], p["memory"]), reverse=True)
-            addresses = psutil.net_if_addrs().get("enp7s0", [])
+            addresses = psutil.net_if_addrs().get(INTERFACE, [])
             address = next((a.address for a in addresses if a.family.name == "AF_INET"), "Offline")
-            link = psutil.net_if_stats().get("enp7s0")
+            link = psutil.net_if_stats().get(INTERFACE)
             if iteration % 5 == 0:
                 services = {
                     "inference": healthy("http://127.0.0.1:8080/health"),
@@ -113,6 +145,11 @@ def sample_forever():
                 }
             snapshot = {
                 "timestamp": time.time(),
+                "host": socket.gethostname(),
+                "cpu_name": CPU_NAME,
+                "physical_cores": psutil.cpu_count(logical=False),
+                "interface": INTERFACE,
+                "sensors": sensor_lines(),
                 "uptime": time.time() - psutil.boot_time(),
                 "cpu": {"usage": sum(cores) / len(cores), "cores": cores,
                         "temperature": cpu_temperature,
@@ -142,8 +179,12 @@ def sample_forever():
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == "/":
+        if self.path == "/" and PAGE is not None:
             payload, content_type = PAGE, "text/html; charset=utf-8"
+        elif self.path == "/api/fleet" and PAGE is not None:
+            fleet = {socket.gethostname(): {"online": bool(snapshot) and time.time() - snapshot["timestamp"] < 10, "metrics": snapshot}}
+            fleet.update({name: remote_snapshots.get(name, {"online": False, "metrics": None}) for name in PEERS})
+            payload, content_type = json.dumps(fleet, allow_nan=False).encode(), "application/json"
         elif self.path == "/api/metrics":
             payload, content_type = json.dumps(snapshot, allow_nan=False).encode(), "application/json"
         else:
@@ -163,4 +204,6 @@ class Handler(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     threading.Thread(target=sample_forever, daemon=True).start()
-    ThreadingHTTPServer(("127.0.0.1", 8099), Handler).serve_forever()
+    for name, url in PEERS.items():
+        threading.Thread(target=poll_peer, args=(name, url), daemon=True).start()
+    ThreadingHTTPServer((os.environ.get("METRICS_BIND", "127.0.0.1"), 8099), Handler).serve_forever()

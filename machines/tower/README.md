@@ -79,6 +79,26 @@ Use `Ctrl+Alt+F2` for a regular login console and `Alt+F1` to return to the
 dashboard. SSH access is unchanged. Inspect the two services with `systemctl`
 and `journalctl`; neither requires another firewall port.
 
+## Fleet monitoring
+
+The monitor shows Tower and Lake together in a permanent host overview. Click a
+host card (or press 1/2) to select its detailed metrics. CPU, RAM, root disk,
+network and process data are collected by the shared Python collector in
+`modules/hardware-dashboard/server.py`. Graph history is kept separately per host
+while viewing it. Unreachable or stale hosts are marked offline and their detail
+view is hidden until fresh telemetry returns.
+
+Lake runs `hardware-telemetry.service` on its Tailscale address
+`100.94.132.48:8099`; it is not bound to the LAN. The read-only endpoint is trusted
+to the tailnet and has no separate API key. Tower polls it server-side with short
+timeouts, so a remote outage does not block local metrics. Lake's existing LCD
+sensor file supplies pool health, capacity, drive temperatures and service/cache
+status. Degraded pools and high pool capacity are highlighted.
+
+To add a host, run the shared collector with its network interface and bind
+address configured, then add its fixed metrics URL to `DASHBOARD_PEERS` in
+`display.nix`. The overview creates a card for each configured host.
+
 ## Coding access
 
 T3 starts as `luna` with `~/code` as its working directory and `~/.t3` as its

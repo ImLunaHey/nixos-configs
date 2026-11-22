@@ -107,6 +107,7 @@ nixos-configs/
 | `smartd.nix` | SMART disk monitoring + notifications |
 | `storage.nix` | Disk mounts and NFS |
 | `t3code.nix` | T3 Code server and SSD code workspace |
+| `telemetry.nix` | |
 
 ### `nova`
 
