@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795387851,
-        "narHash": "sha256-gSyViDdxVpnMdA64KVdrOqyKZ7wYulcsdEc2OoXZvrw=",
+        "lastModified": 1795388133,
+        "narHash": "sha256-cbSIprNoFiL1cq6SE7ftRhggOcKZ/rabjl50RV7n6iY=",
         "owner": "ImLunaHey",
         "repo": "fleet-monitor",
-        "rev": "dedf45aaeed143e1d6f3d1615cf699ea1650b169",
+        "rev": "92fa2c5ca3c9737f2ef0b7b9dfa77b3c67d0ecd3",
         "type": "github"
       },
       "original": {
