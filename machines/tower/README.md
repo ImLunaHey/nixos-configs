@@ -63,9 +63,9 @@ State persists across reboots. After a reinstall, enrol the node again.
 
 The local monitor automatically opens a fullscreen graphical dashboard with
 CPU/GPU history graphs, individual thread activity, temperatures, GPU clocks,
-power, fans and VRAM, memory/cache/swap, disk space and I/O, LAN traffic and
-totals, top processes, and inference/T3 health. Process CPU usage is normalized
-across all 16 threads. It uses a compact dark layout sized for the
+power, fans and VRAM, memory, disk space and I/O, LAN traffic and totals, and
+inference/T3 health. Lake appears alongside Tower with storage and service
+health. It uses a neutral charcoal layout sized for the
 3440×1440 monitor, with no external assets or cloud services.
 
 `tower-dashboard.service` samples hardware every two seconds and serves a
