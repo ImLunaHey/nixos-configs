@@ -71,9 +71,9 @@ in
       User = "luna";
       Group = user.group;
       WorkingDirectory = "${user.home}/code";
-      # Direct access is allowed only on tailscale0; loopback also permits
-      # SSH forwarding and T3 Connect pairing before VPN enrolment.
-      ExecStart = "${t3code}/bin/t3 serve --host 0.0.0.0 --port 3773 --base-dir ${user.home}/.t3";
+      # Require T3 client pairing; admit only private-network connections.
+      # LAN access also makes the URL printed by `t3 pair` usable directly.
+      ExecStart = "${t3code}/bin/t3 serve --lan --host 0.0.0.0 --port 3773 --base-dir ${user.home}/.t3";
       Restart = "always";
       RestartSec = "5s";
       UMask = "0027";

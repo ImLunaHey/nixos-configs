@@ -65,12 +65,16 @@ T3 starts as `luna` with `~/code` as its working directory and `~/.t3` as its
 state directory. It shares `luna`'s Codex configuration and credentials.
 The package versions match the repo's pinned Lake tooling.
 
-- Direct T3 access on port 3773 is admitted only through `tailscale0`.
-- Open `http://100.75.169.97:3773` from an enrolled device. Pair your browser
-  or T3 client using `ssh -t luna@10.0.0.161 t3 pair`; keep its short-lived
+- T3 accepts private-network connections on port 3773 through the LAN and
+  Tailscale interfaces. Client pairing is required.
+- Open `http://10.0.0.161:3773` on the LAN or `http://100.75.169.97:3773`
+  from an enrolled device. Pair your browser
+  or T3 client using `ssh -t luna@tower t3 pair`; keep its short-lived
   pairing token out of chat and repository files.
 - Without VPN access, use `ssh -L 3773:127.0.0.1:3773 luna@10.0.0.161` and
   connect through local port 3773.
+- The `NixOS configs` workspace is at `~/code/nixos-configs`, checked out on
+  the installation PR branch.
 - Inspect health with `systemctl status t3code` and `journalctl -u t3code`.
 - Codex defaults to the local `tower` provider, with no cloud API credentials.
   Run `codex` as `luna` in a project directory.
