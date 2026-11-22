@@ -59,6 +59,65 @@ key generated through the homelab OAuth client. Only Tailscale's own node state
 remains on Tower; no OAuth client secret or reusable auth key was installed.
 State persists across reboots. After a reinstall, enrol the node again.
 
+## Local screen and fleet monitoring
+
+The 3440×1440 monitor opens a passive dark dashboard automatically. Tower,
+Nova, Pulsar, and Comet occupy a 2×2 grid; Lake fills the right column. Offline
+hosts are compact footer entries, with Gateway in a compact status row. No
+keyboard, mouse, tabs, or rotation is needed. Cards show CPU/GPU/network history,
+memory and system disk used/total, temperatures, disk activity, and uptime.
+Online badges are green; card backgrounds stay neutral charcoal.
+Graphs label the two-minute time window and percentage or throughput scale.
+GPU memory has a dedicated used/total meter, with the memory type explicit.
+The lower rows show disk free space, physical-device read/write rates and IOPS;
+RAM usage appears only once. Low disk space, ZFS drive state, errors and high
+drive activity use restrained status colours, with a rebuild progress bar.
+
+The implementation lives in [ImLunaHey/fleet-monitor](https://github.com/ImLunaHey/fleet-monitor),
+pinned by this repository's flake lock. Its public NixOS module supplies the Go
+agent, React/Tailwind dashboard, TanStack Query polling, TanStack Table storage
+tables, and optional Cage/Chromium kiosk. This repository contains only host
+configuration and source-specific firewall policy.
+
+Tower uses `services.fleet-monitor.mode = "dashboard"`; other machines use
+agent mode. The upstream module is imported by each NixOS/nix-darwin configuration,
+including Gateway's independent flake. Tower's display settings are in
+`machines/tower/display.nix`. Change frontend components and collector code in
+the upstream repository, run its Go/component tests and Nix package builds,
+push, then update the pinned `fleet-monitor` input here before deploying.
+
+`fleet-monitor.service` on Tower binds only `127.0.0.1:8099` and polls fixed
+private endpoints with independent timeouts. Lake/Nova bind their LAN addresses
+and retain source-specific firewall rules allowing Tower; Macs use the source
+allowlist in the agent. Addresses must remain stable. There is no separate API
+key. Gateway binds its NetBird address and accepts Lake, but its Lake-to-Gateway
+TCP 8099 mesh policy remains pending at the user's request. Gilbert and Void
+are configured but still unreachable and have not received this deployment.
+
+The UI shows NVIDIA dedicated VRAM, AMD reserved UMA, and Apple shared-memory
+usage separately. Intel i915 utilization works with CAP_PERFMON; shared-memory
+usage is explicitly unavailable. Both Macs expose SMC CPU/GPU temperatures;
+Comet shows battery charge/charging state. Mac disk activity resolves APFS to
+the physical SSD. CPU/GPU percentage-axis labels are intentionally smaller than
+main values; all graphs label the two-minute time window.
+
+Lake's ZFS panel reports scan/pool health, raw used/total, SATA port numbers,
+capacity, temperatures, read/write rates, IOPS, busy time and errors. The old and
+new replacement members share a port number. Drive temperatures come from the
+existing SMART sensor service. Dataset totals include currently available
+shared space; no storage configuration is changed.
+
+Macs currently run upstream's standalone per-user LaunchAgent, installed with
+`fleet-monitor/scripts/install-macos-agent.sh`. The old bootstrap plist was
+moved out of LaunchAgents; the new label is `org.fleet-monitor.agent`.
+Before adopting the nix-darwin-managed agent, remove the standalone plist to
+avoid duplicate labels. The nix-darwin module was evaluated independently;
+full host adoption still depends on the existing private Anvil input.
+
+`cage-tty1.service` runs Chromium as `fleet-monitor-kiosk`. Software rendering
+preserves GPU memory for inference. The screen stays awake and restarts if
+closed. Use Ctrl+Alt+F2 for a login console and Alt+F1 to return.
+
 ## Coding access
 
 T3 starts as `luna` with `~/code` as its working directory and `~/.t3` as its

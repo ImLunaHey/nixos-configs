@@ -68,6 +68,7 @@ nixos-configs/
 | `netbird-client-package.nix` | |
 | `netbird.nix` | |
 | `pocket-id.nix` | |
+| `telemetry-module.nix` | |
 
 ### `gilbert`
 
@@ -84,6 +85,7 @@ nixos-configs/
 | `networking.nix` | DHCP, firewall, Tailscale |
 | `services.nix` | SOPS secret declarations |
 | `storage.nix` | Disk mounts and NFS |
+| `telemetry.nix` | |
 | `arm-config/` | ARM app config (`arm.yaml`) + `Dockerfile` |
 
 ### `lake`
@@ -107,6 +109,7 @@ nixos-configs/
 | `smartd.nix` | SMART disk monitoring + notifications |
 | `storage.nix` | Disk mounts and NFS |
 | `t3code.nix` | T3 Code server and SSD code workspace |
+| `telemetry.nix` | |
 
 ### `nova`
 
@@ -126,6 +129,7 @@ nixos-configs/
 | `networking.nix` | DHCP, firewall, Tailscale |
 | `services.nix` | SOPS secret declarations |
 | `storage.nix` | Disk mounts and NFS |
+| `telemetry.nix` | |
 | `ytdl-sub-channels.nix` | |
 | `ytdl-sub.nix` | |
 
@@ -137,6 +141,7 @@ nixos-configs/
 |------|------|
 | `codex.nix` | |
 | `default.nix` | Imports all machine modules |
+| `display.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `hardware.nix` | GPU drivers and hardware acceleration |
 | `inference.nix` | |
@@ -156,6 +161,7 @@ nixos-configs/
 | `services.nix` | SOPS secret declarations |
 | `smartd.nix` | SMART disk monitoring + notifications |
 | `storage.nix` | Disk mounts and NFS |
+| `telemetry.nix` | |
 
 ### T3 Code on Lake
 
@@ -261,7 +267,7 @@ Normal maintenance timers (backups, monitoring, garbage collection) remain enabl
 
 | Input | Source |
 |-------|--------|
-| `inputs` | github:NixOS/nixpkgs/nixos-unstable |
+| `inputs` | github:ImLunaHey/fleet-monitor |
 
 ## Scripts
 

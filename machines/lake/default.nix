@@ -7,6 +7,7 @@
     ./kache.nix
     ./lancache.nix
     ./monitoring.nix
+    ./telemetry.nix
     ./display.nix
     ./netbird.nix
     ./networking.nix

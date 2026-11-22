@@ -5,6 +5,7 @@
     ./hardware.nix
     ./inference.nix
     ./codex.nix
+    ./display.nix
     ./networking.nix
     ./t3code.nix
   ];

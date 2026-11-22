@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ./networking.nix
+    ./telemetry.nix
     ./hardware.nix
     ./services.nix
     ./containers.nix
