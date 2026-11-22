@@ -3,6 +3,8 @@
   imports = [
     ./hardware-configuration.nix
     ./hardware.nix
+    ./inference.nix
+    ./codex.nix
     ./networking.nix
     ./t3code.nix
   ];

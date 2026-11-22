@@ -4,6 +4,30 @@ let
   t3code = t3codePkgs.callPackage ../../packages/t3code { };
   codex = t3codePkgs.callPackage ../../packages/codex { };
   tools = [ codex ] ++ (with t3codePkgs; [ gh nodejs_24 ripgrep ]);
+  localModel = {
+    instanceId = "codex";
+    model = "inkling-2-mini-abliterated";
+    options = [ ];
+  };
+  initialSettings = pkgs.writeText "tower-t3-settings.json" (builtins.toJSON {
+    defaultModelSelection = localModel;
+    textGenerationModelSelection = localModel;
+    providerInstances.codex = {
+      driver = "codex";
+      displayName = "Codex — local Inkling";
+      enabled = true;
+      config = {
+        setupMode = "existing";
+        binaryPath = "codex";
+        homePath = "${user.home}/.codex";
+        customModels = [{
+          slug = localModel.model;
+          name = "Inkling 2 Mini (abliterated, local)";
+          capabilities.optionDescriptors = [ ];
+        }];
+      };
+    };
+  });
 in
 {
   environment.systemPackages = [ t3code ] ++ tools;
@@ -36,6 +60,13 @@ in
     path = tools ++ (with pkgs; [
       bashInteractive coreutils findutils git gnugrep gnused openssh
     ]);
+    # Seed a new workspace without overwriting subsequent UI preferences.
+    preStart = ''
+      mkdir -p ${user.home}/.t3/userdata
+      if [ ! -e ${user.home}/.t3/userdata/settings.json ]; then
+        install -m 0600 ${initialSettings} ${user.home}/.t3/userdata/settings.json
+      fi
+    '';
     serviceConfig = {
       User = "luna";
       Group = user.group;
