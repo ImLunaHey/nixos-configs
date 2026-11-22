@@ -47,6 +47,7 @@ nixos-configs/
 | `gilbert` | `DHCP` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
 | `lake` | `DHCP` | NAS / data lake | ZFS + SMART monitoring,T3 Code |
 | `nova` | `DHCP` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,NDI capture,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
+| `tower` | `DHCP` | Headless coding / local LLM host (bootstrap) | T3 Code |
 | `void` | `DHCP` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
 
 ## Machine Details
@@ -128,6 +129,18 @@ nixos-configs/
 | `ytdl-sub-channels.nix` | |
 | `ytdl-sub.nix` | |
 
+### `tower`
+
+**IP:** `DHCP` &nbsp; **Purpose:** Headless coding / local LLM host (bootstrap)
+
+| File | Role |
+|------|------|
+| `default.nix` | Imports all machine modules |
+| `hardware-configuration.nix` | Generated hardware config (do not edit) |
+| `hardware.nix` | GPU drivers and hardware acceleration |
+| `networking.nix` | DHCP, firewall, Tailscale |
+| `t3code.nix` | T3 Code server and SSD code workspace |
+
 ### `void`
 
 **IP:** `DHCP` &nbsp; **Purpose:** NAS with ZFS RAID storage
@@ -195,7 +208,11 @@ Then replace the example SSH key and add hardware, boot, filesystem, and network
 
 ## Personal configuration (`common.nix` + `personal.nix`)
 
-Applied to every host:
+Tower initially imports only the base profile and its own configuration, so its
+first boot does not require SOPS secrets. See [Tower bootstrap](machines/tower/README.md)
+for installation prerequisites and the planned local model setup.
+
+Applied to hosts importing the personal configuration:
 
 - **Nix:** flakes + nix-command enabled, auto-optimise-store
 - **Timezone:** Europe/London, locale en\_GB.UTF-8

@@ -67,6 +67,12 @@
     };
 
     nixosConfigurations = {
+      tower = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs.t3codePkgs = nixpkgs-t3code.legacyPackages.x86_64-linux;
+        modules = [ ./profiles/base.nix ./machines/tower ];
+      };
+
       nova = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit cache-domains; };

@@ -62,6 +62,7 @@ get_purpose() {
     gilbert) echo "Media ripping (ARM), Minecraft server, NFS storage" ;;
     void)    echo "NAS with ZFS RAID storage" ;;
     lake)    echo "NAS / data lake" ;;
+    tower)   echo "Headless coding / local LLM host (bootstrap)" ;;
     *)       echo "—" ;;
   esac
 }
@@ -247,7 +248,11 @@ Then replace the example SSH key and add hardware, boot, filesystem, and network
 
 ## Personal configuration (\`common.nix\` + \`personal.nix\`)
 
-Applied to every host:
+Tower initially imports only the base profile and its own configuration, so its
+first boot does not require SOPS secrets. See [Tower bootstrap](machines/tower/README.md)
+for installation prerequisites and the planned local model setup.
+
+Applied to hosts importing the personal configuration:
 
 - **Nix:** flakes + nix-command enabled, auto-optimise-store
 - **Timezone:** Europe/London, locale en\_GB.UTF-8
