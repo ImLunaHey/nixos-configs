@@ -1,219 +1,153 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tower · System overview</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tower · Hardware monitor</title>
 <style>
-:root { color-scheme: dark; font-family: Inter, sans-serif; font-size: clamp(14px, 1vw, 28px); --bg:#0b0f14; --panel:#121820; --line:#27313d; --muted:#8a98a9; --text:#edf3fa; --green:#a8efcd; --blue:#9fbcff; --purple:#c3b0fa; }
-* { box-sizing: border-box; }
-body { margin:0; background:var(--bg); color:var(--text); font-variant-numeric:tabular-nums; overflow:hidden; }
-body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(ellipse at 30% -35%, #244d4538, transparent 65%); }
-.page { position:relative; height:100vh; max-width:130rem; margin:auto; padding:2.4rem 3rem 1.6rem; display:flex; flex-direction:column; }
-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
-.brand { display:flex; gap:1rem; align-items:center; }
-.mark { width:2.8rem; height:2.8rem; padding:.6rem; background:#a8efcd12; border:1px solid #a8efcd33; border-radius:.8rem; color:var(--green); }
-.eyebrow { text-transform:uppercase; letter-spacing:.18em; font-size:.55rem; font-weight:600; color:var(--muted); margin-bottom:.3rem; }
-h1 { font-weight:500; font-size:2rem; letter-spacing:-.06em; margin:0; line-height:1; }
-.header-right { display:flex; align-items:center; gap:1.8rem; }
-.clock { font-size:1.3rem; font-weight:400; letter-spacing:-.03em; text-align:right; }
-.date { color:var(--muted); font-size:.56rem; margin-top:.3rem; text-align:right; }
-.status { display:flex; align-items:center; gap:.5rem; font-size:.57rem; color:var(--green); background:#a8efcd0a; border:1px solid #a8efcd24; padding:.55rem .8rem; border-radius:2rem; }
-.dot { width:.28rem; height:.28rem; border-radius:50%; background:currentColor; box-shadow:0 0 .5rem #a8efcd36; }
-.status.stale { color:#f2bd7b; border-color:#f2bd7b44; }
-.grid { flex:1; min-height:0; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); grid-template-rows:minmax(0,1.5fr) minmax(0,1fr); gap:1rem; }
-.card { min-height:0; border:1px solid #ffffff0b; border-radius:1rem; background:linear-gradient(135deg,#151c25,#10161e); padding:1.3rem 1.45rem; display:flex; flex-direction:column; overflow:hidden; }
-.major { grid-column:span 3; }
-.minor { grid-column:span 2; }
-.card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; }
-.card-title { color:var(--muted); font-size:.58rem; text-transform:uppercase; letter-spacing:.13em; display:flex; align-items:center; gap:.55rem; }
-.icon { width:.8rem; height:.8rem; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
-h2 { margin:.4rem 0 0; font-weight:450; font-size:.86rem; letter-spacing:-.025em; }
-.chip { color:var(--muted); font-size:.49rem; border:1px solid var(--line); border-radius:.3rem; padding:.3rem .45rem; white-space:nowrap; }
-.metric-row { display:flex; align-items:flex-end; justify-content:space-between; margin-top:1rem; }
-.big { font-size:4.1rem; font-weight:450; line-height:1; letter-spacing:-.075em; }
-.unit { color:var(--muted); font-size:1.45rem; letter-spacing:-.05em; margin-left:.15rem; font-weight:400; }
-.metric-caption { font-size:.5rem; color:var(--muted); margin-top:.4rem; }
-.side-stats { display:flex; gap:1.65rem; padding-bottom:.25rem; }
-.stat-value { font-size:1.3rem; letter-spacing:-.04em; }
-.stat-unit { font-size:.64rem; color:var(--muted); margin-left:.12rem; }
-.label { font-size:.5rem; color:var(--muted); margin-top:.3rem; }
-.chart-wrap { flex:1; min-height:2rem; position:relative; margin:1rem -.05rem .4rem; }
-.chart { width:100%; height:100%; position:absolute; overflow:visible; }
-.chart-labels { display:flex; justify-content:space-between; color:#69788a; font-size:.43rem; }
-.chart-grid { stroke:#ffffff08; stroke-width:1; vector-effect:non-scaling-stroke; }
-.chart-line { fill:none; stroke:var(--green); stroke-width:2; vector-effect:non-scaling-stroke; stroke-linejoin:round; }
-.gpu .chart-line { stroke:var(--blue); }
-.card-bottom { margin-top:.9rem; padding-top:.8rem; border-top:1px solid #ffffff0b; }
-.bottom-row { display:flex; align-items:center; justify-content:space-between; gap:.5rem; font-size:.5rem; color:var(--muted); }
-.bottom-row strong { font-weight:500; color:var(--text); }
-.cores { display:flex; gap:.3rem; margin-top:.6rem; height:.55rem; }
-.core { flex:1; background:#a8efcd12; border-radius:.1rem; overflow:hidden; position:relative; }
-.core span { position:absolute; bottom:0; width:100%; min-height:2px; background:var(--green); opacity:.8; }
-.bar { height:.27rem; background:#ffffff0a; border-radius:1rem; overflow:hidden; margin-top:.65rem; }
-.bar span { display:block; height:100%; width:0; border-radius:inherit; background:var(--blue); transition:width 1s ease; }
-.minor .metric-row { margin-top:1.25rem; }
-.medium { font-size:2.65rem; font-weight:450; line-height:1; letter-spacing:-.065em; }
-.medium .unit { font-size:1rem; }
-.minor .card-bottom { margin-top:auto; }
-.memory-bar { display:flex; gap:.19rem; margin:1.15rem 0; height:1.05rem; }
-.memory-bar span { flex:1; border-radius:.1rem; background:#c3b0fa12; }
-.memory-bar span.filled { background:var(--purple); }
-.storage-track { height:.55rem; margin:1.3rem 0 1rem; border-radius:.2rem; background:#ffffff08; overflow:hidden; }
-.storage-track span { display:block; width:0; height:100%; background:#e0bc8c; transition:width 1s ease; }
-.legend { display:flex; align-items:center; gap:.4rem; font-size:.5rem; color:var(--muted); }
-.legend::before { content:""; width:.28rem; height:.28rem; border-radius:.08rem; background:var(--purple); }
-.storage .legend::before { background:#e0bc8c; }
-.minor .card-head h2 { font-size:.7rem; }
-.network-rates { display:flex; gap:2rem; margin-top:1.3rem; }
-.network-rates .medium { font-size:2.1rem; }
-.network-rates .unit { font-size:.7rem; margin-left:.3rem; }
-.network-rates .label { margin-bottom:.45rem; margin-top:0; }
-.network-rates .down { color:var(--green); }
-.network-rates .up { color:var(--blue); }
-.network .chart-wrap { margin-top:1.1rem; margin-bottom:.8rem; }
-.network .chart-line { stroke-width:1.6; }
-.network .card-bottom { margin-top:0; }
-footer { display:flex; justify-content:space-between; gap:1rem; padding-top:1.2rem; color:var(--muted); font-size:.5rem; }
-.services { display:flex; gap:1.3rem; }
-.service { display:flex; gap:.4rem; align-items:center; }
-.service .dot { color:#768191; box-shadow:none; }
-.service.online .dot { color:var(--green); }
-.service.offline .dot { color:#efb574; }
-footer .divider { color:#374453; margin:0 .6rem; }
-@media (max-aspect-ratio: 7/5) { .page { padding:1.5rem; } .grid { grid-template-rows:minmax(0,1.2fr) minmax(0,1fr); } .side-stats { gap:.6rem; } .big { font-size:3rem; } .stat-value { font-size:1rem; } }
-@media (max-height: 650px) { .page { padding:1rem 1.5rem; } header { margin-bottom:.8rem; } .card { padding:.8rem 1rem; } .metric-row,.minor .metric-row { margin-top:.5rem; } .big { font-size:3rem; } .card-bottom { margin-top:.4rem; padding-top:.4rem; } .memory-bar { margin:.6rem 0; } footer { padding-top:.6rem; } }
+:root{color-scheme:dark;font:clamp(13px,.85vw,24px)/1.3 Inter,sans-serif;--bg:#0b0e12;--panel:#12171e;--line:#26303c;--muted:#8996a7;--text:#e7edf5;--cyan:#7edbd0;--blue:#85acff;--amber:#e7bc7e;--purple:#b6a1ee}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-variant-numeric:tabular-nums;overflow:hidden}h1,h2,p{margin:0}h1{font-size:1.25rem;font-weight:600;letter-spacing:-.04em}h2{font-size:.8rem;font-weight:550}svg{display:block}.page{height:100vh;padding:1.15rem 1.5rem .8rem;display:flex;flex-direction:column;gap:.8rem}header{display:flex;align-items:center;justify-content:space-between;gap:1rem}.brand{display:flex;align-items:center;gap:.65rem}.brand-icon{display:grid;place-items:center;width:1.6rem;height:1.6rem;background:#7edbd011;border:1px solid #7edbd044;color:var(--cyan);border-radius:.25rem;font-size:1rem}.subtitle{color:var(--muted);font-size:.55rem;padding-left:.65rem;border-left:1px solid var(--line);margin-left:.2rem;letter-spacing:.05em}.header-info{display:flex;align-items:center;gap:1.3rem;color:var(--muted);font-size:.55rem}.status{color:var(--cyan);display:flex;gap:.4rem;align-items:center}.dot{width:.26rem;height:.26rem;display:inline-block;border-radius:50%;background:currentColor}.status.stale{color:var(--amber)}#clock{font-size:.8rem;color:var(--text)}.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:minmax(0,1.13fr) minmax(0,1fr);gap:.75rem;flex:1;min-height:0}.panel{background:var(--panel);border:1px solid var(--line);border-radius:.35rem;display:flex;flex-direction:column;min-height:0;overflow:hidden}.cpu{grid-column:span 5}.gpu{grid-column:span 4}.memory{grid-column:span 3}.disk,.network,.processes{grid-column:span 4}.panel-head{padding:.65rem .85rem;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:.5rem;background:#ffffff02}.panel-heading{display:flex;gap:.5rem;align-items:center}.index{font-size:.48rem;color:#5f7186;font-weight:500}.tag{font-size:.45rem;letter-spacing:.03em;color:var(--muted);border:1px solid #33404e;padding:.16rem .3rem;border-radius:.15rem;white-space:nowrap}.panel-body{padding:.8rem .9rem;display:flex;flex-direction:column;flex:1;min-height:0;gap:.7rem}.device{font-size:.61rem;color:#acb9c9}.metrics{display:grid;gap:.75rem;align-items:center}.cpu .metrics{grid-template-columns:1.25fr 1fr 1fr 1fr}.gpu .metrics{grid-template-columns:1.2fr 1fr 1fr}.metric-value{font-size:1.55rem;font-weight:450;letter-spacing:-.045em;white-space:nowrap}.metric-value.main{font-size:2.8rem;line-height:1}.unit{font-size:.58rem;color:var(--muted);margin-left:.18rem;letter-spacing:0}.main .unit{font-size:1rem}.label{font-size:.47rem;color:var(--muted);margin-top:.23rem}.temp-track{height:.13rem;background:#ffffff0b;margin-top:.35rem;max-width:4rem}.temp-track span{display:block;height:100%;background:var(--amber);width:0}.cpu-detail{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:1rem;flex:1;min-height:0}.section-label{font-size:.45rem;letter-spacing:.075em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center}.section-label strong{font-size:.45rem;font-weight:400;color:#cbd6e5}.history-block{display:flex;flex-direction:column;min-height:0;gap:.4rem}.plot{position:relative;flex:1;min-height:2rem;margin:.3rem 0 .15rem;padding-right:1.3rem}.plot svg{width:calc(100% - 1.3rem);height:100%;position:absolute;left:0;top:0;overflow:visible}.axis{position:absolute;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;font-size:.4rem;color:#687b90}.axis span{transform:translateY(-25%)}.time-axis{display:flex;justify-content:space-between;font-size:.4rem;color:#687b90;padding-right:1.3rem}.chart-grid{fill:none;stroke:#3a465740;stroke-width:1;vector-effect:non-scaling-stroke}.chart-line{fill:none;stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}.threads{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto repeat(8,1fr);gap:.2rem .65rem;min-height:0;align-items:center}.threads>.section-label{grid-column:span 2;margin-bottom:.15rem}.thread{display:grid;grid-template-columns:1rem 1fr 1.6rem;align-items:center;gap:.3rem;font-size:.42rem}.thread-label{color:#8d9eb2}.thread-bar{height:.3rem;background:#7edbd012;border-radius:.05rem;overflow:hidden}.thread-bar span{display:block;background:var(--cyan);height:100%;width:0;transition:width 1s}.thread-value{text-align:right;color:#c5d2e2}.row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;font-size:.51rem}.row .key{color:var(--muted)}.row strong{font-weight:450}.data-list{display:flex;flex-direction:column;gap:.48rem}.data-list .row{padding-bottom:.42rem;border-bottom:1px solid #ffffff06}.data-list .row:last-child{border-bottom:0;padding-bottom:0}.strip{display:flex;justify-content:space-between;gap:.5rem;padding-top:.55rem;border-top:1px solid var(--line);font-size:.45rem;color:var(--muted)}.strip strong{color:var(--text);font-weight:450}.strip span{white-space:nowrap}.legend{display:flex;gap:.65rem;font-size:.43rem;color:var(--muted)}.legend span{display:flex;gap:.25rem;align-items:center}.legend i{display:inline-block;width:.25rem;height:.25rem;background:var(--cyan);border-radius:.03rem}.legend .blue{background:var(--blue)}.legend .purple{background:var(--purple)}.bar{height:.32rem;background:#ffffff09;overflow:hidden;border-radius:.07rem}.bar span{display:block;height:100%;width:0;background:var(--blue);transition:width 1s}.gpu-plot{flex:1;min-height:0;display:flex;flex-direction:column;gap:.3rem}.gpu-bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem}.small-number{font-size:.82rem;letter-spacing:-.015em}.gpu-memory{display:flex;flex-direction:column;gap:.4rem}.gauge-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem}.gauge{width:4.5rem;height:4.5rem;position:relative;flex-shrink:0}.gauge svg{width:100%;height:100%;transform:rotate(-90deg)}.gauge circle{fill:none;stroke-width:5}.gauge .track{stroke:#ffffff09}.gauge .value{stroke:var(--purple);stroke-linecap:butt;stroke-dasharray:0 283;transition:stroke-dasharray 1s}.gauge-center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-size:1rem}.gauge-center small{font-size:.38rem;color:var(--muted);margin-top:.1rem}.memory .data-list{gap:.4rem}.memory .history-block{flex:1}.memory .metric-value.main{font-size:2.25rem}.io-metrics{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.io-metrics .metric-value{font-size:1.65rem}.io-metrics .label{margin-top:0;margin-bottom:.25rem}.read{color:var(--cyan)}.write{color:var(--blue)}.disk .history-block,.network .history-block{flex:1}.capacity{display:flex;flex-direction:column;gap:.45rem}.capacity .bar span{background:var(--amber)}.storage-meta{display:grid;grid-template-columns:1fr 1fr;gap:.45rem 1rem;font-size:.48rem}.storage-meta .key{color:var(--muted)}.table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.52rem}.table th{text-align:left;color:var(--muted);font-weight:400;font-size:.43rem;letter-spacing:.04em;text-transform:uppercase;border-bottom:1px solid var(--line);padding:.1rem 0 .5rem}.table td{padding:.48rem 0;border-bottom:1px solid #ffffff06;vertical-align:middle}.table th:nth-child(2),.table td:nth-child(2){width:15%;text-align:right;color:var(--muted)}.table th:nth-child(3),.table td:nth-child(3){width:21%;text-align:right}.table th:nth-child(4),.table td:nth-child(4){width:23%;text-align:right}.process-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;padding-right:.4rem}.process-cpu{position:relative;display:inline-block;min-width:2.5rem}.process-cpu i{position:absolute;left:0;bottom:-.13rem;height:2px;background:var(--cyan);max-width:100%;opacity:.7}.processes .strip{margin-top:auto}.empty{color:var(--muted);font-size:.55rem}.services{display:flex;align-items:center;justify-content:space-between;background:#10151b;border:1px solid var(--line);border-radius:.3rem;padding:.6rem .8rem;gap:.8rem}.service{display:flex;align-items:center;gap:.5rem;font-size:.53rem}.service .dot{color:#657387}.service.online .dot{color:var(--cyan)}.service.offline .dot{color:var(--amber)}.service-meta{font-size:.45rem;color:var(--muted);margin-left:.15rem}.services-right{display:flex;gap:1rem;font-size:.48rem;color:var(--muted)}footer{display:flex;justify-content:space-between;font-size:.4rem;color:#6e7d8f}.temperature-warning{color:#f1a874}.mono{font-family:ui-monospace,monospace}
+@media(max-aspect-ratio:8/5){.cpu{grid-column:span 6}.gpu{grid-column:span 6}.memory{grid-column:span 3;grid-row:2}.disk,.network,.processes{grid-column:span 3}.cpu-detail{grid-template-columns:1fr 1fr}.memory .gauge{width:3rem;height:3rem}.table{font-size:.45rem}.services-right{display:none}.metric-value.main{font-size:2rem}.subtitle{display:none}}
+@media(max-height:700px){.page{padding:.6rem;gap:.5rem}.panel-body{padding:.5rem .65rem;gap:.45rem}.panel-head{padding:.4rem .65rem}.metric-value.main{font-size:2rem}.label,.row,.table{font-size:.43rem}.table td{padding:.3rem 0}.services{padding:.4rem .65rem}.gauge{width:3.5rem;height:3.5rem}.data-list{gap:.25rem}}
 </style>
 </head>
 <body>
 <main class="page">
-<header>
-  <div class="brand"><svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 7h8M8 11h8M8 15h8"/><circle cx="12" cy="19" r=".8" fill="currentColor" stroke="none"/></svg><div><div class="eyebrow">System overview</div><h1>tower<span style="color:var(--green)">.</span></h1></div></div>
-  <div class="header-right"><div class="status stale" id="live"><span class="dot"></span><span id="live-text">Connecting</span></div><div><div class="clock" id="clock">—</div><div class="date" id="date">—</div></div></div>
-</header>
-<section class="grid" aria-label="Live hardware metrics">
-  <article class="card major cpu">
-    <div class="card-head"><div><div class="card-title"><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4M19 9h4m-4 6h4"/></svg>Processor</div><h2>AMD Ryzen 7 9700X</h2></div><span class="chip">8 cores · 16 threads</span></div>
-    <div class="metric-row"><div><div class="big"><span id="cpu-usage">—</span><span class="unit">%</span></div><div class="metric-caption">CPU utilization</div></div><div class="side-stats"><div><div class="stat-value"><span id="cpu-temp">—</span><span class="stat-unit">°C</span></div><div class="label">Temperature</div></div><div><div class="stat-value"><span id="cpu-freq">—</span><span class="stat-unit">GHz</span></div><div class="label">Clock speed</div></div></div></div>
-    <div class="chart-wrap"><svg class="chart" id="cpu-chart" viewBox="0 0 600 100" preserveAspectRatio="none" aria-label="CPU usage over the last two minutes"></svg></div><div class="chart-labels"><span>2 MIN AGO</span><span>NOW</span></div>
-    <div class="card-bottom"><div class="bottom-row"><span>Thread activity</span><strong id="cpu-active">16 threads</strong></div><div class="cores" id="cores"></div></div>
-  </article>
-  <article class="card major gpu">
-    <div class="card-head"><div><div class="card-title"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="9" cy="12" r="3"/><path d="M16 9v6m3-6v6M5 18v3m4-3v3"/></svg>Graphics</div><h2 id="gpu-name">NVIDIA GeForce RTX 5070 Ti</h2></div><span class="chip">16 GB GDDR7</span></div>
-    <div class="metric-row"><div><div class="big"><span id="gpu-usage">—</span><span class="unit">%</span></div><div class="metric-caption">GPU utilization</div></div><div class="side-stats"><div><div class="stat-value"><span id="gpu-temp">—</span><span class="stat-unit">°C</span></div><div class="label">Temperature</div></div><div><div class="stat-value"><span id="gpu-power">—</span><span class="stat-unit">W</span></div><div class="label">Power draw</div></div></div></div>
-    <div class="chart-wrap"><svg class="chart" id="gpu-chart" viewBox="0 0 600 100" preserveAspectRatio="none" aria-label="GPU usage over the last two minutes"></svg></div><div class="chart-labels"><span>2 MIN AGO</span><span>NOW</span></div>
-    <div class="card-bottom"><div class="bottom-row"><span>Video memory</span><strong id="gpu-memory">—</strong></div><div class="bar"><span id="gpu-memory-bar"></span></div></div>
-  </article>
-  <article class="card minor memory">
-    <div class="card-head"><div class="card-title"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="1"/><path d="M6 10v4m4-4v4m4-4v4m4-4v4M5 17v3m4-3v3m4-3v3m4-3v3"/></svg>Memory</div><span class="chip">DDR5</span></div>
-    <div class="metric-row"><div class="medium"><span id="memory-used">—</span><span class="unit">GiB</span></div><span class="label" id="memory-total">— total</span></div>
-    <div class="memory-bar" id="memory-bar"></div><div class="bottom-row"><span class="legend">In use <strong id="memory-percent">—</strong></span><span id="memory-available">— available</span></div>
-    <div class="card-bottom"><div class="bottom-row"><span>System memory</span><strong>32 GB installed</strong></div></div>
-  </article>
-  <article class="card minor storage">
-    <div class="card-head"><div class="card-title"><svg class="icon" viewBox="0 0 24 24"><path d="M5 3h14l3 12v5H2v-5L5 3Z"/><path d="M2 15h20m-5 3h2"/></svg>Storage</div><span class="chip">NVMe SSD</span></div>
-    <div class="metric-row"><div class="medium"><span id="disk-free">—</span><span class="unit">GiB</span></div><span class="label">free space</span></div>
-    <div class="storage-track"><span id="disk-bar"></span></div><div class="bottom-row"><span class="legend" id="disk-used">— used</span><span id="disk-total">— total</span></div>
-    <div class="card-bottom"><div class="bottom-row"><span>Kingston NV3 · 1 TB</span><strong>System /</strong></div></div>
-  </article>
-  <article class="card minor network">
-    <div class="card-head"><div class="card-title"><svg class="icon" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="6" rx="1"/><rect x="1" y="16" width="8" height="6" rx="1"/><rect x="15" y="16" width="8" height="6" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></svg>Network</div><span class="chip">2.5 GbE</span></div>
-    <div class="network-rates"><div><div class="label down">↓ Download</div><div class="medium"><span id="net-down">—</span><span class="unit" id="net-down-unit">KiB/s</span></div></div><div><div class="label up">↑ Upload</div><div class="medium"><span id="net-up">—</span><span class="unit" id="net-up-unit">KiB/s</span></div></div></div>
-    <div class="chart-wrap"><svg class="chart" id="net-chart" viewBox="0 0 600 60" preserveAspectRatio="none" aria-label="Download and upload over the last two minutes"></svg></div>
-    <div class="card-bottom"><div class="bottom-row"><span>LAN address</span><strong id="ip-address">—</strong></div></div>
-  </article>
+<header><div class="brand"><div class="brand-icon">▥</div><h1>tower</h1><span class="subtitle">HARDWARE MONITOR</span></div><div class="header-info"><span id="uptime">— uptime</span><div class="status stale" id="live"><span class="dot"></span><span id="live-text">Connecting</span></div><span class="mono" id="clock">—</span></div></header>
+<section class="grid" aria-label="Hardware telemetry">
+<article class="panel cpu">
+  <div class="panel-head"><div class="panel-heading"><span class="index">01</span><h2>CPU</h2></div><span class="tag">8 CORES / 16 THREADS</span></div>
+  <div class="panel-body"><div class="device">AMD Ryzen 7 9700X</div>
+    <div class="metrics"><div><div class="metric-value main"><span id="cpu-usage">—</span><span class="unit">%</span></div><div class="label">Total utilization</div></div><div><div class="metric-value"><span id="cpu-temp">—</span><span class="unit">°C</span></div><div class="label">Package temperature</div><div class="temp-track"><span id="cpu-temp-bar"></span></div></div><div><div class="metric-value"><span id="cpu-freq">—</span><span class="unit">GHz</span></div><div class="label">Average clock</div></div><div><div class="metric-value" id="cpu-load">—</div><div class="label">1 minute load</div></div></div>
+    <div class="cpu-detail"><div class="history-block"><div class="section-label">Utilization history <strong>120 seconds</strong></div><div class="plot"><svg id="cpu-chart" viewBox="0 0 600 160" preserveAspectRatio="none" aria-label="CPU utilization over two minutes"></svg><div class="axis"><span>100%</span><span>50</span><span>0</span></div></div><div class="time-axis"><span>−120s</span><span>−60s</span><span>NOW</span></div></div><div class="threads" id="threads"><div class="section-label">Logical threads <strong>LOAD %</strong></div></div></div>
+    <div class="strip"><span>Load averages <strong id="cpu-loads">— / — / —</strong></span><span>1 / 5 / 15 min</span></div>
+  </div>
+</article>
+<article class="panel gpu">
+  <div class="panel-head"><div class="panel-heading"><span class="index">02</span><h2>GPU</h2></div><span class="tag" id="gpu-state">NVIDIA</span></div>
+  <div class="panel-body"><div class="device" id="gpu-name">GeForce RTX 5070 Ti · 16 GB</div>
+    <div class="metrics"><div><div class="metric-value main"><span id="gpu-usage">—</span><span class="unit">%</span></div><div class="label">GPU utilization</div></div><div><div class="metric-value"><span id="gpu-temp">—</span><span class="unit">°C</span></div><div class="label">GPU temperature</div><div class="temp-track"><span id="gpu-temp-bar"></span></div></div><div><div class="metric-value"><span id="gpu-power">—</span><span class="unit">W</span></div><div class="label" id="gpu-power-limit">— power limit</div></div></div>
+    <div class="gpu-plot"><div class="legend"><span><i class="blue"></i>GPU</span><span><i></i>Memory controller</span></div><div class="plot"><svg id="gpu-chart" viewBox="0 0 600 160" preserveAspectRatio="none" aria-label="GPU and memory controller utilization"></svg><div class="axis"><span>100%</span><span>50</span><span>0</span></div></div><div class="time-axis"><span>−120s</span><span>−60s</span><span>NOW</span></div></div>
+    <div class="gpu-memory"><div class="row"><span class="key">VRAM allocated</span><strong id="gpu-memory">—</strong></div><div class="bar"><span id="gpu-memory-bar"></span></div></div>
+    <div class="gpu-bottom strip"><div><div class="small-number" id="gpu-core-clock">—</div><div class="label">Core clock</div></div><div><div class="small-number" id="gpu-memory-clock">—</div><div class="label">Memory clock</div></div><div><div class="small-number" id="gpu-fan">—</div><div class="label">Fan speed</div></div></div>
+  </div>
+</article>
+<article class="panel memory">
+  <div class="panel-head"><div class="panel-heading"><span class="index">03</span><h2>Memory</h2></div><span class="tag">32 GB DDR5</span></div>
+  <div class="panel-body"><div class="gauge-row"><div><div class="metric-value main"><span id="memory-used">—</span><span class="unit">GiB</span></div><div class="label">In use · <span id="memory-total">—</span> usable</div></div><div class="gauge"><svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="value" id="memory-gauge" cx="50" cy="50" r="45"/></svg><div class="gauge-center"><span id="memory-percent">—</span><small>UTILIZATION</small></div></div></div>
+    <div class="data-list"><div class="row"><span class="key">Available</span><strong id="memory-available">—</strong></div><div class="row"><span class="key">Page cache</span><strong id="memory-cached">—</strong></div><div class="row"><span class="key">Buffers</span><strong id="memory-buffers">—</strong></div><div class="row"><span class="key">ZRAM swap</span><strong id="memory-swap">—</strong></div></div>
+    <div class="history-block"><div class="section-label">Memory utilization</div><div class="plot"><svg id="memory-chart" viewBox="0 0 600 160" preserveAspectRatio="none" aria-label="Memory utilization over two minutes"></svg><div class="axis"><span>100%</span><span>50</span><span>0</span></div></div><div class="time-axis"><span>−120s</span><span>NOW</span></div></div>
+    <div class="strip"><span>Cache is reclaimable when needed</span></div>
+  </div>
+</article>
+<article class="panel disk">
+  <div class="panel-head"><div class="panel-heading"><span class="index">04</span><h2>Storage</h2></div><span class="tag">KINGSTON NV3 / 1 TB</span></div>
+  <div class="panel-body"><div class="io-metrics"><div><div class="label read">READ</div><div class="metric-value"><span id="disk-read">—</span><span class="unit" id="disk-read-unit">KiB/s</span></div></div><div><div class="label write">WRITE</div><div class="metric-value"><span id="disk-write">—</span><span class="unit" id="disk-write-unit">KiB/s</span></div></div></div>
+    <div class="history-block"><div class="section-label">Disk throughput <strong id="disk-scale">—</strong></div><div class="plot"><svg id="disk-chart" viewBox="0 0 600 160" preserveAspectRatio="none" aria-label="Disk read and write throughput"></svg><div class="axis"><span>MAX</span><span>½</span><span>0</span></div></div><div class="time-axis"><span>−120s</span><span>−60s</span><span>NOW</span></div></div>
+    <div class="capacity"><div class="row"><span class="key">System partition /</span><strong id="disk-free">— free</strong></div><div class="bar"><span id="disk-bar"></span></div><div class="row"><span class="key" id="disk-used">— used</span><span class="key" id="disk-total">— total</span></div></div>
+    <div class="strip"><span>Device <strong class="mono" id="disk-device">—</strong></span><span>Operations <strong id="disk-iops">— IOPS</strong></span></div>
+  </div>
+</article>
+<article class="panel network">
+  <div class="panel-head"><div class="panel-heading"><span class="index">05</span><h2>Network</h2></div><span class="tag" id="net-link">ETHERNET</span></div>
+  <div class="panel-body"><div class="io-metrics"><div><div class="label read">↓ RECEIVE</div><div class="metric-value"><span id="net-down">—</span><span class="unit" id="net-down-unit">KiB/s</span></div></div><div><div class="label write">↑ TRANSMIT</div><div class="metric-value"><span id="net-up">—</span><span class="unit" id="net-up-unit">KiB/s</span></div></div></div>
+    <div class="history-block"><div class="section-label">LAN throughput <strong id="net-scale">—</strong></div><div class="plot"><svg id="net-chart" viewBox="0 0 600 160" preserveAspectRatio="none" aria-label="Network receive and transmit throughput"></svg><div class="axis"><span>MAX</span><span>½</span><span>0</span></div></div><div class="time-axis"><span>−120s</span><span>−60s</span><span>NOW</span></div></div>
+    <div class="data-list"><div class="row"><span class="key">Received since boot</span><strong id="net-received">—</strong></div><div class="row"><span class="key">Transmitted since boot</span><strong id="net-sent">—</strong></div></div>
+    <div class="strip"><span>enp7s0 <strong class="mono" id="ip-address">—</strong></span><span id="net-state">—</span></div>
+  </div>
+</article>
+<article class="panel processes">
+  <div class="panel-head"><div class="panel-heading"><span class="index">06</span><h2>Processes</h2></div><span class="tag">SORTED BY CPU</span></div>
+  <div class="panel-body"><table class="table"><thead><tr><th>Process</th><th>PID</th><th>CPU</th><th>RAM</th></tr></thead><tbody id="processes"><tr><td colspan="4" class="empty">Waiting for process data…</td></tr></tbody></table><div class="strip"><span>CPU as a share of all 16 threads</span><span>RAM = resident memory</span></div></div>
+</article>
 </section>
-<footer><div class="services"><span class="service" id="inference"><span class="dot"></span><span>Inkling 2 Mini <span id="inference-state">· checking</span></span></span><span class="service" id="workspace"><span class="dot"></span><span>T3 Code <span id="workspace-state">· checking</span></span></span></div><div><span>NixOS</span><span class="divider">/</span><span id="uptime">— uptime</span><span class="divider">/</span><span>Updated every 2s</span></div></footer>
+<div class="services"><div class="service" id="inference"><span class="dot"></span><strong>Inkling 2 Mini</strong><span class="service-meta" id="inference-state">Checking</span></div><div class="service" id="workspace"><span class="dot"></span><strong>T3 Code</strong><span class="service-meta" id="workspace-state">Checking</span></div><div class="services-right"><span>LOCAL INFERENCE</span><span>32K context</span><span>CUDA</span></div></div>
+<footer><span>NixOS · tower · local hardware telemetry</span><span>2-second samples · 120-second history · <span id="updated">waiting for data</span></span></footer>
 </main>
 <script>
-const $ = id => document.getElementById(id);
-const finite = n => typeof n === 'number' && Number.isFinite(n);
-const fmt = (n, digits=0) => finite(n) ? n.toFixed(digits) : '—';
-const gib = n => n / 1073741824;
-const history = {cpu:[], gpu:[], down:[], up:[]};
-const colors = {cpu:'#a8efcd', gpu:'#9fbcff', down:'#a8efcd', up:'#9fbcff'};
-let lastTimestamp = 0;
-for (let i=0; i<16; i++) $('cores').appendChild(document.createElement('div')).outerHTML='<div class="core"><span></span></div>';
-for (let i=0; i<40; i++) $('memory-bar').appendChild(document.createElement('span'));
-function pathFor(points, max, height) {
-  let path = '', connected = false;
-  points.forEach((n,i) => {
-    if (!finite(n)) { connected = false; return; }
-    const x = (60-points.length+i)*600/59, y=height-3-Math.min(1,Math.max(0,n/max))*(height-6);
-    path += `${connected?'L':'M'}${x.toFixed(1)},${y.toFixed(1)} `; connected=true;
-  });
-  return path;
+const $=id=>document.getElementById(id);
+const finite=n=>typeof n==='number'&&Number.isFinite(n);
+const fmt=(n,digits=0)=>finite(n)?n.toFixed(digits):'—';
+const gib=n=>n/1073741824;
+const histories={cpu:[],gpu:[],gpuMemory:[],memory:[],read:[],write:[],down:[],up:[]};
+const colors={cpu:'#7edbd0',gpu:'#85acff',gpuMemory:'#7edbd0',memory:'#b6a1ee',read:'#7edbd0',write:'#85acff',down:'#7edbd0',up:'#85acff'};
+let lastTimestamp=0;
+for(let i=0;i<16;i++){
+ const el=document.createElement('div');el.className='thread';
+ el.innerHTML=`<span class="thread-label">T${String(i).padStart(2,'0')}</span><div class="thread-bar"><span></span></div><span class="thread-value">—</span>`;
+ $('threads').appendChild(el);
 }
-function chart(id, keys, height=100, max=100) {
-  const lines = [0.25,0.5,0.75].map(p=>`<path class="chart-grid" d="M0 ${height*p}H600"/>`).join('');
-  $(id).innerHTML = lines + keys.map(key=>`<path class="chart-line" style="stroke:${colors[key]}" d="${pathFor(history[key],max,height)}"/>`).join('');
+function bar(id,n){$(id).style.width=`${finite(n)?Math.min(100,Math.max(0,n)):0}%`;}
+function byteValue(n){if(!finite(n))return ['—',''];const units=['B','KiB','MiB','GiB','TiB'];let i=0;while(n>=1024&&i<units.length-1){n/=1024;i++;}return [fmt(n,i?1:0),units[i]];}
+function bytes(n){return byteValue(n).join(' ');}
+function rate(id,n){const [value,unit]=byteValue(n);$(id).textContent=value;$(id+'-unit').textContent=unit?unit+'/s':'';}
+function append(key,value){histories[key].push(value);if(histories[key].length>60)histories[key].shift();}
+function graph(id,keys,max=100){
+ let svg=[0,.25,.5,.75,1].map(p=>`<path class="chart-grid" d="M0 ${3+p*154}H600"/>`).join('');
+ for(const key of keys){let path='',connected=false;const points=histories[key];
+  points.forEach((n,i)=>{if(!finite(n)){connected=false;return;}const x=(60-points.length+i)*600/59,y=157-Math.min(1,Math.max(0,n/max))*154;path+=`${connected?'L':'M'}${x.toFixed(1)},${y.toFixed(1)} `;connected=true;});
+  svg+=`<path class="chart-line" stroke="${colors[key]}" d="${path}"/>`;
+ }
+ $(id).innerHTML=svg;
 }
-function append(key, value) { history[key].push(value); if(history[key].length>60) history[key].shift(); }
-function bar(id, percent) { $(id).style.width=`${finite(percent)?Math.min(100,Math.max(0,percent)):0}%`; }
-function rate(id, bytes) {
-  const large=bytes>=1048576, divisor=large?1048576:1024;
-  $(id).textContent=fmt(bytes===null?null:bytes/divisor,1);
-  $(id+'-unit').textContent=large?'MiB/s':'KiB/s';
+function service(id,online){$(id).className='service '+(online?'online':'offline');$(id+'-state').textContent=online?'Online':'Unavailable';}
+function stale(){
+ $('live').classList.add('stale');$('live-text').textContent='Telemetry unavailable';
+ for(const id of ['inference','workspace']){$(id).className='service';$(id+'-state').textContent='Unknown';}
+ $('updated').textContent='last sample unavailable or stale';
 }
-function service(id, online) {
-  $(id).className='service '+(online?'online':'offline');
-  $(id+'-state').textContent=online?'· online':'· unavailable';
+function renderProcesses(processes){
+ const body=$('processes');body.replaceChildren();
+ for(const process of processes){
+  const tr=document.createElement('tr');
+  const name=tr.insertCell();const label=document.createElement('span');label.className='process-name';label.textContent=process.name;name.appendChild(label);
+  tr.insertCell().textContent=process.pid;
+  const cpu=tr.insertCell();const value=document.createElement('span');value.className='process-cpu';value.textContent=fmt(process.cpu,1)+'%';const fill=document.createElement('i');fill.style.width=Math.min(100,Math.max(0,process.cpu))+'%';value.appendChild(fill);cpu.appendChild(value);
+  tr.insertCell().textContent=bytes(process.memory);body.appendChild(tr);
+ }
 }
-function stale() {
-  $('live').classList.add('stale'); $('live-text').textContent='Telemetry unavailable';
-  for (const id of ['inference','workspace']) { $(id).className='service'; $(id+'-state').textContent='· unknown'; }
+async function refresh(){
+ try{
+  const response=await fetch('/api/metrics',{cache:'no-store',signal:AbortSignal.timeout(3000)});
+  if(!response.ok)throw Error('Metrics unavailable');const d=await response.json();
+  if(!d.timestamp||Date.now()/1000-d.timestamp>10)throw Error('Stale sample');
+  $('live').classList.remove('stale');$('live-text').textContent='Live';
+  $('cpu-usage').textContent=fmt(d.cpu.usage,1);$('cpu-temp').textContent=fmt(d.cpu.temperature);
+  bar('cpu-temp-bar',finite(d.cpu.temperature)?d.cpu.temperature/95*100:null);
+  $('cpu-freq').textContent=fmt(finite(d.cpu.frequency)?d.cpu.frequency/1000:null,2);
+  $('cpu-load').textContent=fmt(d.cpu.load?.[0],2);$('cpu-loads').textContent=(d.cpu.load||[]).map(n=>fmt(n,2)).join(' / ');
+  [...$('threads').querySelectorAll('.thread')].forEach((el,i)=>{const n=d.cpu.cores[i];el.querySelector('.thread-bar span').style.width=(finite(n)?n:0)+'%';el.querySelector('.thread-value').textContent=fmt(n);});
+  $('gpu-name').textContent=d.gpu?.name||'NVIDIA GPU · unavailable';$('gpu-state').textContent=d.gpu?.state?'PERFORMANCE '+d.gpu.state:'UNAVAILABLE';
+  $('gpu-usage').textContent=fmt(d.gpu?.usage);$('gpu-temp').textContent=fmt(d.gpu?.temperature);bar('gpu-temp-bar',finite(d.gpu?.temperature)?d.gpu.temperature/90*100:null);
+  $('gpu-power').textContent=fmt(d.gpu?.power);$('gpu-power-limit').textContent=fmt(d.gpu?.power_limit)+' W limit';
+  const vram=finite(d.gpu?.memory_used)&&finite(d.gpu?.memory_total)&&d.gpu.memory_total>0;
+  $('gpu-memory').textContent=vram?`${fmt(d.gpu.memory_used/1024,1)} / ${fmt(d.gpu.memory_total/1024,1)} GiB · ${fmt(d.gpu.memory_used/d.gpu.memory_total*100)}%`:'Unavailable';bar('gpu-memory-bar',vram?d.gpu.memory_used/d.gpu.memory_total*100:null);
+  $('gpu-core-clock').textContent=fmt(d.gpu?.core_clock)+' MHz';$('gpu-memory-clock').textContent=fmt(d.gpu?.memory_clock)+' MHz';$('gpu-fan').textContent=fmt(d.gpu?.fan)+'%';
+  $('memory-used').textContent=fmt(gib(d.memory.used),1);$('memory-total').textContent=fmt(gib(d.memory.total),1)+' GiB';$('memory-percent').textContent=fmt(d.memory.percent)+'%';
+  $('memory-gauge').style.strokeDasharray=`${d.memory.percent/100*282.74} 283`;
+  $('memory-available').textContent=bytes(d.memory.available);$('memory-cached').textContent=bytes(d.memory.cached);$('memory-buffers').textContent=bytes(d.memory.buffers);
+  $('memory-swap').textContent=bytes(d.memory.swap_used)+' / '+bytes(d.memory.swap_total);
+  $('disk-free').textContent=fmt(gib(d.disk.free),1)+' GiB free';$('disk-used').textContent=fmt(gib(d.disk.used),1)+' GiB used';$('disk-total').textContent=fmt(gib(d.disk.total),1)+' GiB total';bar('disk-bar',d.disk.percent);
+  $('disk-device').textContent=d.disk.device;$('disk-iops').textContent=fmt(d.disk.iops)+' IOPS';rate('disk-read',d.disk.read);rate('disk-write',d.disk.write);
+  rate('net-down',d.network.download);rate('net-up',d.network.upload);$('ip-address').textContent=d.network.address;
+  $('net-received').textContent=bytes(d.network.received);$('net-sent').textContent=bytes(d.network.sent);$('net-link').textContent=d.network.connected?(d.network.speed>=1000?fmt(d.network.speed/1000,1)+' GbE':fmt(d.network.speed)+' MbE'):'LINK DOWN';$('net-state').textContent=d.network.connected?'Link up':'Link down';
+  renderProcesses(d.processes||[]);
+  if(d.timestamp!==lastTimestamp){
+   const gap=lastTimestamp?Math.min(60,Math.max(0,Math.round((d.timestamp-lastTimestamp)/2)-1)):0;
+   for(let i=0;i<gap;i++)for(const key in histories)append(key,null);
+   for(const [key,value] of Object.entries({cpu:d.cpu.usage,gpu:d.gpu?.usage??null,gpuMemory:d.gpu?.memory_usage??null,memory:d.memory.percent,read:d.disk.read,write:d.disk.write,down:d.network.download,up:d.network.upload}))append(key,value);
+   graph('cpu-chart',['cpu']);graph('gpu-chart',['gpu','gpuMemory']);graph('memory-chart',['memory']);
+   const diskMax=Math.max(1024,...histories.read.filter(finite),...histories.write.filter(finite)),netMax=Math.max(1024,...histories.down.filter(finite),...histories.up.filter(finite));
+   graph('disk-chart',['read','write'],diskMax);graph('net-chart',['down','up'],netMax);$('disk-scale').textContent=bytes(diskMax)+'/s max';$('net-scale').textContent=bytes(netMax)+'/s max';
+   lastTimestamp=d.timestamp;
+  }
+  service('inference',d.services.inference);service('workspace',d.services.workspace);
+  const minutes=Math.floor(d.uptime/60),hours=Math.floor(minutes/60),days=Math.floor(hours/24);$('uptime').textContent=`UP ${days?days+'d ':''}${hours%24}h ${minutes%60}m`;
+  $('updated').textContent='updated '+new Date(d.timestamp*1000).toLocaleTimeString('en-GB');
+ }catch{stale();}
+ setTimeout(refresh,2000);
 }
-async function refresh() {
-  try {
-    const response=await fetch('/api/metrics', {cache:'no-store',signal:AbortSignal.timeout(3000)});
-    if(!response.ok) throw Error('Metrics unavailable');
-    const d=await response.json();
-    if(!d.timestamp || Date.now()/1000-d.timestamp>10) throw Error('Stale sample');
-    $('live').classList.remove('stale'); $('live-text').textContent='Live telemetry';
-    $('cpu-usage').textContent=fmt(d.cpu.usage);
-    $('cpu-temp').textContent=fmt(d.cpu.temperature);
-    $('cpu-freq').textContent=fmt(d.cpu.frequency===null?null:d.cpu.frequency/1000,2);
-    [...$('cores').children].forEach((el,i)=>el.firstChild.style.height=`${d.cpu.cores[i]||0}%`);
-    $('gpu-usage').textContent=fmt(d.gpu?.usage);
-    $('gpu-temp').textContent=fmt(d.gpu?.temperature);
-    $('gpu-power').textContent=fmt(d.gpu?.power);
-    $('gpu-name').textContent=d.gpu?.name || 'NVIDIA GPU · unavailable';
-    const gpuMemoryValid=finite(d.gpu?.memory_used)&&finite(d.gpu?.memory_total)&&d.gpu.memory_total>0;
-    $('gpu-memory').textContent=gpuMemoryValid?`${fmt(d.gpu.memory_used/1024,1)} / ${fmt(d.gpu.memory_total/1024,1)} GiB`:'Unavailable';
-    bar('gpu-memory-bar',gpuMemoryValid?d.gpu.memory_used/d.gpu.memory_total*100:null);
-    $('memory-used').textContent=fmt(gib(d.memory.used),1);
-    $('memory-total').textContent=fmt(gib(d.memory.total),1)+' GiB total';
-    $('memory-percent').textContent=fmt(d.memory.percent)+'%';
-    $('memory-available').textContent=fmt(gib(d.memory.available),1)+' GiB available';
-    [...$('memory-bar').children].forEach((el,i)=>el.classList.toggle('filled',i<Math.round(d.memory.percent/2.5)));
-    $('disk-free').textContent=fmt(gib(d.disk.free));
-    $('disk-used').textContent=fmt(gib(d.disk.used),1)+' GiB used';
-    $('disk-total').textContent=fmt(gib(d.disk.total))+' GiB total';
-    bar('disk-bar',d.disk.percent);
-    rate('net-down',d.network.download); rate('net-up',d.network.upload);
-    $('ip-address').textContent=d.network.address;
-    if(d.timestamp!==lastTimestamp) {
-      // Leave a gap in the graph if telemetry was interrupted.
-      const gap=lastTimestamp?Math.min(60,Math.max(0,Math.round((d.timestamp-lastTimestamp)/2)-1)):0;
-      for(let i=0;i<gap;i++) for(const key in history) append(key,null);
-      append('cpu',d.cpu.usage); append('gpu',d.gpu?.usage??null);
-      append('down',d.network.download); append('up',d.network.upload);
-      chart('cpu-chart',['cpu']); chart('gpu-chart',['gpu']);
-      chart('net-chart',['down','up'],60,Math.max(1024,...history.down,...history.up));
-      lastTimestamp=d.timestamp;
-    }
-    service('inference',d.services.inference); service('workspace',d.services.workspace);
-    const minutes=Math.floor(d.uptime/60), hours=Math.floor(minutes/60), days=Math.floor(hours/24);
-    $('uptime').textContent=`Up ${days?days+'d ':''}${hours%24}h ${minutes%60}m`;
-  } catch { stale(); }
-  setTimeout(refresh,2000);
-}
-function clock() {
-  const now=new Date();
-  $('clock').textContent=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-  $('date').textContent=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
-}
-clock(); setInterval(clock,1000); refresh();
+function clock(){$('clock').textContent=new Date().toLocaleTimeString('en-GB');}
+clock();setInterval(clock,1000);refresh();
 </script>
 </body>
 </html>
