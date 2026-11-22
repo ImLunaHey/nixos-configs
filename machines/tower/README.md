@@ -59,47 +59,52 @@ key generated through the homelab OAuth client. Only Tailscale's own node state
 remains on Tower; no OAuth client secret or reusable auth key was installed.
 State persists across reboots. After a reinstall, enrol the node again.
 
-## Local screen
+## Local screen and fleet monitoring
 
-The local monitor automatically opens a fullscreen graphical dashboard with
-CPU/GPU history graphs, individual thread activity, temperatures, GPU clocks,
-power, fans and VRAM, memory, disk space and I/O, LAN traffic and totals, and
-inference/T3 health. Lake appears alongside Tower with storage and service
-health. It uses a neutral charcoal layout sized for the
-3440×1440 monitor, with no external assets or cloud services.
+The 3440×1440 monitor opens a passive dark dashboard automatically. Tower,
+Nova, Pulsar, and Comet occupy a 2×2 grid; Lake fills the right column. Offline
+hosts are compact footer entries, with Gateway in a compact status row. No
+keyboard, mouse, tabs, or rotation is needed. Cards show CPU/GPU/network history,
+memory and system disk used/total, temperatures, disk activity, and uptime.
+Online badges are green; card backgrounds stay neutral charcoal.
 
-`tower-dashboard.service` samples hardware every two seconds and serves a
-read-only page and metrics endpoint on `127.0.0.1:8099`. `cage-tty1.service`
-runs Chromium in kiosk mode as a dedicated unprivileged user. The browser and
-compositor use software rendering to preserve GPU memory for inference.
-The screen stays awake and the kiosk restarts if closed. Stale telemetry and
-unavailable GPU metrics are explicitly marked rather than reported as zero.
+The collector is Go, shared from
+`machines/gateway/packages/hardware-telemetry` so Gateway's standalone flake
+can build the same source. Each host samples every two seconds. NVIDIA uses
+nvidia-smi, Lake uses AMD sysfs counters, Nova uses i915 PMU engine counters
+(the service receives only CAP_PERFMON), and Apple silicon uses unprivileged
+IORegistry AGX statistics. Intel usage is the busiest engine, not the sum of
+concurrent engines. Apple GPU memory is used/shared system capacity, not
+separate VRAM; AMD reports reserved UMA. Unsupported fields remain unavailable,
+and a missing hardware GPU is distinguished from failed collection.
 
-Use `Ctrl+Alt+F2` for a regular login console and `Alt+F1` to return to the
-dashboard. SSH access is unchanged. Inspect the two services with `systemctl`
-and `journalctl`; neither requires another firewall port.
+Lake's ZFS section polls zpool JSON and dataset usage every ten seconds. It
+shows pool and scan health, raw used/total, numbered SATA ports, device names,
+per-drive capacity, temperature, read/write rates, IOPS, busy time, and
+read/write/checksum errors. The old and new members of a replacement share the
+same port number. Drive activity comes from kernel counters; temperatures reuse
+Lake's existing SMART sensor service. Dataset capacity is used plus currently
+available shared space, not dedicated capacity. No storage settings are changed.
 
-## Fleet monitoring
+Tower's `tower-dashboard.service` binds only `127.0.0.1:8099`. It polls fixed
+peer URLs server-side with short timeouts; a failed host does not block others.
+Lake, Nova, Pulsar and Comet expose read-only metrics on their private LAN
+addresses, restricted to Tower's source address. Linux also enforces this in
+the firewall. Addresses must remain stable. The endpoints have no separate API
+key: they trust the private network and source-address restrictions. Gateway
+binds only its NetBird address and accepts Lake, which relays its metrics to
+Tower; this requires a Lake-to-Gateway TCP 8099 NetBird policy. Gilbert and Void
+have collector configurations, but deployment awaits their return online.
 
-Tower and Lake are always visible side by side on the local monitor. The passive
-dark display uses rounded host cards, inset metrics, live activity graphs,
-thread activity, GPU readings on Tower, and storage/service health on Lake.
-No keyboard, mouse, tabs or rotation is required. Each host has independent
-two-minute history; missing or stale readings are hidden and marked offline.
+Macs have a nix-darwin user LaunchAgent module. Before their next full Darwin
+activation, `scripts/install-mac-telemetry.sh` installs the same Go executable
+as a per-user LaunchAgent without sudo. Remove the bootstrap plist before
+adopting the nix-darwin-managed agent to avoid duplicate launchd labels.
 
-Both hosts use `modules/hardware-dashboard/server.py`. Lake's
-`hardware-telemetry.service` binds to `10.0.0.46:8099`; the LAN firewall admits
-only Tower (`10.0.0.161`) to this read-only endpoint. These DHCP addresses must
-remain stable. The machines do not currently share Tailscale peer visibility.
-The endpoint has no separate API key: it trusts the private network and source
-address rule. Tower's page remains loopback-only and polls Lake server-side with
-short timeouts, so a remote outage does not block local metrics.
-
-Lake's existing LCD sensor file supplies pool health, capacity, drive
-temperatures and service/cache status. Degraded pools and high pool capacity are
-highlighted. To add another host, configure the shared collector's interface and
-bind address, restrict access to Tower, and add its fixed metrics URL to
-`DASHBOARD_PEERS` in `display.nix`. A host card appears automatically.
+`cage-tty1.service` runs Chromium as the dedicated unprivileged dashboard user.
+Software rendering preserves GPU memory for inference. The screen stays awake;
+the kiosk restarts if closed. Stale samples become offline; missing readings do
+not become zero. Use Ctrl+Alt+F2 for a login console and Alt+F1 to return.
 
 ## Coding access
 

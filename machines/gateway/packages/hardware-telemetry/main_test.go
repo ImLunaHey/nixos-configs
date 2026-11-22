@@ -37,3 +37,26 @@ func TestCounterReset(t *testing.T) {
 		t.Fatal("bad rate")
 	}
 }
+
+func TestAppleGPU(t *testing.T) {
+	for _, name := range []string{"Apple M2 Pro", "Apple M4"} {
+		data := parseAppleGPU([]byte(`"model" = "` + name + `"
+"PerformanceStatistics" = {"In use system memory (driver)"=0,"Device Utilization %"=16,"In use system memory"=536870912}`))
+		if data["usage"] != float64(16) || data["memory_used"] != float64(512) || data["name"] != name+" GPU" {
+			t.Fatal(data)
+		}
+	}
+	data := parseAppleGPU([]byte(`"model" = "Apple M4"`))
+	if data["status"] != "present" || data["usage"] != nil {
+		t.Fatal("missing counters must not become idle or absent", data)
+	}
+	if parseAppleGPU(nil)["status"] != "unavailable" {
+		t.Fatal("failed inventory must not become absent")
+	}
+}
+
+func TestDrivePort(t *testing.T) {
+	if drivePort("pci-0000:67:00.0-ata-6.0") != 6 || drivePort(nil) != nil {
+		t.Fatal("incorrect SATA port")
+	}
+}

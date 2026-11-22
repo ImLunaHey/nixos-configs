@@ -98,6 +98,9 @@ func pollPeer(name, url string) {
 	}
 }
 func gpu() M {
+	if runtime.GOOS == "darwin" {
+		return appleGPU()
+	}
 	if os.Getenv("AMD_GPU_NAME") != "" {
 		paths, _ := filepath.Glob("/sys/class/drm/card[0-9]*/device")
 		for _, p := range paths {
@@ -120,13 +123,13 @@ func gpu() M {
 	}
 	b, e := command(env("NVIDIA_SMI", "nvidia-smi"), "--query-gpu=name,utilization.gpu,memory.used,memory.total,temperature.gpu,power.draw,power.limit,utilization.memory,fan.speed,clocks.gr,clocks.mem,pstate", "--format=csv,noheader,nounits")
 	if e != nil {
-		return nil
+		return otherGPU()
 	}
 	r := csv.NewReader(strings.NewReader(string(b)))
 	r.TrimLeadingSpace = true
 	row, e := r.Read()
 	if e != nil || len(row) != 12 {
-		return nil
+		return otherGPU()
 	}
 	keys := []string{"name", "usage", "memory_used", "memory_total", "temperature", "power", "power_limit", "memory_usage", "fan", "core_clock", "memory_clock", "state"}
 	m := M{"kind": "discrete", "memory_label": "VRAM"}
@@ -165,7 +168,7 @@ func sensorLines() M {
 	}
 	m := M{}
 	for _, line := range strings.Split(string(b), "\n") {
-		kv := strings.SplitN(line, ": ", 2)
+		kv := strings.SplitN(strings.TrimSpace(line), ": ", 2)
 		if len(kv) == 2 {
 			m[kv[0]] = kv[1]
 		}
@@ -341,7 +344,7 @@ func zfsDisks(node M, group string) []M {
 	out := []M{}
 	kind, _ := node["vdev_type"].(string)
 	if kind == "disk" {
-		out = append(out, M{"name": node["name"], "path": node["path"], "state": node["state"], "size": node["phys_space"], "read_errors": node["read_errors"], "write_errors": node["write_errors"], "checksum_errors": node["checksum_errors"], "replacing": group == "replacing", "missing": node["not_present"], "resilvered": node["scan_processed"]})
+		out = append(out, M{"name": node["name"], "path": node["path"], "port": drivePort(node["phys_path"]), "state": node["state"], "size": node["phys_space"], "read_errors": node["read_errors"], "write_errors": node["write_errors"], "checksum_errors": node["checksum_errors"], "replacing": group == "replacing", "missing": node["not_present"], "resilvered": node["scan_processed"]})
 	}
 	children, _ := node["vdevs"].(map[string]any)
 	for _, v := range children {
@@ -396,6 +399,7 @@ func collectZFS() (M, error) {
 		datasets = append(datasets, M{"name": fields[0], "used": num(fields[1]), "available": num(fields[2]), "referenced": num(fields[3]), "mount": fields[4]})
 	}
 	data["datasets"] = datasets
+	addDriveStats(data)
 	return data, nil
 }
 func main() {

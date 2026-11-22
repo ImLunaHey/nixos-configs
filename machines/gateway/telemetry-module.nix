@@ -10,6 +10,7 @@ in {
     client = lib.mkOption { type = lib.types.str; };
     firewallInterface = lib.mkOption { type = lib.types.str; };
     extraEnvironment = lib.mkOption { type = lib.types.attrsOf lib.types.str; default = { }; };
+    intelGPU = lib.mkEnableOption "Intel GPU performance counters";
   };
   config = lib.mkIf cfg.enable {
     networking.firewall.extraCommands = ''
@@ -38,6 +39,8 @@ in {
         ProtectSystem = "strict";
         ProtectHome = true;
         PrivateTmp = true;
+        AmbientCapabilities = lib.optionals cfg.intelGPU [ "CAP_PERFMON" ];
+        CapabilityBoundingSet = lib.optionals cfg.intelGPU [ "CAP_PERFMON" ];
       };
       unitConfig.StartLimitIntervalSec = 0;
     };

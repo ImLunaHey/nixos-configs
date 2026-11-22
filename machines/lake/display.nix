@@ -101,6 +101,7 @@ let
       nvme_temp=$(read_temp nvme)
 
       hdd_temps=""
+      drive_readings=""
       hdd_count=0
       hdd_max=0
       for disk in /dev/sd?; do
@@ -112,6 +113,8 @@ let
         hdd_count=$((hdd_count + 1))
         [ "$temp" -gt "$hdd_max" ] && hdd_max="$temp"
         hdd_temps="''${hdd_temps}''${hdd_temps:+ }''${temp}°"
+        drive_readings="''${drive_readings}temp_''${disk##*/}: $temp
+      "
       done
 
       if pool_health=$(zpool list -H -o health storage 2>/dev/null); then
@@ -164,6 +167,7 @@ let
         echo "title: LAKE"
         echo "temperatures: CPU ''${cpu_temp}°C    GPU ''${gpu_temp}°C    NVMe ''${nvme_temp}°C"
         echo "drives: HDDs ($hdd_count) ''${hdd_temps:-no readings}    max ''${hdd_max}°C"
+        printf '%s' "$drive_readings"
         echo "pool: $pool_text"
         echo "capacity: $capacity_text"
         echo "services: $services_text"
