@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  python = pkgs.python3.withPackages (p: [ p.psutil ]);
+  collector = pkgs.callPackage ../gateway/packages/hardware-telemetry { };
   kiosk = pkgs.writeShellScript "tower-dashboard-kiosk" ''
     until ${pkgs.curl}/bin/curl --silent --fail http://127.0.0.1:8099/ >/dev/null; do
       sleep 1
@@ -37,14 +37,24 @@ in
     description = "Tower hardware dashboard metrics";
     wantedBy = [ "multi-user.target" ];
     environment = {
+      METRICS_NAME = "tower";
+      METRICS_INTERFACE = "enp7s0";
       NVIDIA_SMI = "/run/current-system/sw/bin/nvidia-smi";
-      DASHBOARD_PEERS = builtins.toJSON { lake = "http://10.0.0.46:8099/api/metrics"; };
+      DASHBOARD_PEERS = builtins.toJSON {
+        lake = "http://10.0.0.46:8099/api/metrics";
+        nova = "http://10.0.0.178:8099/api/metrics";
+        gateway = "http://10.0.0.46:8099/api/peers/gateway";
+        pulsar = "http://100.117.220.119:8099/api/metrics";
+        comet = "http://100.120.5.114:8099/api/metrics";
+        gilbert = "";
+        void = "";
+      };
       DASHBOARD_HTML = "${./dashboard/index.html}";
     };
     serviceConfig = {
       User = "tower-dashboard";
       Group = "tower-dashboard";
-      ExecStart = "${python}/bin/python ${../../modules/hardware-dashboard/server.py}";
+      ExecStart = "${collector}/bin/hardware-telemetry";
       Restart = "always";
       RestartSec = "2s";
       NoNewPrivileges = true;

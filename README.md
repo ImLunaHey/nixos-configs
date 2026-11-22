@@ -68,6 +68,7 @@ nixos-configs/
 | `netbird-client-package.nix` | |
 | `netbird.nix` | |
 | `pocket-id.nix` | |
+| `telemetry-module.nix` | |
 
 ### `gilbert`
 
@@ -127,6 +128,7 @@ nixos-configs/
 | `networking.nix` | DHCP, firewall, Tailscale |
 | `services.nix` | SOPS secret declarations |
 | `storage.nix` | Disk mounts and NFS |
+| `telemetry.nix` | |
 | `ytdl-sub-channels.nix` | |
 | `ytdl-sub.nix` | |
 

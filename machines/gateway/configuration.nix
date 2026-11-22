@@ -1,6 +1,14 @@
 { pkgs, ... }:
 {
-  imports = [ ./hardware-configuration.nix ./killdeer.nix ./netbird.nix ./pocket-id.nix ./ingress.nix ./home.nix ];
+  imports = [ ./hardware-configuration.nix ./killdeer.nix ./netbird.nix ./pocket-id.nix ./ingress.nix ./home.nix ./telemetry-module.nix ];
+
+  services.fleetTelemetry = {
+    enable = true;
+    bind = "100.66.248.2";
+    interface = "enp1s0";
+    firewallInterface = "wt0";
+    client = "100.66.200.157";
+  };
 
   virtualisation.oci-containers.backend = "docker";
   virtualisation.docker.enable = true;

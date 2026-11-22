@@ -4,6 +4,7 @@
 # Host-specific bits (hostname) live in darwin/<host>/default.nix.
 {
   imports = [
+    ./telemetry.nix
     ../modules/lake-cache-client.nix
   ];
 
