@@ -28,6 +28,8 @@ in
     extraGroups = [ "video" "render" ];
     home = "/var/lib/tower-dashboard";
     createHome = true;
+    # A user manager/bus is required when NixOS reloads this active session.
+    linger = true;
   };
 
   # A local-only, read-only metrics endpoint; no extra firewall ports.
