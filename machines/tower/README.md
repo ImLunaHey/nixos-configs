@@ -67,6 +67,11 @@ hosts are compact footer entries, with Gateway in a compact status row. No
 keyboard, mouse, tabs, or rotation is needed. Cards show CPU/GPU/network history,
 memory and system disk used/total, temperatures, disk activity, and uptime.
 Online badges are green; card backgrounds stay neutral charcoal.
+Graphs label the two-minute time window and percentage or throughput scale.
+GPU memory has a dedicated used/total meter, with the memory type explicit.
+The lower rows show disk free space, physical-device read/write rates and IOPS;
+RAM usage appears only once. Low disk space, ZFS drive state, errors and high
+drive activity use restrained status colours, with a rebuild progress bar.
 
 The collector is Go, shared from
 `machines/gateway/packages/hardware-telemetry` so Gateway's standalone flake
@@ -77,6 +82,10 @@ IORegistry AGX statistics. Intel usage is the busiest engine, not the sum of
 concurrent engines. Apple GPU memory is used/shared system capacity, not
 separate VRAM; AMD reports reserved UMA. Unsupported fields remain unavailable,
 and a missing hardware GPU is distinguished from failed collection.
+Mac disk activity resolves the APFS Data volume to its physical backing stores,
+so virtual volume identifiers are not mistaken for missing device counters.
+Intel shared-memory usage is labelled unavailable when the driver does not
+expose it to the collector; it is not presented as zero or dedicated VRAM.
 
 Lake's ZFS section polls zpool JSON and dataset usage every ten seconds. It
 shows pool and scan health, raw used/total, numbered SATA ports, device names,

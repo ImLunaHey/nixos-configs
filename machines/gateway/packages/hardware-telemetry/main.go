@@ -187,6 +187,15 @@ func diskDevice() string {
 	if d := os.Getenv("METRICS_DISK"); d != "" {
 		return d
 	}
+	if runtime.GOOS == "darwin" {
+		b, e := command("/usr/sbin/diskutil", "info", "-plist", "/System/Volumes/Data")
+		if e == nil {
+			if devices := apfsPhysicalDisks(b); len(devices) > 0 {
+				return strings.Join(devices, ",")
+			}
+		}
+		return "unknown"
+	}
 	parts, _ := disk.Partitions(false)
 	for _, p := range parts {
 		if p.Mountpoint == "/" {
@@ -246,7 +255,7 @@ func sample() {
 	physical, _ := cpu.Counts(false)
 	prevNet, _ := network(iface)
 	allDisk, _ := disk.IOCounters()
-	prevDisk := allDisk[device]
+	prevDisk, hadDisk := diskCounters(allDisk, device)
 	previous := time.Now()
 	cpu.Percent(0, true)
 	services := M{}
@@ -293,9 +302,9 @@ func sample() {
 		currentNet, address := network(iface)
 		elapsed := start.Sub(previous).Seconds()
 		ios, _ := disk.IOCounters()
-		currentDisk, hasDisk := ios[device]
+		currentDisk, hasDisk := diskCounters(ios, device)
 		var read, write, iops any
-		if hasDisk {
+		if hasDisk && hadDisk {
 			read = rate(currentDisk.ReadBytes, prevDisk.ReadBytes, elapsed)
 			write = rate(currentDisk.WriteBytes, prevDisk.WriteBytes, elapsed)
 			iops = rate(currentDisk.ReadCount+currentDisk.WriteCount, prevDisk.ReadCount+prevDisk.WriteCount, elapsed)
@@ -321,6 +330,7 @@ func sample() {
 		previous = start
 		prevNet = currentNet
 		prevDisk = currentDisk
+		hadDisk = hasDisk
 		iteration++
 		if delay := 2*time.Second - time.Since(start); delay > 0 {
 			time.Sleep(delay)
