@@ -59,6 +59,16 @@ key generated through the homelab OAuth client. Only Tailscale's own node state
 remains on Tower; no OAuth client secret or reusable auth key was installed.
 State persists across reboots. After a reinstall, enrol the node again.
 
+## Local screen
+
+The first virtual console runs a live `btop` dashboard automatically, showing
+CPU load and temperatures, GPU load and VRAM, RAM, disk space and I/O, and LAN
+traffic. The screen stays awake. `tower-display.service` runs as a dedicated
+unprivileged user and restarts if the dashboard exits.
+
+Use `Alt+F2` for a regular login console and `Alt+F1` to return to the dashboard.
+SSH access is unchanged. Inspect it with `systemctl status tower-display`.
+
 ## Coding access
 
 T3 starts as `luna` with `~/code` as its working directory and `~/.t3` as its

@@ -137,6 +137,7 @@ nixos-configs/
 |------|------|
 | `codex.nix` | |
 | `default.nix` | Imports all machine modules |
+| `display.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
 | `hardware.nix` | GPU drivers and hardware acceleration |
 | `inference.nix` | |
