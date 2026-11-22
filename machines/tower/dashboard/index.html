@@ -178,8 +178,9 @@ async function refresh() {
     $('gpu-temp').textContent=fmt(d.gpu?.temperature);
     $('gpu-power').textContent=fmt(d.gpu?.power);
     $('gpu-name').textContent=d.gpu?.name || 'NVIDIA GPU · unavailable';
-    $('gpu-memory').textContent=d.gpu?`${fmt(d.gpu.memory_used/1024,1)} / ${fmt(d.gpu.memory_total/1024,1)} GiB`:'Unavailable';
-    bar('gpu-memory-bar',d.gpu?d.gpu.memory_used/d.gpu.memory_total*100:null);
+    const gpuMemoryValid=finite(d.gpu?.memory_used)&&finite(d.gpu?.memory_total)&&d.gpu.memory_total>0;
+    $('gpu-memory').textContent=gpuMemoryValid?`${fmt(d.gpu.memory_used/1024,1)} / ${fmt(d.gpu.memory_total/1024,1)} GiB`:'Unavailable';
+    bar('gpu-memory-bar',gpuMemoryValid?d.gpu.memory_used/d.gpu.memory_total*100:null);
     $('memory-used').textContent=fmt(gib(d.memory.used),1);
     $('memory-total').textContent=fmt(gib(d.memory.total),1)+' GiB total';
     $('memory-percent').textContent=fmt(d.memory.percent)+'%';

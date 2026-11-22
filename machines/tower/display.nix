@@ -5,7 +5,7 @@ let
     until ${pkgs.curl}/bin/curl --silent --fail http://127.0.0.1:8099/ >/dev/null; do
       sleep 1
     done
-    exec ${pkgs.chromium}/bin/chromium \
+    exec ${pkgs.dbus}/bin/dbus-run-session -- ${pkgs.chromium}/bin/chromium \
       --kiosk --no-first-run --no-default-browser-check \
       --disable-session-crashed-bubble --disable-infobars \
       --disable-background-networking --disable-component-update \
@@ -71,6 +71,7 @@ in
   systemd.services.cage-tty1 = {
     after = [ "tower-dashboard.service" ];
     wants = [ "tower-dashboard.service" ];
+    restartTriggers = [ ./dashboard/index.html ];
     serviceConfig = {
       Restart = "always";
       RestartSec = "3s";
