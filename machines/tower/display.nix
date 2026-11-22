@@ -38,7 +38,7 @@ in
     wantedBy = [ "multi-user.target" ];
     environment = {
       NVIDIA_SMI = "/run/current-system/sw/bin/nvidia-smi";
-      DASHBOARD_PEERS = builtins.toJSON { lake = "http://100.94.132.48:8099/api/metrics"; };
+      DASHBOARD_PEERS = builtins.toJSON { lake = "http://10.0.0.46:8099/api/metrics"; };
       DASHBOARD_HTML = "${./dashboard/index.html}";
     };
     serviceConfig = {
@@ -61,8 +61,8 @@ in
     user = "tower-dashboard";
     program = kiosk;
     restartIfChanged = true;
-    # Allow switching to a login VT, and use the pointer to select another host.
-    extraArguments = [ "-s" ];
+    # Allow switching to a login VT, and hide the unused pointer on this passive display.
+    extraArguments = [ "-s" "-d" ];
     environment = {
       WLR_LIBINPUT_NO_DEVICES = "1";
       # The monitor is attached to NVIDIA; avoid selecting the unused iGPU.

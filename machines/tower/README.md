@@ -81,23 +81,25 @@ and `journalctl`; neither requires another firewall port.
 
 ## Fleet monitoring
 
-The monitor shows Tower and Lake together in a permanent host overview. Click a
-host card (or press 1/2) to select its detailed metrics. CPU, RAM, root disk,
-network and process data are collected by the shared Python collector in
-`modules/hardware-dashboard/server.py`. Graph history is kept separately per host
-while viewing it. Unreachable or stale hosts are marked offline and their detail
-view is hidden until fresh telemetry returns.
+Tower and Lake are always visible side by side on the local monitor. The passive
+dark display uses rounded host cards, inset metrics, live activity graphs,
+thread activity, GPU readings on Tower, and storage/service health on Lake.
+No keyboard, mouse, tabs or rotation is required. Each host has independent
+two-minute history; missing or stale readings are hidden and marked offline.
 
-Lake runs `hardware-telemetry.service` on its Tailscale address
-`100.94.132.48:8099`; it is not bound to the LAN. The read-only endpoint is trusted
-to the tailnet and has no separate API key. Tower polls it server-side with short
-timeouts, so a remote outage does not block local metrics. Lake's existing LCD
-sensor file supplies pool health, capacity, drive temperatures and service/cache
-status. Degraded pools and high pool capacity are highlighted.
+Both hosts use `modules/hardware-dashboard/server.py`. Lake's
+`hardware-telemetry.service` binds to `10.0.0.46:8099`; the LAN firewall admits
+only Tower (`10.0.0.161`) to this read-only endpoint. These DHCP addresses must
+remain stable. The machines do not currently share Tailscale peer visibility.
+The endpoint has no separate API key: it trusts the private network and source
+address rule. Tower's page remains loopback-only and polls Lake server-side with
+short timeouts, so a remote outage does not block local metrics.
 
-To add a host, run the shared collector with its network interface and bind
-address configured, then add its fixed metrics URL to `DASHBOARD_PEERS` in
-`display.nix`. The overview creates a card for each configured host.
+Lake's existing LCD sensor file supplies pool health, capacity, drive
+temperatures and service/cache status. Degraded pools and high pool capacity are
+highlighted. To add another host, configure the shared collector's interface and
+bind address, restrict access to Tower, and add its fixed metrics URL to
+`DASHBOARD_PEERS` in `display.nix`. A host card appears automatically.
 
 ## Coding access
 
