@@ -86,8 +86,12 @@ including Gateway's independent flake. Tower's display settings are in
 the upstream repository, run its Go/component tests and Nix package builds,
 push, then update the pinned `fleet-monitor` input here before deploying.
 
-`fleet-monitor.service` on Tower binds only `127.0.0.1:8099` and polls fixed
-private endpoints with independent timeouts. Lake/Nova bind their LAN addresses
+`fleet-monitor.service` on Tower serves the dashboard at `http://10.0.0.161:8099/`
+and polls fixed private endpoints with independent timeouts. Its QR code opens
+that address on phones and tablets, with responsive cards and scrollable ZFS
+tables. It binds IPv4 interfaces but accepts only loopback and `10.0.0.0/24`
+clients; TCP 8099 is opened only on `enp7s0`. Reserve Tower’s DHCP address so
+the link remains valid. No WAN forwarding is configured. Lake/Nova bind their LAN addresses
 and retain source-specific firewall rules allowing Tower; Macs use the source
 allowlist in the agent. Addresses must remain stable. There is no separate API
 key. Gateway binds its NetBird address and accepts Lake, but its Lake-to-Gateway

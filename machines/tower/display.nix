@@ -7,6 +7,9 @@
     enable = true;
     mode = "dashboard";
     name = "tower";
+    listenAddress = "0.0.0.0";
+    allowedClients = [ "127.0.0.1" "::1" "10.0.0.0/24" ];
+    publicUrl = "http://10.0.0.161:8099/";
     interface = "enp7s0";
     title = "Homelab";
     featuredHost = "lake";

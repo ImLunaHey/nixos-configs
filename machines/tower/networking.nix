@@ -7,7 +7,7 @@
     checkReversePath = "loose";
     # SSH is also available on the LAN before Tailscale enrolment.
     allowedTCPPorts = [ 22 ];
-    interfaces.enp7s0.allowedTCPPorts = [ 3773 ];
+    interfaces.enp7s0.allowedTCPPorts = [ 3773 8099 ];
     interfaces.tailscale0.allowedTCPPorts = [ 3773 ];
   };
 }
