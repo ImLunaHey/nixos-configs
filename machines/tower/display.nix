@@ -17,7 +17,7 @@
       "5".slot = 3;
       "4".slot = 4;
       "3".slot = 5;
-      "2" = { slot = 6; inferred = true; };
+      "2".slot = 6;
       "1".slot = 7;
     };
     hostOrder = [ "tower" "lake" "nova" "gateway" "pulsar" "comet" "gilbert" "void" ];
