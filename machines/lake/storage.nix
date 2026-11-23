@@ -11,13 +11,11 @@
   # 3    | WD-WXB2D36DNCA4 | WDC WD20EFPX-68C4TN0, 2 TB | ata5 | Confirmed
   # 4    | WD-WXB2D36HV3J4 | WDC WD20EFPX-68C4TN0, 2 TB | ata4 | Confirmed
   # 5    | WD-WXB2D36HV154 | WDC WD20EFPX-68C4TN0, 2 TB | ata3 | Confirmed
-  # 6    | WD-WXB2D36HVT23 | WDC WD20EFPX-68C4TN0, 2 TB | ata2 | By elimination
+  # 6    | WD-WXB2D36HVT23 | WDC WD20EFPX-68C4TN0, 2 TB | ata2 | Confirmed
   # 7    | WD-WXB2D36HVTNA | WDC WD20EFPX-68C4TN0, 2 TB | ata1 | Confirmed
   # Owner confirmed replacements in slot 2 (previously JP2930HQ3NWEWH),
   # slot 3 (JP2940HD09MAJC), slot 4 (W9AML1H5), slot 5 (959SN05NS),
-  # and slot 7 (JP2911HQ3JV4KH).
-  # WD-WXB2D36HVT23 replaced JP2930HQ3NW7WH on ata2. Slot 6 is the only
-  # remaining bay, mapped by elimination rather than physical inspection.
+  # slot 6 (JP2930HQ3NW7WH), and slot 7 (JP2911HQ3JV4KH).
   # The system NVMe is separate: Samsung 990 PRO, serial S6Z2NJ0TA25178W.
 
   # Shared storage for Nova, Gilbert and their backups. SMB uses the same paths.
