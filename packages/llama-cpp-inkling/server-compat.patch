@@ -1,0 +1,74 @@
+diff --git a/common/jinja/value.cpp b/common/jinja/value.cpp
+index 67174d4..2630213 100644
+--- a/common/jinja/value.cpp
++++ b/common/jinja/value.cpp
+@@ -232,6 +232,24 @@ static std::string json_ensure_ascii_preserving_format(const std::string & json_
+     return output;
+ }
+ 
++// JSON sort_keys applies recursively without mutating the template's input objects.
++static value sorted_json_value(const value & input) {
++    if (is_val<value_object>(input)) {
++        auto pairs = input->as_ordered_object();
++        std::sort(pairs.begin(), pairs.end(), [](const auto & a, const auto & b) {
++            return a.first->as_string().str() < b.first->as_string().str();
++        });
++        for (auto & pair : pairs) pair.second = sorted_json_value(pair.second);
++        return mk_val<value_object>(pairs);
++    }
++    if (is_val<value_array>(input)) {
++        auto values = input->as_array();
++        for (auto & v : values) v = sorted_json_value(v);
++        return mk_val<value_array>(values);
++    }
++    return input;
++}
++
+ static value tojson(const func_args & args) {
+     args.ensure_count(1, 5);
+     value val_ascii      = args.get_kwarg_or_pos("ensure_ascii", 1);
+@@ -247,14 +265,11 @@ static value tojson(const func_args & args) {
+     if (is_val<value_int>(val_indent)) {
+         indent = static_cast<int>(val_indent->as_int());
+     }
+-    if (val_sort->as_bool()) { // undefined == false
+-        throw not_implemented_exception("tojson sort_keys=true not implemented");
+-    }
+     const bool ensure_ascii = val_ascii->as_bool(); // undefined == false
+     auto separators = (is_val<value_array>(val_separators) ? val_separators : mk_val<value_array>())->as_array();
+     std::string item_sep = separators.size() > 0 ? separators[0]->as_string().str() : (indent < 0 ? ", " : ",");
+     std::string key_sep = separators.size() > 1 ? separators[1]->as_string().str() : ": ";
+-    std::string json_str = value_to_json(args.get_pos(0), indent, item_sep, key_sep);
++    std::string json_str = value_to_json(val_sort->as_bool() ? sorted_json_value(args.get_pos(0)) : args.get_pos(0), indent, item_sep, key_sep);
+     if (ensure_ascii) {
+         json_str = json_ensure_ascii_preserving_format(json_str);
+     }
+diff --git a/tests/test-jinja.cpp b/tests/test-jinja.cpp
+index 1c31dd1..a8ca620 100644
+--- a/tests/test-jinja.cpp
++++ b/tests/test-jinja.cpp
+@@ -1773,6 +1773,12 @@ static void test_object_methods(testing & t) {
+         "{\"name\": \"test\", \"value\": 42}"
+     );
+ 
++    test_template(t, "recursive sorted JSON leaves input order unchanged",
++        "{% set obj = {'z': [{'b': 2, 'a': 1}], 'a': 0} %}{{ obj|tojson(sort_keys=true, separators=[',', ':']) }}|{{ obj|tojson }}",
++        json::object(),
++        R"({"a":0,"z":[{"a":1,"b":2}]}|{"z": [{"b": 2, "a": 1}], "a": 0})"
++    );
++
+     test_template(t, "nested object|tojson",
+         "{{ obj|tojson }}",
+         {{"obj", {{"outer", {{"inner", "value"}}}}}},
+diff --git a/vendor/cpp-httplib/httplib.cpp b/vendor/cpp-httplib/httplib.cpp
+index f3555f2..d7d7826 100644
+--- a/vendor/cpp-httplib/httplib.cpp
++++ b/vendor/cpp-httplib/httplib.cpp
+@@ -5361,6 +5361,7 @@ bool setup_client_tls_session(const std::string &host, tls::ctx_t &ctx,
+  */
+ 
+ void default_socket_options(socket_t sock) {
++  set_socket_opt(sock, SOL_SOCKET, SO_REUSEADDR, 1);
+   set_socket_opt(sock, SOL_SOCKET,
+ #ifdef SO_REUSEPORT
+                  SO_REUSEPORT,

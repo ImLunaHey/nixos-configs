@@ -1,0 +1,20 @@
+{
+  "engine_commit": "46b11f422d42ce4eb7cf8d92386cf36f60a1af86",
+  "engine_package": "packages/llama-cpp-inkling",
+  "cuda": "12.8",
+  "model_sha256": "23a8e6792481b6f1d0ebad51399e9ee2a2c2be8525b09ed1ae6737811159f892",
+  "context": 32768,
+  "parallel": 1,
+  "gpu_layers": 99,
+  "flash_attention": "on",
+  "cache_k": "q8_0",
+  "cache_v": "q8_0",
+  "swa_compress": true,
+  "batch": 1024,
+  "ubatch": 512,
+  "power_limit_watts": 300,
+  "memory_cap_mib": 14750,
+  "environment": {
+    "RAON_GRAPH_CHUNKS_N": "16"
+  }
+}

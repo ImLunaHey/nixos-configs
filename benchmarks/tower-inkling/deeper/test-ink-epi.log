@@ -1,0 +1,51 @@
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA GeForce RTX 5070 Ti, compute capability 12.0, VMM: yes, VRAM: 15839 MiB
+CPU   conv_res T=1 mode=0                          nmse vs CPU chain 0.00e+00  hash abd26b50eecb743b  OK
+CUDA0 conv_res T=1 mode=0                          nmse vs CPU chain 1.83e-16  hash 25f20702a27967e7  OK
+CPU   conv_res T=1 mode=1                          nmse vs CPU chain 0.00e+00  hash fed90ff4c23294f7  OK
+CUDA0 conv_res T=1 mode=1                          nmse vs CPU chain 0.00e+00  hash fed90ff4c23294f7  OK
+CPU   conv_res T=1 mode=2                          nmse vs CPU chain 0.00e+00  hash 90a19523d4ceef05  OK
+CUDA0 conv_res T=1 mode=2                          nmse vs CPU chain 2.30e-16  hash b01a8388f211bb57  OK
+CPU   conv_res T=3 mode=0                          nmse vs CPU chain 0.00e+00  hash 2236d0b44e069374  OK
+CUDA0 conv_res T=3 mode=0                          nmse vs CPU chain 2.53e-16  hash dadb48a41ad80beb  OK
+CPU   conv_res T=3 mode=1                          nmse vs CPU chain 0.00e+00  hash c367a30b12a5d91c  OK
+CUDA0 conv_res T=3 mode=1                          nmse vs CPU chain 1.23e-16  hash d963f1e29e01ae24  OK
+CPU   conv_res T=3 mode=2                          nmse vs CPU chain 0.00e+00  hash 9b0e74514fae2c00  OK
+CUDA0 conv_res T=3 mode=2                          nmse vs CPU chain 1.41e-16  hash 9610ddd00a866b6c  OK
+CPU   conv_res T=8 mode=0                          nmse vs CPU chain 0.00e+00  hash afcf47109d3f04ff  OK
+CUDA0 conv_res T=8 mode=0                          nmse vs CPU chain 2.71e-16  hash 464b0e1c13e39f9f  OK
+CPU   conv_res T=8 mode=1                          nmse vs CPU chain 0.00e+00  hash eb38d2ffad51aec6  OK
+CUDA0 conv_res T=8 mode=1                          nmse vs CPU chain 2.45e-16  hash 1527624ad8492bcf  OK
+CPU   conv_res T=8 mode=2                          nmse vs CPU chain 0.00e+00  hash a9c91d36f471f833  OK
+CUDA0 conv_res T=8 mode=2                          nmse vs CPU chain 1.66e-16  hash ac5b15267ee1477c  OK
+CPU   conv_res T=64 mode=0                         nmse vs CPU chain 0.00e+00  hash f0acd96bb37ee631  OK
+CUDA0 conv_res T=64 mode=0                         nmse vs CPU chain 2.97e-16  hash 1ea091f04238eb98  OK
+CPU   conv_res T=64 mode=1                         nmse vs CPU chain 0.00e+00  hash 7a419bab3e994713  OK
+CUDA0 conv_res T=64 mode=1                         nmse vs CPU chain 2.90e-16  hash e3fa6f26cfa3421c  OK
+CPU   conv_res T=64 mode=2                         nmse vs CPU chain 0.00e+00  hash 131176fb1b05e058  OK
+CUDA0 conv_res T=64 mode=2                         nmse vs CPU chain 2.84e-16  hash 42918ab29e40faf6  OK
+CPU   router f32 T=1                               nmse vs CPU chain 0.00e+00  hash 15f8aeac47f44788  OK
+CUDA0 router f32 T=1                               nmse vs CPU chain 6.76e-15  hash cd09aafc435c783a  OK
+CPU   router f32 T=2                               nmse vs CPU chain 0.00e+00  hash 2563492c6fd43465  OK
+CUDA0 router f32 T=2                               nmse vs CPU chain 1.19e-14  hash 101a33f89b3aec07  OK
+CPU   router f32 T=5                               nmse vs CPU chain 0.00e+00  hash 2759806320606884  OK
+CUDA0 router f32 T=5                               nmse vs CPU chain 1.41e-14  hash 46b087453cc8373d  OK
+CPU   router f32 T=8                               nmse vs CPU chain 0.00e+00  hash 59344e7fa7003689  OK
+CUDA0 router f32 T=8                               nmse vs CPU chain 1.61e-14  hash ab34abe583865529  OK
+CPU   router bf16 T=1                              nmse vs CPU chain 0.00e+00  hash 3add41c74ca55d13  OK
+CUDA0 router bf16 T=1                              nmse vs CPU chain 6.59e-14  hash e634a7450a58d7af  OK
+CPU   router bf16 T=2                              nmse vs CPU chain 0.00e+00  hash 138b5ea38963bc65  OK
+CUDA0 router bf16 T=2                              nmse vs CPU chain 1.80e-14  hash 5cec3f755a00f2f2  OK
+CPU   router bf16 T=5                              nmse vs CPU chain 0.00e+00  hash 0343ca7be02b5193  OK
+CUDA0 router bf16 T=5                              nmse vs CPU chain 1.60e-14  hash 32133f95a46a8ff1  OK
+CPU   router bf16 T=8                              nmse vs CPU chain 0.00e+00  hash 846ed91be5bf2a2b  OK
+Cgemma-smallfuse: RAON_G4_PREQ active
+gemma-smallfuse: RAON_G4_PREQ hit for node_1
+gemma-smallfuse: RAON_G4_PREQ hit for node_1
+~ggml_backend_cuda_context: have 9 graphs
+UDA0 router bf16 T=8                              nmse vs CPU chain 1.84e-14  hash c7624d40a6865b98  OK
+CPU   sigmul+gemv q8_0                             nmse vs CPU chain 0.00e+00  hash 8c1a80b9608db527  OK
+CUDA0 sigmul+gemv q8_0                             nmse vs CPU chain 1.39e-05  hash a76c734844314fb6  OK
+CPU   sigmul+gemv q4_0                             nmse vs CPU chain 0.00e+00  hash 8cc01ad83f7d7fe4  OK
+CUDA0 sigmul+gemv q4_0                             nmse vs CPU chain 1.12e-05  hash f3514b04780557a0  OK
+PASSED (0 failures)
