@@ -1,0 +1,5 @@
+Nov 23 11:12:58 tower llama-server[166941]: 0.01.234.411 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 3356.22 MiB on device 0: cudaMalloc failed: out of memory
+Nov 23 11:12:58 tower llama-server[166941]: 0.01.236.338 E llama_init_from_model: failed to initialize the context: failed to allocate compute pp buffers
+Nov 23 11:13:10 tower llama-server[167018]: 0.01.352.365 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 3356.22 MiB on device 0: cudaMalloc failed: out of memory
+Nov 23 11:13:10 tower llama-server[167018]: 0.01.354.529 E llama_init_from_model: failed to initialize the context: failed to allocate compute pp buffers
+Nov 23 11:13:21 tower llama-server[167083]: 0.01.370.646 E ggml_backend_cuda_buffer_type_alloc_buffer: allocating 3356.22 MiB on device 0: cudaMalloc failed: out of memory
