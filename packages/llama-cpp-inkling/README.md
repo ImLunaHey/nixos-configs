@@ -37,3 +37,10 @@ Run `test-fa-relbias CUDA` to exercise the additional q4 attention cases.
 The CPU q4 cases currently fail in this build, so do not use this profile
 with CPU attention/offload. Qualification is in
 `benchmarks/tower-inkling/context-128k/PLAN.md`.
+
+`INKLING_Q4_VEC=1` selects direct q4 vector attention for single-token,
+128-wide full attention and small relative-bias batches. It avoids converting
+the whole KV cache to f16 for each decode step. The default remains off so the
+original path is available for controlled comparisons. The patch reuses
+existing CUDA kernels; expanded tests cover full attention at 4K/32K/128K and
+relative-bias decode/prefill. See the tuning ledger before enabling it.

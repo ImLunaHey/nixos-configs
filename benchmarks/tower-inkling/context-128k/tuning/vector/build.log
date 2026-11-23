@@ -1,0 +1,734 @@
+warning: Nix search path entry '/nix/var/nix/profiles/per-user/root/channels' does not exist, ignoring
+these 2 derivations will be built:
+  /nix/store/82m0m9wkrc4shy1dg6s1yrfr5n529drd-inkling-ik-experiment-46b11f422d42.drv
+  /nix/store/46p2vr6vv5zi1cr33jpfk4m64k8ylahx-inkling-ik-server-46b11f422d42-compat1.drv
+building '/nix/store/82m0m9wkrc4shy1dg6s1yrfr5n529drd-inkling-ik-experiment-46b11f422d42.drv'...
+inkling-ik-experiment> Sourcing setup-cuda-hook
+inkling-ik-experiment> source: sourcing removeStubsFromRunpathHook.bash (hostOffset=0) (targetOffset=1)
+inkling-ik-experiment> source: added removeStubsFromRunpathHookRegistration to prePhases
+inkling-ik-experiment> Sourcing fix-elf-files.sh
+inkling-ik-experiment> Running phase: removeStubsFromRunpathHookRegistration
+inkling-ik-experiment> removeStubsFromRunpathHookRegistration: added removeStubsFromRunpath to postFixupHooks
+inkling-ik-experiment> Running phase: unpackPhase
+inkling-ik-experiment> unpacking source archive /nix/store/m7yp3nxdrwpqcdq0hkgxv7nmnfwqxwap-source
+inkling-ik-experiment> source root is source
+inkling-ik-experiment> Running phase: patchPhase
+inkling-ik-experiment> applying patch /nix/store/n1vp7hvxzpbnbvs3zfvbf5iaykmzrrf4-q4-vector.patch
+inkling-ik-experiment> patching file ggml/src/ggml-cuda/fattn.cu
+inkling-ik-experiment> Running phase: updateAutotoolsGnuConfigScriptsPhase
+inkling-ik-experiment> Running phase: configurePhase
+inkling-ik-experiment> Executing setupCUDAToolkitCompilers
+inkling-ik-experiment> cmake flags: -GNinja -DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_INSTALL_LOCALEDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/share/locale -DCMAKE_INSTALL_LIBEXECDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/libexec -DCMAKE_INSTALL_LIBDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib -DCMAKE_INSTALL_DOCDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/share/doc/inkling-ik-experiment -DCMAKE_INSTALL_INFODIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/share/info -DCMAKE_INSTALL_MANDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/share/man -DCMAKE_INSTALL_INCLUDEDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/include -DCMAKE_INSTALL_SBINDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/sbin -DCMAKE_INSTALL_BINDIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin -DCMAKE_INSTALL_NAME_DIR=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib -DCMAKE_STRIP=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/strip -DCMAKE_RANLIB=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/ranlib -DCMAKE_AR=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/ar -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=/nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42 -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=120 -DLLAMA_CURL=OFF -DGGML_NATIVE=OFF -DGGML_IQK_FA_ALL_QUANTS=OFF -DGGML_CUDA_FA_ALL_QUANTS=OFF -DGGML_CUDA_DEV_QUANTS_KV_TYPES=F16\;Q8_0\;Q4_0 -DGGML_CUDA_DEV_QUANTS=ON -DLLAMA_BUILD_TESTS=ON -DGGML_CUDA_DEV_QUANTS_TYPES=F32\;F16\;BF16\;Q8_0\;Q4_0\;IQ4_NL\;IQ3_S -DCUDA_HOST_COMPILER=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/c++ -DCMAKE_CUDA_HOST_COMPILER=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/c++ -DCUDAToolkit_INCLUDE_DIR=/nix/store/z44h5k7aznnf7kxp3gws412vj9680hkk-cuda12.8-cuda_cccl-12.8.90/include\;/nix/store/j0mc98pia9vjq49kyahvayn00nsn8naq-cuda12.8-libcublas-12.8.5.7-include/include\;/nix/store/m8ag24p01kdr85xry3rysjccqm145hjs-cuda12.8-cuda_nvcc-12.8.93/include\;/nix/store/gmjfqfppqdapvrw8vywq2sfh28lg1ak3-cuda12.8-cuda_cudart-12.8.90/include -DCUDAToolkit_ROOT=/nix/store/wsll7igywd0j2g810k82flm407lm322d-cuda12.8-libcublas-12.8.5.7-dev\;/nix/store/z44h5k7aznnf7kxp3gws412vj9680hkk-cuda12.8-cuda_cccl-12.8.90\;/nix/store/j0mc98pia9vjq49kyahvayn00nsn8naq-cuda12.8-libcublas-12.8.5.7-include\;/nix/store/m8ag24p01kdr85xry3rysjccqm145hjs-cuda12.8-cuda_nvcc-12.8.93\;/nix/store/ar5xqpjd6wzihbnr9lzfc8y7ppwyrscz-cuda12.8-libcublas-12.8.5.7-lib\;/nix/store/gmjfqfppqdapvrw8vywq2sfh28lg1ak3-cuda12.8-cuda_cudart-12.8.90
+inkling-ik-experiment> -- The C compiler identification is GNU 14.4.0
+inkling-ik-experiment> -- The CXX compiler identification is GNU 14.4.0
+inkling-ik-experiment> -- Detecting C compiler ABI info
+inkling-ik-experiment> -- Detecting C compiler ABI info - done
+inkling-ik-experiment> -- Check for working C compiler: /nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/gcc - skipped
+inkling-ik-experiment> -- Detecting C compile features
+inkling-ik-experiment> -- Detecting C compile features - done
+inkling-ik-experiment> -- Detecting CXX compiler ABI info
+inkling-ik-experiment> -- Detecting CXX compiler ABI info - done
+inkling-ik-experiment> -- Check for working CXX compiler: /nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/g++ - skipped
+inkling-ik-experiment> -- Detecting CXX compile features
+inkling-ik-experiment> -- Detecting CXX compile features - done
+inkling-ik-experiment> -- Could NOT find Git (missing: GIT_EXECUTABLE)
+inkling-ik-experiment> -- Could NOT find Git (missing: GIT_EXECUTABLE)
+inkling-ik-experiment> CMake Warning at cmake/build-info.cmake:14 (message):
+inkling-ik-experiment>   Git not found.  Build info will not be accurate.
+inkling-ik-experiment> Call Stack (most recent call first):
+inkling-ik-experiment>   CMakeLists.txt:88 (include)
+inkling-ik-experiment> 
+inkling-ik-experiment> 
+inkling-ik-experiment> -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+inkling-ik-experiment> -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+inkling-ik-experiment> -- Found Threads: TRUE
+inkling-ik-experiment> -- Found OpenMP_C: -fopenmp (found version "4.5")
+inkling-ik-experiment> -- Found OpenMP_CXX: -fopenmp (found version "4.5")
+inkling-ik-experiment> -- Found OpenMP: TRUE (found version "4.5")
+inkling-ik-experiment> -- OpenMP found
+inkling-ik-experiment> -- Using optimized iqk matrix multiplications
+inkling-ik-experiment> -- Enabling IQK Flash Attention kernels
+inkling-ik-experiment> -- Found CUDAToolkit: /nix/store/m8ag24p01kdr85xry3rysjccqm145hjs-cuda12.8-cuda_nvcc-12.8.93/include (found version "12.8.93")
+inkling-ik-experiment> -- CUDA found
+inkling-ik-experiment> -- Using CUDA architectures: 120
+inkling-ik-experiment> -- The CUDA compiler identification is NVIDIA 12.8.93 with host compiler GNU 14.4.0
+inkling-ik-experiment> -- Detecting CUDA compiler ABI info
+inkling-ik-experiment> -- Detecting CUDA compiler ABI info - done
+inkling-ik-experiment> -- Check for working CUDA compiler: /nix/store/m8ag24p01kdr85xry3rysjccqm145hjs-cuda12.8-cuda_nvcc-12.8.93/bin/nvcc - skipped
+inkling-ik-experiment> -- Detecting CUDA compile features
+inkling-ik-experiment> -- Detecting CUDA compile features - done
+inkling-ik-experiment> -- GGML_CUDA_DEV_QUANTS: dev build, 131 CUDA instance files skipped; kept types: F32;F16;BF16;Q8_0;Q4_0;IQ4_NL;IQ3_S; FA KV types: F16;Q8_0;Q4_0
+inkling-ik-experiment> -- Could NOT find NCCL (missing: NCCL_INCLUDE_DIRS NCCL_LIBRARIES)
+inkling-ik-experiment> ==================== NCCL NOT found -> building wihout NCCL support
+inkling-ik-experiment> -- CUDA Toolkit: 12.8.93
+inkling-ik-experiment> -- CUDA host compiler is GNU 14.4.0
+inkling-ik-experiment> 
+inkling-ik-experiment> -- Warning: ccache not found - consider installing it for faster compilation or disable this warning with GGML_CCACHE=OFF
+inkling-ik-experiment> -- CMAKE_SYSTEM_PROCESSOR: x86_64
+inkling-ik-experiment> -- x86 detected
+inkling-ik-experiment> CMake Warning at common/CMakeLists.txt:30 (message):
+inkling-ik-experiment>   Git repository not found; to enable automatic generation of build info,
+inkling-ik-experiment>   make sure Git is installed and the project is a Git repository.
+inkling-ik-experiment> 
+inkling-ik-experiment> 
+inkling-ik-experiment> -- ARCH_FLAGS =
+inkling-ik-experiment> TARGET_SRCS contains: /build/source/examples/server/public/index.html.gz
+inkling-ik-experiment> TARGET_SRCS contains: /build/source/examples/server/public_llamacpp/index_llamacpp.html.gz
+inkling-ik-experiment> TARGET_SRCS contains: /build/source/examples/server/public_llamacpp/loading.html
+inkling-ik-experiment> -- Configuring done (1.4s)
+inkling-ik-experiment> -- Generating done (0.0s)
+inkling-ik-experiment> CMake Warning (unused-cli):
+inkling-ik-experiment>   Manually-specified variables were not used by the project:
+inkling-ik-experiment> 
+inkling-ik-experiment>     CMAKE_EXPORT_NO_PACKAGE_REGISTRY
+inkling-ik-experiment>     CUDAToolkit_INCLUDE_DIR
+inkling-ik-experiment>     CUDA_HOST_COMPILER
+inkling-ik-experiment> 
+inkling-ik-experiment> 
+inkling-ik-experiment> -- Build files have been written to: /build/source/build
+inkling-ik-experiment> Running phase: buildPhase
+inkling-ik-experiment> build flags: -j8 llama-server llama-bench test-ink-mix test-ink-control test-ink-prologue test-ink-epi test-fa-relbias
+inkling-ik-experiment> [1/326] Building C object ggml/src/CMakeFiles/ggml.dir/ggml-alloc.c.o
+inkling-ik-experiment> [2/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/ggml-moe-prefetch.cpp.o
+inkling-ik-experiment> [3/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/arange.cu.o
+inkling-ik-experiment> [4/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/acc.cu.o
+inkling-ik-experiment> [5/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/add-id.cu.o
+inkling-ik-experiment> [6/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/ggml-backend.cpp.o
+inkling-ik-experiment> [7/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/argmax.cu.o
+inkling-ik-experiment> [8/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/blend.cu.o
+inkling-ik-experiment> [9/326] Building C object ggml/src/CMakeFiles/ggml.dir/ggml-quants.c.o
+inkling-ik-experiment> [10/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/bw-mmv.cu.o
+inkling-ik-experiment> [11/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/clamp.cu.o
+inkling-ik-experiment> [12/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/concat.cu.o
+inkling-ik-experiment> [13/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/conv-transpose-1d.cu.o
+inkling-ik-experiment> [14/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/binbcast.cu.o
+inkling-ik-experiment> [15/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/bw-iq4ks.cu.o
+inkling-ik-experiment> [16/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/conv2d-dw.cu.o
+inkling-ik-experiment> [17/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/conv2d.cu.o
+inkling-ik-experiment> [18/326] Building C object ggml/src/CMakeFiles/ggml.dir/ggml.c.o
+inkling-ik-experiment> /build/source/ggml/src/ggml.c: In function 'ggml_compute_forward_ink_attn_prologue':
+inkling-ik-experiment> /build/source/ggml/src/ggml.c:17888:73: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+inkling-ik-experiment> 17888 |                 for (int64_t i = 0; i < hd; ++i) ss += (ggml_float) y[i]*y[i];
+inkling-ik-experiment>       |                                                                         ^
+inkling-ik-experiment> /build/source/ggml/src/ggml.c:17916:46: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+inkling-ik-experiment> 17916 |                     ss += (ggml_float) tmp[i]*tmp[i];
+inkling-ik-experiment>       |                                              ^
+inkling-ik-experiment> /build/source/ggml/src/ggml.c:17930:46: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+inkling-ik-experiment> 17930 |                     ss += (ggml_float) tmp[i]*tmp[i];
+inkling-ik-experiment>       |                                              ^
+inkling-ik-experiment> /build/source/ggml/src/ggml.c: In function 'ggml_compute_forward_l2_clip':
+inkling-ik-experiment> /build/source/ggml/src/ggml.c:17971:29: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+inkling-ik-experiment> 17971 |             ss += (double) v*v;
+inkling-ik-experiment>       |                             ^
+inkling-ik-experiment> /build/source/ggml/src/ggml.c: In function 'ggml_compute_forward_clamp':
+inkling-ik-experiment> /build/source/ggml/src/ggml.c:22302:5: warning: enumeration value 'GGML_TYPE_IQ3_QT' not handled in switch [-Wswitch]
+inkling-ik-experiment> 22302 |     switch (src0->type) {
+inkling-ik-experiment>       |     ^~~~~~
+inkling-ik-experiment> /build/source/ggml/src/ggml.c: In function 'ggml_compute_forward_head_screen':
+inkling-ik-experiment> /build/source/ggml/src/ggml.c:26724:73: warning: implicit conversion from 'float' to 'double' to match other operand of binary expression [-Wdouble-promotion]
+inkling-ik-experiment> 26724 |             for (int64_t j = 0; j < n_embd; ++j) acc += (double) wrow[j]*(d8[j/32]*xq[j]);   // x as the q8_1 the head sees
+inkling-ik-experiment>       |                                                                         ^
+inkling-ik-experiment> [19/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/cumsum.cu.o
+inkling-ik-experiment> [20/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/diagmask.cu.o
+inkling-ik-experiment> [21/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/delta-net.cu.o
+inkling-ik-experiment> [22/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/dmmv.cu.o
+inkling-ik-experiment> [23/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/cpy.cu.o
+inkling-ik-experiment> [24/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ds4_comp.cu.o
+inkling-ik-experiment> [25/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/convert.cu.o
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/convert.cu:2602:6: warning: no previous declaration for 'void iq3qt_set_luts_convert(const int8_t*)' [-Wmissing-declarations]
+inkling-ik-experiment>  2602 | IQ3QT_LUT_SETTER(iq3qt_set_luts_convert)
+inkling-ik-experiment>       |      ^~~~~~~~~~~~~~~~~~~~~~
+inkling-ik-experiment> [26/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-clattn.cu.o
+inkling-ik-experiment> [27/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/dsa_attn.cu.o
+inkling-ik-experiment> [28/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/bw-qt.cu.o
+inkling-ik-experiment> [29/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-tile-new.cu.o
+inkling-ik-experiment> [30/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-q8dec.cu.o
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/fattn-q8dec.cu(477): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int jj = 0; jj < 2*NCT; ++jj) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during:
+inkling-ik-experiment>             instantiation of "void <unnamed>::flash_attn_q8dec<D,use_softcap,use_rb,CL,NCT,FP>(const char *, const char *, const char *, const half *, float *, float *, float2 *, float, float, float, int, int, int, int, int, int, int, int, int, const float *, fattn_rel_bias, int, int, int, int, const float *, int, ink_pro_args) [with D=128, use_softcap=false, use_rb=true, CL=true, NCT=1, FP=false]" at line 592
+inkling-ik-experiment>             instantiation of "void <unnamed>::launch_q8dec<D,use_softcap,use_rb,CL,NCT,FP>(ggml_backend_cuda_context &, ggml_tensor *, float, float, const float *, int, int) [with D=128, use_softcap=false, use_rb=true, CL=true, NCT=1, FP=false]" at line 804
+inkling-ik-experiment> 
+inkling-ik-experiment> Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+inkling-ik-experiment> 
+inkling-ik-experiment> [31/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-vec-f16.cu.o
+inkling-ik-experiment> [32/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-vec-f32.cu.o
+inkling-ik-experiment> [33/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-tile-f32.cu.o
+inkling-ik-experiment> [34/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn.cu.o
+inkling-ik-experiment> [35/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fill.cu.o
+inkling-ik-experiment> [36/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-tile-f16.cu.o
+inkling-ik-experiment> [37/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/getrows.cu.o
+inkling-ik-experiment> [38/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/hadamard.cu.o
+inkling-ik-experiment> [39/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/im2col.cu.o
+inkling-ik-experiment> [40/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/gemma-smallfuse.cu.o
+inkling-ik-experiment> [41/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/indexer_topk.cu.o
+inkling-ik-experiment> [42/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/argsort.cu.o
+inkling-ik-experiment> [43/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-wmma-f16.cu.o
+inkling-ik-experiment> [44/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ink-mask.cu.o
+inkling-ik-experiment> [45/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ink-prologue.cu.o
+inkling-ik-experiment> [46/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ink-router.cu.o
+inkling-ik-experiment> [47/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/iqk_mmvq.cu.o
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/iqk_mmvq.cu: In function 'void iqk_mul_mat_vec_q(ggml_type, const mmvq_args&, cudaStream_t)':
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/iqk_mmvq.cu:11:57: warning: unused parameter 'args' [-Wunused-parameter]
+inkling-ik-experiment>    11 | void iqk_mul_mat_vec_q(ggml_type type, const mmvq_args & args, cudaStream_t stream) {
+inkling-ik-experiment>       |                                        ~~~~~~~~~~~~~~~~~^~~~
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/iqk_mmvq.cu:11:76: warning: unused parameter 'stream' [-Wunused-parameter]
+inkling-ik-experiment>    11 | void iqk_mul_mat_vec_q(ggml_type type, const mmvq_args & args, cudaStream_t stream) {
+inkling-ik-experiment>       |                                                               ~~~~~~~~~~~~~^~~~~~
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/iqk_mmvq.cu:11:6: warning: function might be candidate for attribute 'noreturn' [-Wsuggest-attribute=noreturn]
+inkling-ik-experiment>    11 | void iqk_mul_mat_vec_q(ggml_type type, const mmvq_args & args, cudaStream_t stream) {
+inkling-ik-experiment>       |      ^~~~~~~~~~~~~~~~~
+inkling-ik-experiment> [48/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ink.cu.o
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink.cu: In function 'void ggml_cuda_op_l2_clip(ggml_backend_cuda_context&, ggml_tensor*)':
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink.cu:161:20: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+inkling-ik-experiment>   161 |     const float thr = ((const float *) dst->op_params)[0];
+inkling-ik-experiment>       |                   ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+inkling-ik-experiment> [49/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/head-screen.cu.o
+inkling-ik-experiment> [50/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/kda.cu.o
+inkling-ik-experiment> [51/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-mma-f16.cu.o
+inkling-ik-experiment> [52/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ks-encoder.cu.o
+inkling-ik-experiment> [53/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/kt-encoder.cu.o
+inkling-ik-experiment> [54/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/mmq.cu.o
+inkling-ik-experiment> [55/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/latent_attn.cu.o
+inkling-ik-experiment> [56/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/logits-topm.cu.o
+inkling-ik-experiment> [57/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/mmq_id.cu.o
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/mmq_id.cu:725:78: warning: no previous declaration for 'std::map<std::tuple<long int, long int, long int>, _GLOBAL__N__a51dd094_9_mmq_id_cu_0eb37de4::mmqid_stat>& _GLOBAL__N__a51dd094_9_mmq_id_cu_0eb37de4::mmqid_map()' [-Wmissing-declarations]
+inkling-ik-experiment>   725 | std::map<std::tuple<int64_t,int64_t,int64_t>, mmqid_stat> & mmqid_map() {
+inkling-ik-experiment>       |                                                                              ^
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/mmq_id.cu:729:6: warning: no previous declaration for 'void _GLOBAL__N__a51dd094_9_mmq_id_cu_0eb37de4::mmqid_print()' [-Wmissing-declarations]
+inkling-ik-experiment>   729 | void mmqid_print() {
+inkling-ik-experiment>       |      ^~~~~~~~~~~
+inkling-ik-experiment> [58/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/mmvq.cu.o
+inkling-ik-experiment> [59/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/moe-down-kt.cu.o
+inkling-ik-experiment> [60/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/multiadd.cu.o
+inkling-ik-experiment> [61/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ink-control.cu.o
+inkling-ik-experiment> [62/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/pad.cu.o
+inkling-ik-experiment> [63/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/pool2d.cu.o
+inkling-ik-experiment> [64/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/quantize.cu.o
+inkling-ik-experiment> [65/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/quantize_id.cu.o
+inkling-ik-experiment> [66/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/norm.cu.o
+inkling-ik-experiment> [67/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/moe-grouped.cu.o
+inkling-ik-experiment> [68/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ink-glue.cu.o
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(410): warning #177-D: variable "warp" was declared but never referenced
+inkling-ik-experiment>       const int warp = tid / 32;
+inkling-ik-experiment>                 ^
+inkling-ik-experiment> 
+inkling-ik-experiment> Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=1, NN=0, PROD=1]" at line 793
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=3, NN=0, PROD=1]" at line 793
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=1, NN=0, PROD=2]" at line 795
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=3, NN=0, PROD=2]" at line 795
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=1, NN=0, PROD=0]" at line 798
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=2, NN=0, PROD=0]" at line 799
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=3, NN=0, PROD=0]" at line 800
+inkling-ik-experiment> 
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda/ink-glue.cu(342): warning #128-D: loop is not reachable
+inkling-ik-experiment>       for (int r = 0; r < (NN > 0 ? NN : 1); ++r) {
+inkling-ik-experiment>       ^
+inkling-ik-experiment>           detected during instantiation of "void k_ink_glue_mix<NQ,NN,PROD>(ig_args) [with NQ=4, NN=0, PROD=0]" at line 801
+inkling-ik-experiment> 
+inkling-ik-experiment> [69/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/mmvf.cu.o
+inkling-ik-experiment> [70/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/raon-hcb1.cu.o
+inkling-ik-experiment> [71/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/rda-decode.cu.o
+inkling-ik-experiment> [72/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/scale.cu.o
+inkling-ik-experiment> [73/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/reduce.cu.o
+inkling-ik-experiment> [74/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/raon-smallfuse.cu.o
+inkling-ik-experiment> [75/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/rope.cu.o
+inkling-ik-experiment> [76/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/set-rows.cu.o
+inkling-ik-experiment> [77/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/softcap.cu.o
+inkling-ik-experiment> [78/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/softmax.cu.o
+inkling-ik-experiment> [79/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/sinkhorn.cu.o
+inkling-ik-experiment> [80/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/sumrows.cu.o
+inkling-ik-experiment> [81/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/tsembd.cu.o
+inkling-ik-experiment> [82/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/tri.cu.o
+inkling-ik-experiment> [83/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/topk-moe.cu.o
+inkling-ik-experiment> [84/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/ssm-conv.cu.o
+inkling-ik-experiment> [85/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/solve_tri.cu.o
+inkling-ik-experiment> [86/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/upscale.cu.o
+inkling-ik-experiment> [87/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/unary.cu.o
+inkling-ik-experiment> [88/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda.cu.o
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu: In function 'int ggml_cuda_mul_mat_q(ggml_backend_cuda_context&, const ggml_tensor*, const ggml_tensor*, ggml_tensor*, const ggml_cgraph*, int, bool)':
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu:2804:25: warning: cast from type 'const void*' to type 'char*' casts away qualifiers [-Wcast-qual]
+inkling-ik-experiment>  2804 |     char * src1_q = g4pq ? (char *) g4pq : src1_quantized.get();
+inkling-ik-experiment>       |                         ^~~~~~~~~~~~
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu: In function 'int ggml_cuda_moe_up_gate_unary(ggml_backend_cuda_context&, ggml_tensor*, const ggml_cgraph*, int)':
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu:3462:25: warning: cast from type 'const void*' to type 'char*' casts away qualifiers [-Wcast-qual]
+inkling-ik-experiment>  3462 |             char * src1_q = g4pq ? (char *) g4pq : src1_quantized.alloc(src_1_ddq_size * Ny);
+inkling-ik-experiment>       |                         ^~~~~~~~~~~~
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu: In function 'void ggml_cuda_up_gate_unary(ggml_backend_cuda_context&, ggml_tensor*)':
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu:4078:198: warning: cast from type 'const void*' to type 'char*' casts away qualifiers [-Wcast-qual]
+inkling-ik-experiment>  4078 |             ggml_cuda_op_fused_mul_mat_vec_q_id(ctx, src0_1, src1, nullptr, dst,
+inkling-ik-experiment>       |                                                                                                                                                                                                      ^
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu: At global scope:
+inkling-ik-experiment> /build/source/ggml/src/ggml-cuda.cu:6572:6: warning: no previous declaration for 'bool ggml_cuda_iq3qt_luts_active()' [-Wmissing-declarations]
+inkling-ik-experiment>  6572 | bool ggml_cuda_iq3qt_luts_active() { return g_iq3qt_luts_active; }
+inkling-ik-experiment>       |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+inkling-ik-experiment> [89/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/raon-moe.cu.o
+inkling-ik-experiment> [90/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-wmma-f16-instance-kqfloat-cpb16.cu.o
+inkling-ik-experiment> [91/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-wmma-f16-instance-kqhalf-cpb8.cu.o
+inkling-ik-experiment> [92/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-wmma-f16-instance-kqfloat-cpb32.cu.o
+inkling-ik-experiment> [93/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-wmma-f16-instance-kqhalf-cpb16.cu.o
+inkling-ik-experiment> [94/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/mmvq-multi.cu.o
+inkling-ik-experiment> [95/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_1-ncols2_8.cu.o
+inkling-ik-experiment> [96/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-wmma-f16-instance-kqhalf-cpb32.cu.o
+inkling-ik-experiment> [97/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_16-ncols2_1.cu.o
+inkling-ik-experiment> [98/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_2-ncols2_4.cu.o
+inkling-ik-experiment> [99/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_16-ncols2_2.cu.o
+inkling-ik-experiment> [100/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_16-ncols2_4.cu.o
+inkling-ik-experiment> [101/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_2-ncols2_8.cu.o
+inkling-ik-experiment> [102/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_32-ncols2_1.cu.o
+inkling-ik-experiment> [103/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_4-ncols2_2.cu.o
+inkling-ik-experiment> [104/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_4-ncols2_4.cu.o
+inkling-ik-experiment> [105/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_32-ncols2_2.cu.o
+inkling-ik-experiment> [106/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_8-ncols2_1.cu.o
+inkling-ik-experiment> [107/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_8-ncols2_2.cu.o
+inkling-ik-experiment> [108/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_4-ncols2_8.cu.o
+inkling-ik-experiment> [109/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_8-ncols2_4.cu.o
+inkling-ik-experiment> [110/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_64-ncols2_1.cu.o
+inkling-ik-experiment> [111/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/fattn-new-mma.cu.o
+inkling-ik-experiment> [112/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-mma-f16-instance-ncols1_8-ncols2_8.cu.o
+inkling-ik-experiment> [113/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-iq3_s.cu.o
+inkling-ik-experiment> [114/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-q4_0.cu.o
+inkling-ik-experiment> [115/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-q8_0.cu.o
+inkling-ik-experiment> [116/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmvq-instance-iq3_s.cu.o
+inkling-ik-experiment> [117/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmvq-instance-iq4_nl.cu.o
+inkling-ik-experiment> [118/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-iq3_s_id.cu.o
+inkling-ik-experiment> [119/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmvq-instance-q8_0.cu.o
+inkling-ik-experiment> [120/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs128-q4_0-q4_0.cu.o
+inkling-ik-experiment> [121/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs128-q4_0-q4_0.cu.o
+inkling-ik-experiment> [122/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmvq-instance-q4_0.cu.o
+inkling-ik-experiment> [123/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-q4_0_id.cu.o
+inkling-ik-experiment> [124/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs192-q8_0-q8_0.cu.o
+inkling-ik-experiment> [125/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs128-q8_0-q8_0.cu.o
+inkling-ik-experiment> [126/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-iq4_nl.cu.o
+inkling-ik-experiment> [127/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs192-q8_0-q8_0.cu.o
+inkling-ik-experiment> [128/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs128-q8_0-q8_0.cu.o
+inkling-ik-experiment> [129/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs256-q8_0-q8_0.cu.o
+inkling-ik-experiment> [130/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs512-q8_0-q8_0.cu.o
+inkling-ik-experiment> [131/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-q8_0_id.cu.o
+inkling-ik-experiment> [132/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs256-q8_0-q8_0.cu.o
+inkling-ik-experiment> [133/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs576-q8_0-q8_0.cu.o
+inkling-ik-experiment> [134/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs192-f16-f16.cu.o
+inkling-ik-experiment> [135/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs128-f16-f16.cu.o
+inkling-ik-experiment> [136/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs64-f16-f16.cu.o
+inkling-ik-experiment> [137/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f16-instance-hs256-f16-f16.cu.o
+inkling-ik-experiment> [138/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_kda.cpp.o
+inkling-ik-experiment> [139/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs128-f16-f16.cu.o
+inkling-ik-experiment> [140/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_flash_attn.cpp.o
+inkling-ik-experiment> [141/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_mul_mat.cpp.o
+inkling-ik-experiment> [142/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs192-f16-f16.cu.o
+inkling-ik-experiment> [143/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs64-f16-f16.cu.o
+inkling-ik-experiment> [144/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs576-f16-f16.cu.o
+inkling-ik-experiment> [145/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_576_512.cpp.o
+inkling-ik-experiment> [146/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/fattn-vec-f32-instance-hs256-f16-f16.cu.o
+inkling-ik-experiment> [147/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_320_256.cpp.o
+inkling-ik-experiment> [148/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_512_512.cpp.o
+inkling-ik-experiment> [149/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_192_192.cpp.o
+inkling-ik-experiment> [150/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_192_128.cpp.o
+inkling-ik-experiment> [151/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_256_256.cpp.o
+inkling-ik-experiment> [152/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_96_96.cpp.o
+inkling-ik-experiment> [153/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_128_128.cpp.o
+inkling-ik-experiment> [154/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/fa/iqk_fa_64_64.cpp.o
+inkling-ik-experiment> [155/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_gemm_floats.cpp.o
+inkling-ik-experiment> [156/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_gemm_ktquants.cpp.o
+inkling-ik-experiment> [157/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_gemm_iquants.cpp.o
+inkling-ik-experiment> [158/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_qtip.cpp.o
+inkling-ik-experiment> /build/source/ggml/src/iqk/iqk_qtip.cpp: In function 'int {anonymous}::qt_segments(const void*, int64_t, QtSeg*)':
+inkling-ik-experiment> /build/source/ggml/src/iqk/iqk_qtip.cpp:87:41: warning: cast from type 'const void*' to type 'char*' casts away qualifiers [-Wcast-qual]
+inkling-ik-experiment>    87 |     block_iq3_qt * b = (block_iq3_qt *)((char *)row + sizeof(float));
+inkling-ik-experiment>       |                                         ^~~~~~~~~~~
+inkling-ik-experiment> [159/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_cpu_ops.cpp.o
+inkling-ik-experiment> [160/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_gemm_kquants.cpp.o
+inkling-ik-experiment> [161/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_gemm_1bit.cpp.o
+inkling-ik-experiment> [162/326] Building C object ggml/src/CMakeFiles/ggml.dir/ggml-aarch64.c.o
+inkling-ik-experiment> [163/326] Building CXX object src/CMakeFiles/llama.dir/llama-spec-features.cpp.o
+inkling-ik-experiment> [164/326] Building CXX object src/CMakeFiles/llama.dir/llama-spec-features-dflash.cpp.o
+inkling-ik-experiment> [165/326] Building CXX object src/CMakeFiles/llama.dir/llama-dflash.cpp.o
+inkling-ik-experiment> [166/326] Building CUDA object ggml/src/CMakeFiles/ggml.dir/ggml-cuda/template-instances/mmq-instance-iq4_nl_id.cu.o
+inkling-ik-experiment> [167/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_gemm_iqk_quants.cpp.o
+inkling-ik-experiment> [168/326] Building CXX object src/CMakeFiles/llama.dir/llama-dsv4.cpp.o
+inkling-ik-experiment> [169/326] Building CXX object src/CMakeFiles/llama.dir/llama-mmap.cpp.o
+inkling-ik-experiment> [170/326] Building CXX object src/CMakeFiles/llama.dir/llama-vocab.cpp.o
+inkling-ik-experiment> [171/326] Building CXX object src/CMakeFiles/llama.dir/llama-sampling.cpp.o
+inkling-ik-experiment> [172/326] Building CXX object src/CMakeFiles/llama.dir/llama-grammar.cpp.o
+inkling-ik-experiment> [173/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_quantize.cpp.o
+inkling-ik-experiment> [174/326] Building CXX object src/CMakeFiles/llama.dir/llama-build-context.cpp.o
+inkling-ik-experiment> In file included from /build/source/src/../include/llama.h:11,
+inkling-ik-experiment>                  from /build/source/src/llama-impl.h:11,
+inkling-ik-experiment>                  from /build/source/src/llama-build-context.h:3,
+inkling-ik-experiment>                  from /build/source/src/llama-build-context.cpp:1:
+inkling-ik-experiment> /build/source/src/llama-build-context.cpp: In function 'ggml_tensor* llm_build_kqv(ggml_context*, llama_context&, const llama_kv_cache&, ggml_cgraph*, ggml_tensor*, ggml_tensor*, ggml_tensor*, ggml_tensor*, int32_t, int32_t, float, const llm_build_cb&, int, ggml_tensor*, int, int, ggml_tensor**, ggml_tensor**, int32_t, ggml_tensor*, ggml_tensor*, ggml_tensor*, ggml_tensor*, int)':
+inkling-ik-experiment> /build/source/src/llama-build-context.cpp:2363:64: warning: suggest parentheses around '&&' within '||' [-Wparentheses]
+inkling-ik-experiment>  2363 |             GGML_ASSERT(!rb_kpos || rb_kpos->ne[0] == k->ne[1] && "rel-bias kpos must cover the K view");
+inkling-ik-experiment>       |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+inkling-ik-experiment> /build/source/ggml/src/../include/ggml.h:298:30: note: in definition of macro 'GGML_ASSERT'
+inkling-ik-experiment>   298 | #define GGML_ASSERT(x) if (!(x)) GGML_ABORT("GGML_ASSERT(%s) failed", #x)
+inkling-ik-experiment>       |                              ^
+inkling-ik-experiment> [175/326] Building CXX object src/CMakeFiles/llama.dir/llama-model-loader.cpp.o
+inkling-ik-experiment> [176/326] Building CXX object src/CMakeFiles/llama.dir/llama-moe-cache.cpp.o
+inkling-ik-experiment> [177/326] Building CXX object src/CMakeFiles/llama.dir/llama-arch.cpp.o
+inkling-ik-experiment> [178/326] Building CXX object src/CMakeFiles/llama.dir/llama-reload.cpp.o
+inkling-ik-experiment> [179/326] Building CXX object src/CMakeFiles/llama.dir/llama-delta-net.cpp.o
+inkling-ik-experiment> [180/326] Building CXX object src/CMakeFiles/llama.dir/llama-hparams.cpp.o
+inkling-ik-experiment> [181/326] Building CXX object src/CMakeFiles/llama.dir/unicode-data.cpp.o
+inkling-ik-experiment> [182/326] Building CXX object src/CMakeFiles/llama.dir/llama-kda.cpp.o
+inkling-ik-experiment> [183/326] Building CXX object src/CMakeFiles/llama.dir/unicode-script-data.cpp.o
+inkling-ik-experiment> [184/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_llama.cpp.o
+inkling-ik-experiment> [185/326] Building CXX object ggml/src/CMakeFiles/ggml.dir/iqk/iqk_gemm_legacy_quants.cpp.o
+inkling-ik-experiment> [186/326] Linking CXX shared library ggml/src/libggml.so
+inkling-ik-experiment> [187/326] Building CXX object src/CMakeFiles/llama.dir/llama-model.cpp.o
+inkling-ik-experiment> [188/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_muse_glimmer.cpp.o
+inkling-ik-experiment> [189/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_mistral3.cpp.o
+inkling-ik-experiment> [190/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_deci.cpp.o
+inkling-ik-experiment> [191/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_baichuan.cpp.o
+inkling-ik-experiment> [192/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_xverse.cpp.o
+inkling-ik-experiment> [193/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_falcon.cpp.o
+inkling-ik-experiment> [194/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_grok.cpp.o
+inkling-ik-experiment> [195/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_dbrx.cpp.o
+inkling-ik-experiment> [196/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_starcoder.cpp.o
+inkling-ik-experiment> [197/326] Building CXX object src/CMakeFiles/llama.dir/llama-quantize.cpp.o
+inkling-ik-experiment> [198/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_starcoder2.cpp.o
+inkling-ik-experiment> [199/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_refact.cpp.o
+inkling-ik-experiment> [200/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_bert.cpp.o
+inkling-ik-experiment> [201/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_bloom.cpp.o
+inkling-ik-experiment> [202/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_mpt.cpp.o
+inkling-ik-experiment> [203/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_stablelm.cpp.o
+inkling-ik-experiment> [204/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_seedoss.cpp.o
+inkling-ik-experiment> [205/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_laguna.cpp.o
+inkling-ik-experiment> [206/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_k2horizon.cpp.o
+inkling-ik-experiment> [207/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_step35.cpp.o
+inkling-ik-experiment> [208/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_qwen.cpp.o
+inkling-ik-experiment> [209/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_qwen2.cpp.o
+inkling-ik-experiment> [210/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_mellum.cpp.o
+inkling-ik-experiment> [211/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_qwen3.cpp.o
+inkling-ik-experiment> [212/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_maple.cpp.o
+inkling-ik-experiment> [213/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_qwen3next.cpp.o
+inkling-ik-experiment> [214/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_lfm2.cpp.o
+inkling-ik-experiment> [215/326] Building CXX object src/CMakeFiles/llama.dir/unicode.cpp.o
+inkling-ik-experiment> [216/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_qwen35.cpp.o
+inkling-ik-experiment> [217/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_phi2.cpp.o
+inkling-ik-experiment> [218/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_qwen4exp.cpp.o
+inkling-ik-experiment> [219/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_phi3.cpp.o
+inkling-ik-experiment> [220/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_plamo.cpp.o
+inkling-ik-experiment> [221/326] Building CXX object src/CMakeFiles/llama.dir/llama.cpp.o
+inkling-ik-experiment> /build/source/src/llama.cpp: In function 'bool llama_rewind_ckpt_discard(llama_context*, llama_ckpt_data, llama_seq_id)':
+inkling-ik-experiment> /build/source/src/llama.cpp:12902:20: warning: unused variable 'ckpt' [-Wunused-variable]
+inkling-ik-experiment> 12902 |             auto & ckpt = *it->second;
+inkling-ik-experiment>       |                    ^~~~
+inkling-ik-experiment> /build/source/src/llama.cpp:12898:100: warning: unused parameter 'seq_id' [-Wunused-parameter]
+inkling-ik-experiment> 12898 | bool llama_rewind_ckpt_discard(struct llama_context * ctx, llama_ckpt_data ckpt_type, llama_seq_id seq_id) {
+inkling-ik-experiment>       |                                                                                       ~~~~~~~~~~~~~^~~~~~
+inkling-ik-experiment> /build/source/src/llama.cpp: In function 'bool llama_rewind_ckpt_release(llama_context*, llama_ckpt_data, llama_seq_id)':
+inkling-ik-experiment> /build/source/src/llama.cpp:12914:100: warning: unused parameter 'seq_id' [-Wunused-parameter]
+inkling-ik-experiment> 12914 | bool llama_rewind_ckpt_release(struct llama_context * ctx, llama_ckpt_data ckpt_type, llama_seq_id seq_id) {
+inkling-ik-experiment>       |                                                                                       ~~~~~~~~~~~~~^~~~~~
+inkling-ik-experiment> [222/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_gpt2.cpp.o
+inkling-ik-experiment> [223/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_codeshell.cpp.o
+inkling-ik-experiment> [224/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_orion.cpp.o
+inkling-ik-experiment> [225/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_internlm2.cpp.o
+inkling-ik-experiment> [226/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_minicpm.cpp.o
+inkling-ik-experiment> [227/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_gemma.cpp.o
+inkling-ik-experiment> [228/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_gemma2.cpp.o
+inkling-ik-experiment> [229/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_gemma3.cpp.o
+inkling-ik-experiment> [230/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_mamba.cpp.o
+inkling-ik-experiment> [231/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_command_r.cpp.o
+inkling-ik-experiment> [232/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_dflash.cpp.o
+inkling-ik-experiment> [233/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_olmo.cpp.o
+inkling-ik-experiment> [234/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_openelm.cpp.o
+inkling-ik-experiment> [235/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_gemma4.cpp.o
+inkling-ik-experiment> [236/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_gptneox.cpp.o
+inkling-ik-experiment> [237/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_arctic.cpp.o
+inkling-ik-experiment> [238/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_glm4.cpp.o
+inkling-ik-experiment> [239/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_deepseek2.cpp.o
+inkling-ik-experiment> [240/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_bitnet.cpp.o
+inkling-ik-experiment> [241/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_openpangu.cpp.o
+inkling-ik-experiment> [242/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_cohere2.cpp.o
+inkling-ik-experiment> [243/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_cohere2_moe.cpp.o
+inkling-ik-experiment> [244/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_jais.cpp.o
+inkling-ik-experiment> [245/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_t5.cpp.o
+inkling-ik-experiment> [246/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_chatglm.cpp.o
+inkling-ik-experiment> [247/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_dots1.cpp.o
+inkling-ik-experiment> [248/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_ernie45.cpp.o
+inkling-ik-experiment> [249/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_hunyuan.cpp.o
+inkling-ik-experiment> [250/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_deepseek4.cpp.o
+inkling-ik-experiment> [251/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_mimo2.cpp.o
+inkling-ik-experiment> [252/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_flint.cpp.o
+inkling-ik-experiment> [253/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_openai.cpp.o
+inkling-ik-experiment> [254/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_bailingmoe2.cpp.o
+inkling-ik-experiment> [255/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_bailingmoe3.cpp.o
+inkling-ik-experiment> [256/326] Generating build details from Git
+inkling-ik-experiment> -- Could NOT find Git (missing: GIT_EXECUTABLE)
+inkling-ik-experiment> CMake Warning at cmake/build-info.cmake:14 (message):
+inkling-ik-experiment>   Git not found.  Build info will not be accurate.
+inkling-ik-experiment> Call Stack (most recent call first):
+inkling-ik-experiment>   common/cmake/build-info-gen-cpp.cmake:1 (include)
+inkling-ik-experiment> 
+inkling-ik-experiment> 
+inkling-ik-experiment> [257/326] Building CXX object common/CMakeFiles/build_info.dir/build-info.cpp.o
+inkling-ik-experiment> [258/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_glm5next.cpp.o
+inkling-ik-experiment> [259/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_raon1.cpp.o
+inkling-ik-experiment> [260/326] Building CXX object src/CMakeFiles/llama.dir/llama-load-tensors.cpp.o
+inkling-ik-experiment> [261/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_minimaxm3.cpp.o
+inkling-ik-experiment> [262/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_minimaxm2.cpp.o
+inkling-ik-experiment> [263/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_smollm3.cpp.o
+inkling-ik-experiment> [264/326] Building CXX object common/CMakeFiles/common.dir/console.cpp.o
+inkling-ik-experiment> [265/326] Building CXX object src/CMakeFiles/llama.dir/graphs/build_inkling2.cpp.o
+inkling-ik-experiment> [266/326] Linking CXX shared library src/libllama.so
+inkling-ik-experiment> [267/326] Building CXX object common/CMakeFiles/common.dir/llguidance.cpp.o
+inkling-ik-experiment> [268/326] Building CXX object common/CMakeFiles/common.dir/chat-auto-parser-helpers.cpp.o
+inkling-ik-experiment> [269/326] Building CXX object common/CMakeFiles/common.dir/chat-auto-parser-generator.cpp.o
+inkling-ik-experiment> [270/326] Building CXX object common/CMakeFiles/common.dir/log.cpp.o
+inkling-ik-experiment> [271/326] Building CXX object common/CMakeFiles/common.dir/train.cpp.o
+inkling-ik-experiment> [272/326] Building CXX object common/CMakeFiles/common.dir/sampling.cpp.o
+inkling-ik-experiment> [273/326] Building CXX object common/CMakeFiles/common.dir/chat-peg-parser.cpp.o
+inkling-ik-experiment> [274/326] Building CXX object common/CMakeFiles/common.dir/ngram-map.cpp.o
+inkling-ik-experiment> [275/326] Building CXX object common/CMakeFiles/common.dir/ngram-cache.cpp.o
+inkling-ik-experiment> [276/326] Building CXX object common/CMakeFiles/common.dir/unicode.cpp.o
+inkling-ik-experiment> [277/326] Building CXX object common/CMakeFiles/common.dir/ngram-mod.cpp.o
+inkling-ik-experiment> [278/326] Building CXX object common/CMakeFiles/common.dir/json-partial.cpp.o
+inkling-ik-experiment> [279/326] Building CXX object common/CMakeFiles/common.dir/spec-draft-policy.cpp.o
+inkling-ik-experiment> [280/326] Building CXX object common/CMakeFiles/common.dir/chat-diff-analyzer.cpp.o
+inkling-ik-experiment> [281/326] Building CXX object common/CMakeFiles/common.dir/spec-tuner.cpp.o
+inkling-ik-experiment> [282/326] Building CXX object common/CMakeFiles/common.dir/reasoning-budget.cpp.o
+inkling-ik-experiment> [283/326] Building CXX object common/CMakeFiles/common.dir/json-schema-to-grammar.cpp.o
+inkling-ik-experiment> [284/326] Building CXX object common/CMakeFiles/common.dir/suffix-tree.cpp.o
+inkling-ik-experiment> [285/326] Building CXX object common/CMakeFiles/common.dir/jinja/lexer.cpp.o
+inkling-ik-experiment> [286/326] Building CXX object common/CMakeFiles/common.dir/regex-partial.cpp.o
+inkling-ik-experiment> [287/326] Building CXX object common/CMakeFiles/common.dir/speculative.cpp.o
+inkling-ik-experiment> [288/326] Building CXX object common/CMakeFiles/common.dir/jinja/parser.cpp.o
+inkling-ik-experiment> [289/326] Building CXX object common/CMakeFiles/common.dir/jinja/string.cpp.o
+inkling-ik-experiment> [290/326] Building CXX object common/CMakeFiles/common.dir/jinja/runtime.cpp.o
+inkling-ik-experiment> [291/326] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/mtmd-audio.cpp.o
+inkling-ik-experiment> [292/326] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/mtmd.cpp.o
+inkling-ik-experiment> [293/326] Building CXX object common/CMakeFiles/common.dir/common.cpp.o
+inkling-ik-experiment> [294/326] Building CXX object common/CMakeFiles/common.dir/jinja/value.cpp.o
+inkling-ik-experiment> [295/326] Building CXX object common/CMakeFiles/common.dir/jinja/caps.cpp.o
+inkling-ik-experiment> [296/326] Building CXX object tests/CMakeFiles/test-fa-relbias.dir/test-fa-relbias.cpp.o
+inkling-ik-experiment> [297/326] Building CXX object tests/CMakeFiles/test-ink-mix.dir/test-ink-mix.cpp.o
+inkling-ik-experiment> [298/326] Building CXX object tests/CMakeFiles/test-ink-control.dir/test-ink-control.cpp.o
+inkling-ik-experiment> [299/326] Building CXX object tests/CMakeFiles/test-ink-prologue.dir/test-ink-prologue.cpp.o
+inkling-ik-experiment> [300/326] Building CXX object common/CMakeFiles/common.dir/peg-parser.cpp.o
+inkling-ik-experiment> [301/326] Building CXX object tests/CMakeFiles/test-ink-epi.dir/test-ink-epi.cpp.o
+inkling-ik-experiment> [302/326] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/clip.cpp.o
+inkling-ik-experiment> [303/326] Building CXX object common/CMakeFiles/common.dir/chat.cpp.o
+inkling-ik-experiment> [304/326] Linking CXX static library common/libcommon.a
+inkling-ik-experiment> [305/326] Linking CXX executable bin/test-fa-relbias
+inkling-ik-experiment> [306/326] Linking CXX executable bin/test-ink-control
+inkling-ik-experiment> [307/326] Linking CXX executable bin/test-ink-prologue
+inkling-ik-experiment> [308/326] Linking CXX executable bin/test-ink-epi
+inkling-ik-experiment> [309/326] Linking CXX executable bin/test-ink-mix
+inkling-ik-experiment> [310/326] Building CXX object examples/llama-bench/CMakeFiles/llama-bench.dir/llama-bench.cpp.o
+inkling-ik-experiment> [311/326] Linking CXX executable bin/llama-bench
+inkling-ik-experiment> [312/326] Building CXX object vendor/cpp-httplib/CMakeFiles/cpp-httplib.dir/httplib.cpp.o
+inkling-ik-experiment> [313/326] Linking CXX static library vendor/cpp-httplib/libcpp-httplib.a
+inkling-ik-experiment> [314/326] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/mtmd-helper.cpp.o
+inkling-ik-experiment> [315/326] Linking CXX shared library examples/mtmd/libmtmd.so
+inkling-ik-experiment> [316/326] Generating loading.html.hpp
+inkling-ik-experiment> [317/326] Generating index.html.gz.hpp
+inkling-ik-experiment> [318/326] Generating index_llamacpp.html.gz.hpp
+inkling-ik-experiment> [319/326] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-queue.cpp.o
+inkling-ik-experiment> [320/326] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-decision.cpp.o
+inkling-ik-experiment> [321/326] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-chat.cpp.o
+inkling-ik-experiment> [322/326] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-common.cpp.o
+inkling-ik-experiment> [323/326] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-task.cpp.o
+inkling-ik-experiment> [324/326] Building CXX object examples/server/CMakeFiles/llama-server.dir/server.cpp.o
+inkling-ik-experiment> [325/326] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-context.cpp.o
+inkling-ik-experiment> [326/326] Linking CXX executable bin/llama-server
+inkling-ik-experiment> buildPhase completed in 4 minutes 0 seconds
+inkling-ik-experiment> Running phase: installPhase
+inkling-ik-experiment> Running phase: fixupPhase
+inkling-ik-experiment> shrinking RPATHs of ELF executables and libraries in /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libllama.so
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libggml.so
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libmtmd.so
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/llama-server
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-epi
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-prologue
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/llama-bench
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-mix
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-fa-relbias
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-control
+inkling-ik-experiment> checking for references to /build/ in /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42...
+inkling-ik-experiment> patching script interpreter paths in /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42
+inkling-ik-experiment> stripping (with command strip and flags -S -p) in /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin
+inkling-ik-experiment> shrinking RPATHs of ELF executables and libraries in /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libllama.so
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libggml.so
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libmtmd.so
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/llama-server
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-epi
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-prologue
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/llama-bench
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-mix
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-fa-relbias
+inkling-ik-experiment> shrinking /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-control
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libllama.so
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libggml.so
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/lib/libmtmd.so
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/llama-server
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-epi
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-prologue
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/llama-bench
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-mix
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-fa-relbias
+inkling-ik-experiment> autoFixElfFiles: using removeStubsFromRunpath to fix /nix/store/9wkw6q1sr711c64pjcxvxlzv0nn58a8s-inkling-ik-experiment-46b11f422d42/bin/test-ink-control
+building '/nix/store/46p2vr6vv5zi1cr33jpfk4m64k8ylahx-inkling-ik-server-46b11f422d42-compat1.drv'...
+inkling-ik-server> Running phase: unpackPhase
+inkling-ik-server> unpacking source archive /nix/store/m7yp3nxdrwpqcdq0hkgxv7nmnfwqxwap-source
+inkling-ik-server> source root is source
+inkling-ik-server> Running phase: patchPhase
+inkling-ik-server> applying patch /nix/store/rr3a6vxm3ayp012prz3k0cfpy06j2aa2-server-compat.patch
+inkling-ik-server> patching file common/jinja/value.cpp
+inkling-ik-server> patching file tests/test-jinja.cpp
+inkling-ik-server> patching file vendor/cpp-httplib/httplib.cpp
+inkling-ik-server> applying patch /nix/store/s6jrr3kdzrfmpwabk6p3gh9nkc9fb2b4-q4-kv-test.patch
+inkling-ik-server> patching file tests/test-fa-relbias.cpp
+inkling-ik-server> Running phase: updateAutotoolsGnuConfigScriptsPhase
+inkling-ik-server> Running phase: configurePhase
+inkling-ik-server> cmake flags: -GNinja -DCMAKE_FIND_USE_SYSTEM_PACKAGE_REGISTRY=OFF -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF -DCMAKE_INSTALL_LOCALEDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/share/locale -DCMAKE_INSTALL_LIBEXECDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/libexec -DCMAKE_INSTALL_LIBDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/lib -DCMAKE_INSTALL_DOCDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/share/doc/inkling-ik-server -DCMAKE_INSTALL_INFODIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/share/info -DCMAKE_INSTALL_MANDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/share/man -DCMAKE_INSTALL_INCLUDEDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/include -DCMAKE_INSTALL_SBINDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/sbin -DCMAKE_INSTALL_BINDIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/bin -DCMAKE_INSTALL_NAME_DIR=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/lib -DCMAKE_STRIP=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/strip -DCMAKE_RANLIB=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/ranlib -DCMAKE_AR=/nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/ar -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_INSTALL_PREFIX=/nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1 -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=ON
+inkling-ik-server> -- The C compiler identification is GNU 14.4.0
+inkling-ik-server> -- The CXX compiler identification is GNU 14.4.0
+inkling-ik-server> -- Detecting C compiler ABI info
+inkling-ik-server> -- Detecting C compiler ABI info - done
+inkling-ik-server> -- Check for working C compiler: /nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/gcc - skipped
+inkling-ik-server> -- Detecting C compile features
+inkling-ik-server> -- Detecting C compile features - done
+inkling-ik-server> -- Detecting CXX compiler ABI info
+inkling-ik-server> -- Detecting CXX compiler ABI info - done
+inkling-ik-server> -- Check for working CXX compiler: /nix/store/6cqassbww1lfdxynpciibqskhwalvbnj-gcc-wrapper-14.4.0/bin/g++ - skipped
+inkling-ik-server> -- Detecting CXX compile features
+inkling-ik-server> -- Detecting CXX compile features - done
+inkling-ik-server> -- Could NOT find Git (missing: GIT_EXECUTABLE)
+inkling-ik-server> -- Could NOT find Git (missing: GIT_EXECUTABLE)
+inkling-ik-server> CMake Warning at cmake/build-info.cmake:14 (message):
+inkling-ik-server>   Git not found.  Build info will not be accurate.
+inkling-ik-server> Call Stack (most recent call first):
+inkling-ik-server>   CMakeLists.txt:88 (include)
+inkling-ik-server> 
+inkling-ik-server> 
+inkling-ik-server> -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+inkling-ik-server> -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+inkling-ik-server> -- Found Threads: TRUE
+inkling-ik-server> CMake Warning at common/CMakeLists.txt:30 (message):
+inkling-ik-server>   Git repository not found; to enable automatic generation of build info,
+inkling-ik-server>   make sure Git is installed and the project is a Git repository.
+inkling-ik-server> 
+inkling-ik-server> 
+inkling-ik-server> -- ARCH_FLAGS =
+inkling-ik-server> TARGET_SRCS contains: /build/source/examples/server/public/index.html.gz
+inkling-ik-server> TARGET_SRCS contains: /build/source/examples/server/public_llamacpp/index_llamacpp.html.gz
+inkling-ik-server> TARGET_SRCS contains: /build/source/examples/server/public_llamacpp/loading.html
+inkling-ik-server> -- Configuring done (0.2s)
+inkling-ik-server> -- Generating done (0.0s)
+inkling-ik-server> CMake Warning (unused-cli):
+inkling-ik-server>   Manually-specified variables were not used by the project:
+inkling-ik-server> 
+inkling-ik-server>     CMAKE_EXPORT_NO_PACKAGE_REGISTRY
+inkling-ik-server> 
+inkling-ik-server> 
+inkling-ik-server> -- Build files have been written to: /build/source/build
+inkling-ik-server> Running phase: buildPhase
+inkling-ik-server> build flags: -j8 llama-server test-jinja test-fa-relbias
+inkling-ik-server> [1/56] Generating build details from Git
+inkling-ik-server> -- Could NOT find Git (missing: GIT_EXECUTABLE)
+inkling-ik-server> CMake Warning at cmake/build-info.cmake:14 (message):
+inkling-ik-server>   Git not found.  Build info will not be accurate.
+inkling-ik-server> Call Stack (most recent call first):
+inkling-ik-server>   common/cmake/build-info-gen-cpp.cmake:1 (include)
+inkling-ik-server> 
+inkling-ik-server> 
+inkling-ik-server> [2/56] Building CXX object common/CMakeFiles/build_info.dir/build-info.cpp.o
+inkling-ik-server> [3/56] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/mtmd-audio.cpp.o
+inkling-ik-server> [4/56] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/mtmd.cpp.o
+inkling-ik-server> [5/56] Building CXX object common/CMakeFiles/common.dir/chat-auto-parser-helpers.cpp.o
+inkling-ik-server> [6/56] Building CXX object common/CMakeFiles/common.dir/chat-auto-parser-generator.cpp.o
+inkling-ik-server> [7/56] Building CXX object common/CMakeFiles/common.dir/console.cpp.o
+inkling-ik-server> [8/56] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/clip.cpp.o
+inkling-ik-server> [9/56] Building CXX object common/CMakeFiles/common.dir/llguidance.cpp.o
+inkling-ik-server> [10/56] Building CXX object common/CMakeFiles/common.dir/chat-peg-parser.cpp.o
+inkling-ik-server> [11/56] Building CXX object common/CMakeFiles/common.dir/chat-diff-analyzer.cpp.o
+inkling-ik-server> [12/56] Building CXX object common/CMakeFiles/common.dir/sampling.cpp.o
+inkling-ik-server> [13/56] Building CXX object common/CMakeFiles/common.dir/log.cpp.o
+inkling-ik-server> [14/56] Building CXX object common/CMakeFiles/common.dir/train.cpp.o
+inkling-ik-server> [15/56] Building CXX object common/CMakeFiles/common.dir/ngram-cache.cpp.o
+inkling-ik-server> [16/56] Building CXX object common/CMakeFiles/common.dir/ngram-map.cpp.o
+inkling-ik-server> [17/56] Building CXX object common/CMakeFiles/common.dir/json-partial.cpp.o
+inkling-ik-server> [18/56] Building CXX object common/CMakeFiles/common.dir/unicode.cpp.o
+inkling-ik-server> [19/56] Building CXX object common/CMakeFiles/common.dir/ngram-mod.cpp.o
+inkling-ik-server> [20/56] Building CXX object common/CMakeFiles/common.dir/spec-tuner.cpp.o
+inkling-ik-server> [21/56] Building CXX object common/CMakeFiles/common.dir/spec-draft-policy.cpp.o
+inkling-ik-server> [22/56] Building CXX object examples/mtmd/CMakeFiles/mtmd.dir/mtmd-helper.cpp.o
+inkling-ik-server> [23/56] Building CXX object common/CMakeFiles/common.dir/reasoning-budget.cpp.o
+inkling-ik-server> [24/56] Building CXX object vendor/cpp-httplib/CMakeFiles/cpp-httplib.dir/httplib.cpp.o
+inkling-ik-server> [25/56] Building CXX object common/CMakeFiles/common.dir/json-schema-to-grammar.cpp.o
+inkling-ik-server> [26/56] Building CXX object common/CMakeFiles/common.dir/suffix-tree.cpp.o
+inkling-ik-server> [27/56] Building CXX object common/CMakeFiles/common.dir/jinja/lexer.cpp.o
+inkling-ik-server> [28/56] Building CXX object common/CMakeFiles/common.dir/jinja/parser.cpp.o
+inkling-ik-server> [29/56] Building CXX object common/CMakeFiles/common.dir/speculative.cpp.o
+inkling-ik-server> [30/56] Building CXX object common/CMakeFiles/common.dir/regex-partial.cpp.o
+inkling-ik-server> [31/56] Linking CXX static library vendor/cpp-httplib/libcpp-httplib.a
+inkling-ik-server> [32/56] Linking CXX shared library examples/mtmd/libmtmd.so
+inkling-ik-server> [33/56] Building CXX object common/CMakeFiles/common.dir/jinja/string.cpp.o
+inkling-ik-server> [34/56] Building CXX object tests/CMakeFiles/test-jinja.dir/get-model.cpp.o
+inkling-ik-server> [35/56] Building CXX object common/CMakeFiles/common.dir/jinja/runtime.cpp.o
+inkling-ik-server> [36/56] Building CXX object tests/CMakeFiles/test-fa-relbias.dir/test-fa-relbias.cpp.o
+inkling-ik-server> [37/56] Building CXX object common/CMakeFiles/common.dir/common.cpp.o
+inkling-ik-server> [38/56] Building CXX object common/CMakeFiles/common.dir/jinja/caps.cpp.o
+inkling-ik-server> [39/56] Building CXX object common/CMakeFiles/common.dir/jinja/value.cpp.o
+inkling-ik-server> [40/56] Building CXX object common/CMakeFiles/common.dir/peg-parser.cpp.o
+inkling-ik-server> [41/56] Building CXX object common/CMakeFiles/common.dir/chat.cpp.o
+inkling-ik-server> [42/56] Linking CXX static library common/libcommon.a
+inkling-ik-server> [43/56] Generating loading.html.hpp
+inkling-ik-server> [44/56] Linking CXX executable bin/test-fa-relbias
+inkling-ik-server> [45/56] Generating index.html.gz.hpp
+inkling-ik-server> [46/56] Generating index_llamacpp.html.gz.hpp
+inkling-ik-server> [47/56] Building CXX object tests/CMakeFiles/test-jinja.dir/test-jinja.cpp.o
+inkling-ik-server> [48/56] Linking CXX executable bin/test-jinja
+inkling-ik-server> [49/56] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-queue.cpp.o
+inkling-ik-server> [50/56] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-decision.cpp.o
+inkling-ik-server> [51/56] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-chat.cpp.o
+inkling-ik-server> [52/56] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-common.cpp.o
+inkling-ik-server> [53/56] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-task.cpp.o
+inkling-ik-server> [54/56] Building CXX object examples/server/CMakeFiles/llama-server.dir/server.cpp.o
+inkling-ik-server> [55/56] Building CXX object examples/server/CMakeFiles/llama-server.dir/server-context.cpp.o
+inkling-ik-server> [56/56] Linking CXX executable bin/llama-server
+inkling-ik-server> buildPhase completed in 39 seconds
+inkling-ik-server> Running phase: installPhase
+inkling-ik-server> Running phase: fixupPhase
+inkling-ik-server> shrinking RPATHs of ELF executables and libraries in /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1
+inkling-ik-server> shrinking /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/lib/libmtmd.so
+inkling-ik-server> shrinking /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/bin/test-jinja
+inkling-ik-server> shrinking /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/bin/llama-server
+inkling-ik-server> shrinking /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/bin/test-fa-relbias
+inkling-ik-server> checking for references to /build/ in /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1...
+inkling-ik-server> patching script interpreter paths in /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1
+inkling-ik-server> stripping (with command strip and flags -S -p) in /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/lib /nix/store/pn9n5zj0pk5339dby2j2j08qyzzrqxgx-inkling-ik-server-46b11f422d42-compat1/bin

@@ -9,6 +9,7 @@ in cuda.backendStdenv.mkDerivation {
     url = "https://github.com/Mcniiby/ik_llama.cpp-mcniiby/archive/46b11f422d42ce4eb7cf8d92386cf36f60a1af86.tar.gz";
     sha256 = "1xbp9wp2s7zcak8pc844869cgpjdi50dzzcxpk6kwiq79hj5pimf";
   };
+  patches = [ ./q4-vector.patch ];
   nativeBuildInputs = [ pkgs.cmake pkgs.ninja pkgs.patchelf cuda.cuda_nvcc ];
   buildInputs = [ cuda.cuda_cudart cuda.libcublas ];
   cmakeFlags = [

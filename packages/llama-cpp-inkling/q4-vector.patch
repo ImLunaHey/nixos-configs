@@ -1,0 +1,35 @@
+--- a/ggml/src/ggml-cuda/fattn.cu
++++ b/ggml/src/ggml-cuda/fattn.cu
+@@ -46,9 +46,15 @@
+ // Relative-position bias: up to this many queries the f32 vec kernel (one query per block, reads q8_0 K/V directly)
+ // runs, above it the MMA kernel (K/V converted to f16).
+ static constexpr int FATTN_RELBIAS_VEC_MAX_Q = 4;
++
++static bool inkling_q4_vec_enabled() {
++    static const bool enabled = [] { const char * e = getenv("INKLING_Q4_VEC"); return e && atoi(e) != 0; }();
++    return enabled;
++}
+ 
+ static inline bool relbias_vec_types(const ggml_tensor * K, const ggml_tensor * V) {
+-    return (K->type == GGML_TYPE_F16 && V->type == GGML_TYPE_F16) || (K->type == GGML_TYPE_Q8_0 && V->type == GGML_TYPE_Q8_0);
++    return (K->type == GGML_TYPE_F16 && V->type == GGML_TYPE_F16) || (K->type == GGML_TYPE_Q8_0 && V->type == GGML_TYPE_Q8_0) ||
++           (inkling_q4_vec_enabled() && K->type == GGML_TYPE_Q4_0 && V->type == GGML_TYPE_Q4_0);
+ }
+ 
+ static inline bool relbias_use_vec(const ggml_tensor * dst) {
+@@ -252,6 +258,15 @@
+         return;
+     }
+ 
++    // Inkling q4 decode: avoid materializing the entire cache as f16 for one query.
++    if (inkling_q4_vec_enabled() && Q->ne[1] == 1 && Q->ne[0] == 128 &&
++            K->ne[0] == 128 && V->ne[0] == 128 &&
++            K->type == GGML_TYPE_Q4_0 && V->type == GGML_TYPE_Q4_0 &&
++            ggml_cuda_fattn_vec_f32_is_supported(ctx, dst)) {
++        ggml_cuda_flash_attn_ext_vec_f32(ctx, dst);
++        return;
++    }
++
+     // RAON_FA_Q8DEC (off by default): one-token decode straight from a q8_0 K/V cache (no f16 copy), split-K
+     if (ggml_cuda_flash_attn_ext_q8dec(ctx, dst)) {
+         return;

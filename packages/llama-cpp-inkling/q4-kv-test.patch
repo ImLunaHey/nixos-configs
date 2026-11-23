@@ -1,9 +1,33 @@
 --- a/tests/test-fa-relbias.cpp
 +++ b/tests/test-fa-relbias.cpp
-@@ -188,6 +188,10 @@
+@@ -62,7 +62,7 @@
+     for (int64_t h = 0; h < c.nh_q; ++h) {
+         for (int64_t r = 0; r < c.nb; ++r) {
+             for (int64_t j = 0; j < c.kv; ++j) {
+-                bias[(h*c.nb + r)*c.kv + j] = tab[(h*c.nb + r)*c.n_rel + idx[r*c.kv + j]];
++                bias[(h*c.nb + r)*c.kv + j] = c.mode < 0 ? 0.0f : tab[(h*c.nb + r)*c.n_rel + idx[r*c.kv + j]];
+             }
+         }
+     }
+@@ -86,7 +86,9 @@
+     // FA with the gathered-in-kernel bias -> [hs, nh_q, nb]
+     ggml_tensor * fa = ggml_flash_attn_ext(ctx, tq, tk, tv, tm16, scale, 0.0f, 0.0f);
+     ggml_flash_attn_ext_add_sinks(fa, tsink);
+-    if (c.mode == 0) {
++    if (c.mode < 0) {
++        // Full attention without relative-position bias.
++    } else if (c.mode == 0) {
+         ggml_flash_attn_ext_set_rel_bias(fa, tidx, ttab);
+     } else {
+         GGML_ASSERT(!c.rand_idx);
+@@ -188,6 +190,14 @@
      const char * filter = argc > 1 ? argv[1] : nullptr;
  
      const std::vector<relbias_case> cases = {
++        { 128, 24, 8, 4096, 1, 4000, 1025, false, GGML_TYPE_Q4_0, -1 },
++        { 128, 24, 8, 32768, 1, 32512, 1025, false, GGML_TYPE_Q4_0, -1 },
++        { 128, 24, 8, 131072, 1, 130816, 1025, false, GGML_TYPE_Q4_0, -1 },
++        { 128, 24, 8, 1536, 4, 1500, 1025, false, GGML_TYPE_Q4_0, 1 },
 +        // q4 KV cache paths used by the 128K Inkling profile.
 +        { 128, 24, 8, 4096,   1, 4000, 1025, false, GGML_TYPE_Q4_0, 1 },
 +        { 128, 24, 8,  512,  77,  450, 1025, false, GGML_TYPE_Q4_0, 1 },
