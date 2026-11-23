@@ -40,3 +40,22 @@ being informed of this constraint. Production remains 32K/q8 until qualified.
 - A 128K recipe must require GPU-only attention. The CPU q4 path failed its
   numerical checks in this build. The existing q8 CPU/CUDA cases still pass.
   No broad q4-versus-q8 accuracy equivalence is claimed.
+
+## Upstream registry acceptance
+
+The unmodified lab.py try gates at registry commit
+`e10a785174415c27700416cf7312304077dc7627` passed all six gates on this exact
+128K/q4/b1024/ub128 profile: load, chat, reasoning, tools, context, speed.
+Measured 103.4 tok/s decode and 986 prompt tok/s using the registry workload
+and accounting. Its context gate processed 91890 prompt tokens; the separate
+130816-token test above covers the nearly full context. The raw lab record
+is `registry-run.json` and is bound by the generated recipe proof hash.
+
+Submitted as https://github.com/sybil-solutions/local-ai-registry/pull/522.
+The launcher pins Nix source commit 3d4450eb893ead81311a3bce2d809277a1932b66;
+its expression resolves to the tested server store path. Upstream `make`
+and `make check` pass (443 recipes and matching JS/Python SDKs). No policy
+exemptions or hand-written recipes were introduced.
+
+After the run, the temporary override was removed and the existing 32K/q8
+production service restarted healthy. No automatic switch to 128K is made.
