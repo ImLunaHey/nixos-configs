@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  # Lake / AOOSTAR WTR MAX SATA drive inventory (checked 2026-11-21).
+  # Lake / AOOSTAR WTR MAX SATA drive inventory (checked 2026-11-23).
   # Physical front slots are numbered 1-7, left to right when facing the front.
   # Slot 1 is the SSD/NVMe sled; slots 2-7 are the six SATA HDD bays.
   # Match the serial on the drive label before removal; /dev/sdX can change.
@@ -10,14 +10,14 @@
   # 2    | WD-WX12D462V2CD | WDC WD20EFPX-68C4TN0, 2 TB | ata6 | Confirmed
   # 3    | WD-WXB2D36DNCA4 | WDC WD20EFPX-68C4TN0, 2 TB | ata5 | Confirmed
   # 4    | WD-WXB2D36HV3J4 | WDC WD20EFPX-68C4TN0, 2 TB | ata4 | Confirmed
-  # 5    | 959SN05NS       | TOSHIBA DT01ACA100         | ata3 | Inferred
-  # 6    | WD-WXB2D36HVT23 | WDC WD20EFPX-68C4TN0, 2 TB | ata2 | Inferred
+  # 5    | WD-WXB2D36HV154 | WDC WD20EFPX-68C4TN0, 2 TB | ata3 | Confirmed
+  # 6    | WD-WXB2D36HVT23 | WDC WD20EFPX-68C4TN0, 2 TB | ata2 | By elimination
   # 7    | WD-WXB2D36HVTNA | WDC WD20EFPX-68C4TN0, 2 TB | ata1 | Confirmed
   # Owner confirmed replacements in slot 2 (previously JP2930HQ3NWEWH),
-  # slot 3 (JP2940HD09MAJC), slot 4 (W9AML1H5), and slot 7 (JP2911HQ3JV4KH).
-  # WD-WXB2D36HVT23 replaced JP2930HQ3NW7WH on ata2; slot 6 is unconfirmed.
-  # Slots 5-6 assume reverse ATA order from the confirmed mappings; this is
-  # not proof of their wiring. Physically verify each serial before removal.
+  # slot 3 (JP2940HD09MAJC), slot 4 (W9AML1H5), slot 5 (959SN05NS),
+  # and slot 7 (JP2911HQ3JV4KH).
+  # WD-WXB2D36HVT23 replaced JP2930HQ3NW7WH on ata2. Slot 6 is the only
+  # remaining bay, mapped by elimination rather than physical inspection.
   # The system NVMe is separate: Samsung 990 PRO, serial S6Z2NJ0TA25178W.
 
   # Shared storage for Nova, Gilbert and their backups. SMB uses the same paths.
