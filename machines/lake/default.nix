@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ./anvil.nix
+    ./board.nix
     ./cache.nix
     ./kache.nix
     ./lancache.nix

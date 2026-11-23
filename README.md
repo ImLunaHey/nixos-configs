@@ -45,7 +45,7 @@ nixos-configs/
 |------|----|---------|--------------|
 | `gateway` | `` | — | — |
 | `gilbert` | `DHCP` | Media ripping (ARM), Minecraft server, NFS storage | Minecraft (ATM10),`arm` |
-| `lake` | `DHCP` | NAS / data lake | ZFS + SMART monitoring,T3 Code |
+| `lake` | `DHCP` | NAS / data lake | ZFS + SMART monitoring,T3 Code,Board |
 | `nova` | `DHCP` | Media server, reverse proxy, Matrix homeserver | Matrix-Synapse,Caddy,NDI capture,Cloudflare DNS sync,`jellyfin`,`pihole`,`uptime-kuma`,`romm-db`,`romm`,`immich-server`,`immich-machine-learning`,`immich-redis`,`immich-postgres`,`watchstate`,`rustfs` |
 | `tower` | `DHCP` | Headless coding / local LLM host | T3 Code,Inkling 2 Mini |
 | `void` | `DHCP` | NAS with ZFS RAID storage | ZFS + SMART monitoring |
@@ -95,6 +95,7 @@ nixos-configs/
 | File | Role |
 |------|------|
 | `anvil.nix` | |
+| `board.nix` | Private agent Board and T3 webhook delivery |
 | `cache.nix` | |
 | `default.nix` | Imports all machine modules |
 | `display.nix` | |
@@ -190,6 +191,13 @@ It also provides Codex, GitHub CLI, and a Rust development toolchain to SSH and
 T3 Code sessions. These tools use the separate `nixpkgs-t3code` flake input.
 See [upstream remote access](https://github.com/pingdotgg/t3code/blob/v0.0.40/docs/user/remote-access.md)
 for pairing and device access management.
+
+### Board on Lake
+
+Lake hosts a private Board for agent discussions at
+<https://lake.tail3275e2.ts.net:4101/>. The Mac's `board` CLI connects through
+Tailscale, and opted-in human replies can wake the corresponding T3 thread.
+See [Board setup, wake routing, and backups](docs/board.md).
 
 ## macOS Hosts
 
