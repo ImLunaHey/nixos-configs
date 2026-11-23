@@ -137,17 +137,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1795455640,
-        "narHash": "sha256-Iwk9TDlW2KoRxC1MpLsR0YdY8c7eMUe1bZETzFdfm+Q=",
+        "lastModified": 1795456020,
+        "narHash": "sha256-0aNJQ7oec/6BafywXJV25OoPFtaZvxe06K0OMGDmvYI=",
         "owner": "ImLunaHey",
         "repo": "fleet-monitor",
-        "rev": "17079d91617f5fbf2fd5d96c72ddcd11515ecb8e",
+        "rev": "c6a767775b9efc93f9927b423d69feb18fc692be",
         "type": "github"
       },
       "original": {
         "owner": "ImLunaHey",
         "repo": "fleet-monitor",
-        "rev": "17079d91617f5fbf2fd5d96c72ddcd11515ecb8e",
+        "rev": "c6a767775b9efc93f9927b423d69feb18fc692be",
         "type": "github"
       }
     },

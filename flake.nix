@@ -2,7 +2,7 @@
   description = "Luna's Nix configurations (NixOS servers + macOS/nix-darwin)";
   inputs = {
     fleet-monitor = {
-      url = "github:ImLunaHey/fleet-monitor/17079d91617f5fbf2fd5d96c72ddcd11515ecb8e";
+      url = "github:ImLunaHey/fleet-monitor/c6a767775b9efc93f9927b423d69feb18fc692be";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
