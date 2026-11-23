@@ -19,22 +19,22 @@ Configuration sweep (four interleaved ub128 controls):
   full94.780s/29.91 tok/s, same14554 MiB. Does not free GPU memory;
   reject removal of useful reuse behaviour for this small cold-only gain.
 - ub224: short111.59 tok/s, cold4K1.983s, full87.346s/30.00 tok/s,
-  peak14704 MiB. Full prefill barely beats192, but short prefill is >5% better.
+  peak 14704 MiB. Full prefill barely beats192, but short prefill is >5% better.
   Keep as candidate best under the unchanged14750 cap; repeat qualification.
 
 Code inspection found q4 single-token full attention and relative-bias
 attention use the MMA path. Candidate patch gates dispatch to the existing
 q4 vector kernel behind INKLING_Q4_VEC, preserving the baseline path for
 controlled comparisons. No new quantization, model, context or power change.
-Expanded CUDA numerical tests include full attention at4K/32K/128K and
+Expanded CUDA numerical tests include full attention at 4K/32K/128K and
 relative-bias decode/prefill. Kernel compile waits for the GPU queue lock.
 
-Direct-q4 candidate numerical qualification: all22 CUDA attention cases pass
-with INKLING_Q4_VEC=0 and =1, including added full-attention q4 cases at4K,
-32K and128K. All1439 Jinja assertions pass.
-Initial full-context A/B atub224: off30.001 versus on60.103 tok/s;
-TTFT87.358 versus87.417s. Both recover all three needles with identical answer
-hashes and peak14704 MiB. Repetition and half-context/functional gates pending.
+Direct-q4 candidate numerical qualification: all 22 CUDA attention cases pass
+with INKLING_Q4_VEC=0 and =1, including added full-attention q4 cases at 4K,
+32K and128K. All 1439 Jinja assertions pass.
+Initial full-context A/B at ub224: off 30.001 versus on 60.103 tok/s;
+TTFT 87.358 versus 87.417s. Both recover all three needles with identical answer
+hashes and peak 14704 MiB. Repetition and half-context/functional gates pending.
 
 ## Accepted result
 
@@ -49,7 +49,7 @@ hashes and peak14704 MiB. Repetition and half-context/functional gates pending.
 The kernel-only controls at the same ub224 reproduce 30.001/30.011 tok/s,
 versus 60.103/60.146 with direct-q4 enabled. Prefill remains unchanged within
 noise. The batch change supplies the prefill gain; direct-q4 dispatch supplies
-the decode gain. Numerical cases pass against the dense reference at4K/32K/
+the decode gain. Numerical cases pass against the dense reference at 4K/32K/
 128K. Near-full retrieval answers are byte-identical across both paths.
 
 **Not a bit-exact/lossless claim:** greedy short-prompt outputs differ on five
@@ -60,8 +60,8 @@ broad accuracy equivalence. No degeneration was observed in the saved panel.
 The full-context decode figure comes from short retrieval answers, not a broad
 long-generation benchmark. Single-slot only; no multi-user claim.
 
-The 65536-token (half-context) needle also passed, TTFT38.070s, decode77.37
- tok/s. The near-full candidate was repeated twice. Production32K/q8 was
+The 65536-token (half-context) needle also passed, TTFT 38.070s, decode 77.37
+ tok/s. The near-full candidate was repeated twice. Production 32K/q8 was
 restored automatically after the queue and is not changed by this PR.
 
 Remaining work is deeper kernel profiling/tuning: improve q4 attention's
@@ -69,3 +69,17 @@ repeated KV reads across grouped query heads, and reduce prefill's whole-cache
 conversion/scratch overhead so larger physical batches fit. Native DSpark
 still needs a compatible loader; the previous published drafter shape failure
 is not bypassed. No claim that this is the maximum possible speed.
+
+## Pinned build and final acceptance
+
+Public Nix source 99fddb86e988989e28a058ecbb3d93100947128b builds/resolves to
+exactly the benchmarked server artifact (pn9n5zj0pk5339dby2j2j08qyzzrqxgx).
+Fresh unmodified upstream lab.py try passed all six gates on this artifact
+with ub224 and INKLING_Q4_VEC=1: 111.2 tok/s decode, 1449 prompt tok/s using the
+registry workload/accounting. The latter includes answer time and is distinct
+from pure prefill. Original registry result was 103.4/986. Raw evidence is
+vector/registry-run.json. No registry-policy exception is used.
+
+Temporary override removed; default 32K/q8 service healthy after final gates.
+No NVIDIA Xid errors observed. Do not delete the source branch while upstream
+recipe pins its pre-merge commit. No additional power/driver/model changes.
