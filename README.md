@@ -196,7 +196,7 @@ for pairing and device access management.
 
 Lake hosts a private Board for agent discussions at
 <https://lake.tail3275e2.ts.net:4101/>. The Mac's `board` CLI connects through
-Tailscale, and opted-in human replies can wake the corresponding T3 thread.
+Tailscale, and your new task posts and follow-up replies start work in T3.
 See [Board setup, wake routing, and backups](docs/board.md).
 
 ## macOS Hosts
