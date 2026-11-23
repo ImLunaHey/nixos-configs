@@ -1,0 +1,80 @@
+Nov 23 12:23:53 tower llama-server[202110]: Layer  6:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer  7:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer  8:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer  9:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 10:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 11:    491.89,    288.00,    779.89       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 12:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 13:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 14:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 15:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 16:    491.70,      3.38,    495.08       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 17:    491.89,    288.00,    779.89       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 18:    489.27,      3.38,    492.65       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 19:    489.27,      3.38,    492.65       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 20:    489.27,      3.38,    492.65       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 21:    489.27,      3.38,    492.65       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 22:    489.27,      3.38,    492.65       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 23:    489.46,    288.00,    777.46       81.00  MiB
+Nov 23 12:23:53 tower llama-server[202110]: Layer 24:    469.32,    309.74,    779.06 MiB (output layer)
+Nov 23 12:23:53 tower llama-server[202110]: --------------------------------------------------------------------------
+Nov 23 12:23:53 tower llama-server[202110]: Total   :  11772.43,   1529.24,  13301.67 MiB
+Nov 23 12:23:53 tower llama-server[202110]: Memory required for model tensors + cache: 13771 MiB
+Nov 23 12:23:53 tower llama-server[202110]: Memory available on all devices - compute: 14442 MiB
+Nov 23 12:23:53 tower llama-server[202110]: llm_load_tensors: ggml ctx size =    0.79 MiB
+Nov 23 12:23:53 tower llama-server[202110]: llm_load_tensors: offloading 48 repeating layers to GPU
+Nov 23 12:23:53 tower llama-server[202110]: llm_load_tensors: offloading non-repeating layers to GPU
+Nov 23 12:23:53 tower llama-server[202110]: llm_load_tensors: offloaded 49/49 layers to GPU
+Nov 23 12:23:53 tower llama-server[202110]: llm_load_tensors:  CUDA_Host buffer size =   469.31 MiB (total of 1 resident buffers)
+Nov 23 12:23:53 tower llama-server[202110]: llm_load_tensors:      CUDA0 buffer size = 12241.81 MiB
+Nov 23 12:23:54 tower llama-server[202110]: ........................................................
+Nov 23 12:23:54 tower llama-server[202110]: ~ggml_backend_cuda_context: have 0 graphs
+Nov 23 12:23:54 tower llama-server[202110]: llama_model_inkling_ctrl_bf16: Inkling loop controllers + routers in BF16: 24 tensors, 13.5 MiB
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: n_ctx         = 131072
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: n_batch       = 1024
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: n_ubatch      = 512
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: flash_attn    = 1
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: attn_max_b    = 256
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: fused_moe     = 1
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: grouped er    = 0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: fused_up_gate = 1
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: fused_mmad    = 1
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: rope_cache    = 0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: graph_reuse   = 1
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: k_cache_hadam = 0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: v_cache_hadam = 0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: split_mode_graph_scheduling = 0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: reduce_type   = f16
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: sched_async   = 0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: ser           = -1, 0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: freq_base     = 10000.0
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: freq_scale    = 1
+Nov 23 12:23:54 tower llama-server[202110]: llama_kv_cache_init:      CUDA0 KV buffer size =  1223.17 MiB
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: SWA compress = 40 of 48 layers compacted, 1536-1536 rows each (dense 131072), window 1024, n_ubatch 512
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: SWA compress = 85.33x fewer rows on compacted layers
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: KV self size  = 1219.50 MiB, K (q4_0):  609.75 MiB, V (q4_0):  609.75 MiB
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: --swa-compress: 1536 rows per compacted layer (0 sink + 1536 window, window 1024)
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model:  CUDA_Host  output buffer size =     0.76 MiB
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model:      CUDA0 compute buffer size =   796.76 MiB
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model:  CUDA_Host compute buffer size =     7.01 MiB
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: graph nodes  = 4445
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: graph splits = 2
+Nov 23 12:23:54 tower llama-server[202110]: llama_init_from_model: enabling only_active_experts scheduling
+Nov 23 12:23:54 tower llama-server[202110]: /build/source/ggml/src/ggml-cuda/devquants.cuh:48: CUDA: FlashAttention KV type q4_0 is not compiled in this dev build (GGML_CUDA_DEV_QUANTS=ON). Add it to GGML_CUDA_DEV_QUANTS_KV_TYPES or reconfigure with -DGGML_CUDA_DEV_QUANTS=OFF
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libggml.so(+0xb828d) [0x7ab77ccb828d]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libggml.so(ggml_abort+0xfa) [0x7ab77ccba2da]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libggml.so(+0x4bda76) [0x7ab77d0bda76]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libggml.so(+0x4c8d03) [0x7ab77d0c8d03]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libggml.so(+0x4cb548) [0x7ab77d0cb548]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libggml.so(+0x141542) [0x7ab77cd41542]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libllama.so(+0x11fbbf) [0x7ab78271fbbf]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/dnbxlra78mvdkxkfy2ypz267xb16l6q8-inkling-ik-experiment-46b11f422d42/lib/libllama.so(llama_decode+0x1f2) [0x7ab782726b12]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/1hklyvb7jazqj94ax63m7jfxpq98ykcq-inkling-ik-server-46b11f422d42-compat1/bin/llama-server(+0x2644f0) [0x5bc60d4924f0]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/1hklyvb7jazqj94ax63m7jfxpq98ykcq-inkling-ik-server-46b11f422d42-compat1/bin/llama-server(+0x1ee90f) [0x5bc60d41c90f]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/1hklyvb7jazqj94ax63m7jfxpq98ykcq-inkling-ik-server-46b11f422d42-compat1/bin/llama-server(+0xdcbc0) [0x5bc60d30abc0]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/r3hvhzl5fxhrgn0rfy5g7rda17702pj4-glibc-2.44-57/lib/libc.so.6(+0x2b391) [0x7ab77c42b391]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/r3hvhzl5fxhrgn0rfy5g7rda17702pj4-glibc-2.44-57/lib/libc.so.6(__libc_start_main+0x88) [0x7ab77c42b4a8]
+Nov 23 12:23:54 tower llama-server[202110]: /nix/store/1hklyvb7jazqj94ax63m7jfxpq98ykcq-inkling-ik-server-46b11f422d42-compat1/bin/llama-server(+0xe4695) [0x5bc60d312695]
+Nov 23 12:23:56 tower systemd[1]: inkling.service: Main process exited, code=dumped, status=6/ABRT
+Nov 23 12:23:56 tower systemd[1]: inkling.service: Failed with result 'core-dump'.
+Nov 23 12:23:56 tower systemd[1]: inkling.service: Consumed 6.565s CPU time over 3.413s wall clock time, 959.3M memory peak, 514B incoming IP traffic, 328B outgoing IP traffic.

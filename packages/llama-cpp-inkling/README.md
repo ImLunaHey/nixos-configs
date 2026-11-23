@@ -30,3 +30,10 @@ under `benchmarks/tower-inkling/`. The checked kernel types cover this GGUF's
 F32, Q8_0, IQ4_NL and IQ3_S tensors, plus types needed by its numerical tests.
 This is a Tower-specific package, not a general-purpose replacement for every
 model or GPU.
+
+The KV kernel allowlist also includes Q4_0 for an experimental GPU-only 128K
+profile (batch 1024, physical batch 128). Tower's default remains 32K/q8.
+Run `test-fa-relbias CUDA` to exercise the additional q4 attention cases.
+The CPU q4 cases currently fail in this build, so do not use this profile
+with CPU attention/offload. Qualification is in
+`benchmarks/tower-inkling/context-128k/PLAN.md`.
