@@ -12,9 +12,12 @@
     featuredHost = "lake";
     hostOrder = [ "tower" "lake" "nova" "gateway" "pulsar" "comet" "gilbert" "void" ];
     compactHosts = [ "gateway" ];
+    alertHosts = [ "tower" "lake" "nova" "pulsar" "comet" ];
+    llamaUrl = "http://127.0.0.1:8080";
     hideOfflineFooter = true;
     unifi = {
       enable = true;
+      legacySite = "default";
       url = "https://10.0.0.1/proxy/network/integration/v1";
       siteId = "88f7af54-98f8-306a-a1c7-c9349722b1f6";
       certificateSha256 = "2fed649d798a577f46ff2e645781f319471a09d84e4d699adea2ea28dbb0fe33";
