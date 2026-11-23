@@ -13,7 +13,7 @@ in
     wantedBy = [ "multi-user.target" ];
     after = [ "network.target" ];
     serviceConfig = {
-      ExecStart = "${server}/bin/llama-server --model ${model} --alias inkling-2-mini-abliterated --host 0.0.0.0 --port 8080 --jinja --ctx-size 32768 --parallel 1 --n-gpu-layers 99 --flash-attn on --cache-type-k q8_0 --cache-type-v q8_0 --batch-size 512 --ubatch-size 128";
+      ExecStart = "${server}/bin/llama-server --model ${model} --alias inkling-2-mini-abliterated --host 0.0.0.0 --port 8080 --metrics --jinja --ctx-size 32768 --parallel 1 --n-gpu-layers 99 --flash-attn on --cache-type-k q8_0 --cache-type-v q8_0 --batch-size 512 --ubatch-size 128";
       DynamicUser = true;
       SupplementaryGroups = [ "video" "render" ];
       StateDirectory = "inkling";
