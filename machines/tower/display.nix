@@ -11,16 +11,14 @@
     title = "Homelab";
     featuredHost = "lake";
     # Physical bays face the front, left to right. Slot 1 is the SSD sled.
-    # Serial inventory: nixos-configs PR #61. ATA port numbers are reversed.
+    # Enclosure wiring documented in nixos-configs PR #61: ATA -> physical slot.
     driveSlots.lake = {
-      "WD-WX12D462V2CD".slot = 2;
-      "WD-WXB2D36DNCA4".slot = 3;
-      "WD-WXB2D36HV3J4".slot = 4;
-      "WD-WXB2D36HV154".slot = 5;
-      "WD-WXB2D36HVT23" = { slot = 6; inferred = true; };
-      "WD-WXB2D36HVTNA".slot = 7;
-      # The removed drive still appears beside its replacement while rebuilding.
-      "959SN05NS".slot = 5;
+      "6".slot = 2;
+      "5".slot = 3;
+      "4".slot = 4;
+      "3".slot = 5;
+      "2" = { slot = 6; inferred = true; };
+      "1".slot = 7;
     };
     hostOrder = [ "tower" "lake" "nova" "gateway" "pulsar" "comet" "gilbert" "void" ];
     compactHosts = [ "gateway" ];
