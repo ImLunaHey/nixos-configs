@@ -190,3 +190,72 @@ func TestRedirectDoesNotLeakBearerURL(t *testing.T) {
 		t.Fatalf("unsafe redirect/error: %v", err)
 	}
 }
+
+func TestChannelIntake(t *testing.T) {
+	const principal = "tailscale:user:imlunahey@github"
+	r := route{Channel: "nixos-configs", Mode: "channel", Principal: principal}
+	for _, tc := range []struct {
+		name   string
+		change func(*event)
+		want   bool
+	}{
+		{"new task", func(e *event) { e.Message.Re = nil }, true},
+		{"follow-up", func(e *event) {}, true},
+		{"other person", func(e *event) { e.Payload.By.Principal = "tailscale:user:someone-else" }, false},
+		{"agent", func(e *event) { e.Actor.Kind = "agent" }, false},
+		{"profile", func(e *event) { s := "codex"; e.Payload.By.Profile = &s }, false},
+		{"edit", func(e *event) { e.Type = "message.edited" }, false},
+		{"other channel", func(e *event) { e.Message.Channel = "homelab" }, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			e := reply()
+			e.Payload.By.Principal = principal
+			tc.change(&e)
+			if channelCandidate(e, r) != tc.want {
+				t.Fatal("unexpected channel intake")
+			}
+		})
+	}
+}
+
+func TestChannelRootDelivery(t *testing.T) {
+	const principal = "tailscale:user:imlunahey@github"
+	for _, tc := range []struct {
+		name, owner, wake string
+		want              int
+	}{
+		{"own unlabeled task", principal, "", 1},
+		{"paused task", principal, "off", 0},
+		{"someone else's discussion", "other-user", "", 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			delivered := 0
+			hook := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				delivered++
+				var body map[string]string
+				_ = json.NewDecoder(r.Body).Decode(&body)
+				if body["threadId"] != "reply" {
+					t.Error("root ID was not delivered")
+				}
+				w.WriteHeader(202)
+			}))
+			defer hook.Close()
+			b := fixture(t, func(w http.ResponseWriter, r *http.Request) {
+				if r.URL.Path != "/messages/reply" {
+					t.Error("wrong root lookup")
+				}
+				_ = json.NewEncoder(w).Encode(map[string]any{"message": map[string]any{"id": "reply", "channel": "nixos-configs", "by": map[string]string{"principal": tc.owner}, "labels": map[string]string{"wake": tc.wake}}})
+			})
+			e := reply()
+			e.Message.Re = nil
+			e.Payload.By.Principal = principal
+			err := b.deliver(context.Background(), "nixos-configs", route{Channel: "nixos-configs", Mode: "channel", Principal: principal, WebhookURL: hook.URL}, e)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if delivered != tc.want {
+				t.Fatalf("delivered %d, want %d", delivered, tc.want)
+			}
+		})
+	}
+}

@@ -28,12 +28,18 @@ import (
 type route struct {
 	Channel    string `json:"channel"`
 	WebhookURL string `json:"webhookUrl"`
+	Mode       string `json:"mode"`
+	Principal  string `json:"principal"`
 }
 type message struct {
 	ID      string            `json:"id"`
 	Re      *string           `json:"re"`
 	Channel string            `json:"channel"`
 	Labels  map[string]string `json:"labels"`
+	By      struct {
+		Principal string  `json:"principal"`
+		Profile   *string `json:"profile"`
+	} `json:"by"`
 }
 type event struct {
 	Cursor  string   `json:"cursor"`
@@ -41,7 +47,8 @@ type event struct {
 	Message *message `json:"message"`
 	Payload struct {
 		By struct {
-			Profile *string `json:"profile"`
+			Profile   *string `json:"profile"`
+			Principal string  `json:"principal"`
 		} `json:"by"`
 	} `json:"payload"`
 	Actor struct {
@@ -72,6 +79,9 @@ func readRoutes(path string) (map[string]route, error) {
 		return nil, errors.New("no routes configured")
 	}
 	for name, r := range routes {
+		if (r.Mode != "" && r.Mode != "channel") || (r.Mode == "channel" && r.Principal == "") {
+			return nil, errors.New("channel routes require an explicit trusted principal")
+		}
 		u, err := url.Parse(r.WebhookURL)
 		if !routeName.MatchString(name) || r.Channel == "" || err != nil || u.Scheme != "https" || u.Host == "" || u.User != nil || u.Fragment != "" {
 			return nil, errors.New("invalid route: require a safe name, channel and HTTPS webhook URL")
@@ -117,23 +127,43 @@ func candidate(e event, channel string) bool {
 		(e.Payload.By.Profile == nil || *e.Payload.By.Profile == "")
 }
 
+func channelCandidate(e event, r route) bool {
+	return e.Type == "message.posted" && e.Message != nil && e.Message.Channel == r.Channel &&
+		e.Actor.Kind == "person" && e.Payload.By.Principal == r.Principal &&
+		(e.Payload.By.Profile == nil || *e.Payload.By.Profile == "")
+}
+
 func (b *bridge) deliver(ctx context.Context, name string, r route, e event) error {
-	if !candidate(e, r.Channel) {
+	if (r.Mode == "channel" && !channelCandidate(e, r)) || (r.Mode != "channel" && !candidate(e, r.Channel)) {
 		return nil
+	}
+	rootID := e.Message.ID
+	if e.Message.Re != nil {
+		rootID = *e.Message.Re
 	}
 	var thread struct {
 		Message message `json:"message"`
 	}
-	if err := b.get(ctx, "/messages/"+url.PathEscape(*e.Message.Re), &thread); err != nil {
+	if err := b.get(ctx, "/messages/"+url.PathEscape(rootID), &thread); err != nil {
 		return err
 	}
 	// Recheck the current root: removing wake cancels queued wake-ups too.
-	if thread.Message.Labels["wake"] != name || thread.Message.Channel != r.Channel {
+	if thread.Message.Channel != r.Channel {
+		return nil
+	}
+	if r.Mode == "channel" {
+		// Only the configured person's own discussions are task requests.
+		if thread.Message.By.Principal != r.Principal ||
+			(thread.Message.By.Profile != nil && *thread.Message.By.Profile != "") ||
+			thread.Message.Labels["wake"] == "off" {
+			return nil
+		}
+	} else if thread.Message.Labels["wake"] != name {
 		return nil
 	}
 	payload, _ := json.Marshal(map[string]string{
 		"source": "lake-board", "route": name, "eventId": name + ":" + e.Cursor,
-		"threadId": *e.Message.Re, "messageId": e.Message.ID,
+		"threadId": rootID, "messageId": e.Message.ID,
 	})
 	deliveryCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
@@ -205,7 +235,10 @@ func (b *bridge) step(ctx context.Context, name string, r route) error {
 	if cursor == "" {
 		return errors.New("empty saved cursor; refusing to skip events")
 	}
-	query := url.Values{"channel": {r.Channel}, "label": {"wake=" + name}, "after": {cursor}, "wait": {"30"}}
+	query := url.Values{"channel": {r.Channel}, "after": {cursor}, "wait": {"30"}}
+	if r.Mode != "channel" {
+		query.Set("label", "wake="+name)
+	}
 	var p page
 	if err := b.get(ctx, "/events?"+query.Encode(), &p); err != nil {
 		return err
