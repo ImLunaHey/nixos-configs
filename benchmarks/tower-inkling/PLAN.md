@@ -45,3 +45,10 @@ unit changed and no runtime override left. Final deployed panel: 3.464s cold
 4K TTFT, 1183 prefill tok/s, 77.06 decode tok/s; 14,556 MiB observed peak.
 Chat, reasoning, structured tool round-trip and near-32K retrieval pass.
 The PR records the change; it is not automatically merged.
+
+## Deeper follow-up
+
+This first-pass ledger is historical. The accepted configuration and current
+summary are now in README.md, summary.json and configs/best-config.json. The
+second pass, including rejected levers and final deployment gates, is recorded
+in deeper/PLAN.md. FIRST-PASS.md preserves the original narrative.

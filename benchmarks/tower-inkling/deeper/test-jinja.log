@@ -1,0 +1,646 @@
+whitespace control
+  trim_blocks removes newline after tag
+  trim_blocks removes newline after tag (1 assertion(s))                        [PASS]
+  lstrip_blocks removes leading whitespace
+  lstrip_blocks removes leading whitespace (1 assertion(s))                     [PASS]
+  for loop with trim_blocks
+  for loop with trim_blocks (1 assertion(s))                                    [PASS]
+  explicit strip both
+  explicit strip both (1 assertion(s))                                          [PASS]
+  expression whitespace control
+  expression whitespace control (1 assertion(s))                                [PASS]
+  inline block no newline
+  inline block no newline (1 assertion(s))                                      [PASS]
+whitespace control (6 assertion(s))                                             [PASS]
+conditionals
+  if true
+  if true (1 assertion(s))                                                      [PASS]
+  if false
+  if false (1 assertion(s))                                                     [PASS]
+  if else
+  if else (1 assertion(s))                                                      [PASS]
+  if elif else
+  if elif else (1 assertion(s))                                                 [PASS]
+  nested if
+  nested if (1 assertion(s))                                                    [PASS]
+  comparison operators
+  comparison operators (1 assertion(s))                                         [PASS]
+  object comparison
+  object comparison (1 assertion(s))                                            [PASS]
+  array comparison
+  array comparison (1 assertion(s))                                             [PASS]
+  logical and
+  logical and (1 assertion(s))                                                  [PASS]
+  logical or
+  logical or (1 assertion(s))                                                   [PASS]
+  logical not
+  logical not (1 assertion(s))                                                  [PASS]
+  in operator (element in array)
+  in operator (element in array) (1 assertion(s))                               [PASS]
+  in operator (substring)
+  in operator (substring) (1 assertion(s))                                      [PASS]
+  in operator (object key)
+  in operator (object key) (1 assertion(s))                                     [PASS]
+  is defined
+  is defined (1 assertion(s))                                                   [PASS]
+  is not defined
+  is not defined (1 assertion(s))                                               [PASS]
+  is undefined falsy
+  is undefined falsy (1 assertion(s))                                           [PASS]
+  is undefined attribute falsy
+  is undefined attribute falsy (1 assertion(s))                                 [PASS]
+  is undefined key falsy
+  is undefined key falsy (1 assertion(s))                                       [PASS]
+  is empty array falsy
+  is empty array falsy (1 assertion(s))                                         [PASS]
+  is empty object falsy
+  is empty object falsy (1 assertion(s))                                        [PASS]
+  is empty string falsy
+  is empty string falsy (1 assertion(s))                                        [PASS]
+  is 0 falsy
+  is 0 falsy (1 assertion(s))                                                   [PASS]
+  is 0.0 falsy
+  is 0.0 falsy (1 assertion(s))                                                 [PASS]
+  is non-empty array truthy
+  is non-empty array truthy (1 assertion(s))                                    [PASS]
+  is non-empty object truthy
+  is non-empty object truthy (1 assertion(s))                                   [PASS]
+  is non-empty string truthy
+  is non-empty string truthy (1 assertion(s))                                   [PASS]
+  is 1 truthy
+  is 1 truthy (1 assertion(s))                                                  [PASS]
+  is 1.0 truthy
+  is 1.0 truthy (1 assertion(s))                                                [PASS]
+conditionals (29 assertion(s))                                                  [PASS]
+loops
+  simple for
+  simple for (1 assertion(s))                                                   [PASS]
+  loop.index
+  loop.index (1 assertion(s))                                                   [PASS]
+  loop.index0
+  loop.index0 (1 assertion(s))                                                  [PASS]
+  loop.first and loop.last
+  loop.first and loop.last (1 assertion(s))                                     [PASS]
+  loop.length
+  loop.length (1 assertion(s))                                                  [PASS]
+  for over dict items
+  for over dict items (1 assertion(s))                                          [PASS]
+  for else empty
+  for else empty (1 assertion(s))                                               [PASS]
+  for undefined empty
+  for undefined empty (1 assertion(s))                                          [PASS]
+  nested for
+  nested for (1 assertion(s))                                                   [PASS]
+  for with range
+  for with range (1 assertion(s))                                               [PASS]
+  conditional set does not leak across iterations
+  conditional set does not leak across iterations (1 assertion(s))              [PASS]
+loops (11 assertion(s))                                                         [PASS]
+expressions
+  simple variable
+  simple variable (1 assertion(s))                                              [PASS]
+  dot notation
+  dot notation (1 assertion(s))                                                 [PASS]
+  negative float (not dot notation)
+  negative float (not dot notation) (1 assertion(s))                            [PASS]
+  bracket notation
+  bracket notation (1 assertion(s))                                             [PASS]
+  empty computed member defaults to undefined
+  empty computed member defaults to undefined (1 assertion(s))                  [PASS]
+  empty computed member is undefined
+  empty computed member is undefined (1 assertion(s))                           [PASS]
+  undefined computed member is undefined
+  undefined computed member is undefined (1 assertion(s))                       [PASS]
+  array access
+  array access (1 assertion(s))                                                 [PASS]
+  array negative access
+  array negative access (1 assertion(s))                                        [PASS]
+  array slice
+  array slice (1 assertion(s))                                                  [PASS]
+  array slice step
+  array slice step (1 assertion(s))                                             [PASS]
+  tuple slice
+  tuple slice (1 assertion(s))                                                  [PASS]
+  arithmetic
+  arithmetic (1 assertion(s))                                                   [PASS]
+  string concat ~
+  string concat ~ (1 assertion(s))                                              [PASS]
+  string repetition
+  string repetition (1 assertion(s))                                            [PASS]
+  reversed string repetition
+  reversed string repetition (1 assertion(s))                                   [PASS]
+  ternary
+  ternary (1 assertion(s))                                                      [PASS]
+expressions (17 assertion(s))                                                   [PASS]
+set statement
+  simple set
+  simple set (1 assertion(s))                                                   [PASS]
+  set with expression
+  set with expression (1 assertion(s))                                          [PASS]
+  set list
+  set list (1 assertion(s))                                                     [PASS]
+  set dict
+  set dict (1 assertion(s))                                                     [PASS]
+  set dict with mixed type keys
+  set dict with mixed type keys (1 assertion(s))                                [PASS]
+  print dict with mixed type keys
+  print dict with mixed type keys (1 assertion(s))                              [PASS]
+  print array with mixed types
+  print array with mixed types (1 assertion(s))                                 [PASS]
+  object member assignment with mixed key types
+  object member assignment with mixed key types (1 assertion(s))                [PASS]
+  tuple unpacking
+  tuple unpacking (1 assertion(s))                                              [PASS]
+set statement (9 assertion(s))                                                  [PASS]
+filters
+  upper
+  upper (1 assertion(s))                                                        [PASS]
+  lower
+  lower (1 assertion(s))                                                        [PASS]
+  upper array
+  upper array (1 assertion(s))                                                  [PASS]
+  upper dict
+  upper dict (1 assertion(s))                                                   [PASS]
+  capitalize
+  capitalize (1 assertion(s))                                                   [PASS]
+  title
+  title (1 assertion(s))                                                        [PASS]
+  trim
+  trim (1 assertion(s))                                                         [PASS]
+  trim chars
+  trim chars (1 assertion(s))                                                   [PASS]
+  length string
+  length string (1 assertion(s))                                                [PASS]
+  replace
+  replace (1 assertion(s))                                                      [PASS]
+  length list
+  length list (1 assertion(s))                                                  [PASS]
+  first
+  first (1 assertion(s))                                                        [PASS]
+  last
+  last (1 assertion(s))                                                         [PASS]
+  reverse
+  reverse (1 assertion(s))                                                      [PASS]
+  sort
+  sort (1 assertion(s))                                                         [PASS]
+  sort reverse
+  sort reverse (1 assertion(s))                                                 [PASS]
+  sort with attribute
+  sort with attribute (1 assertion(s))                                          [PASS]
+  sort with numeric attribute
+  sort with numeric attribute (1 assertion(s))                                  [PASS]
+  join
+  join (1 assertion(s))                                                         [PASS]
+  join default separator
+  join default separator (1 assertion(s))                                       [PASS]
+  abs
+  abs (1 assertion(s))                                                          [PASS]
+  int from string
+  int from string (1 assertion(s))                                              [PASS]
+  int from string with default
+  int from string with default (1 assertion(s))                                 [PASS]
+  int from string with base
+  int from string with base (1 assertion(s))                                    [PASS]
+  float from string
+  float from string (1 assertion(s))                                            [PASS]
+  default with value
+  default with value (1 assertion(s))                                           [PASS]
+  default without value
+  default without value (1 assertion(s))                                        [PASS]
+  default with falsy value
+  default with falsy value (1 assertion(s))                                     [PASS]
+  tojson ensure_ascii=true
+  tojson ensure_ascii=true (1 assertion(s))                                     [PASS]
+  tojson ensure_ascii=true nested object
+  tojson ensure_ascii=true nested object (1 assertion(s))                       [PASS]
+  tojson ensure_ascii=true indent=2
+  tojson ensure_ascii=true indent=2 (1 assertion(s))                            [PASS]
+  tojson ensure_ascii=true preserves existing escapes
+  tojson ensure_ascii=true preserves existing escapes (1 assertion(s))          [PASS]
+  tojson sort_keys=true
+  tojson sort_keys=true (1 assertion(s))                                        [PASS]
+  tojson
+  tojson (1 assertion(s))                                                       [PASS]
+  tojson indent=4
+  tojson indent=4 (1 assertion(s))                                              [PASS]
+  tojson separators=(',',':')
+  tojson separators=(',',':') (1 assertion(s))                                  [PASS]
+  tojson separators=(',',': ') indent=2
+  tojson separators=(',',': ') indent=2 (1 assertion(s))                        [PASS]
+  indent
+  indent (1 assertion(s))                                                       [PASS]
+  indent first only
+  indent first only (1 assertion(s))                                            [PASS]
+  indent blank lines and first line
+  indent blank lines and first line (1 assertion(s))                            [PASS]
+  indent with default width
+  indent with default width (1 assertion(s))                                    [PASS]
+  indent with no newline
+  indent with no newline (1 assertion(s))                                       [PASS]
+  indent with trailing newline
+  indent with trailing newline (1 assertion(s))                                 [PASS]
+  indent with string
+  indent with string (1 assertion(s))                                           [PASS]
+  chained filters
+  chained filters (1 assertion(s))                                              [PASS]
+  int filter on integer is identity
+  int filter on integer is identity (1 assertion(s))                            [PASS]
+  none to string
+  none to string (1 assertion(s))                                               [PASS]
+filters (47 assertion(s))                                                       [PASS]
+literals
+  integer
+  integer (1 assertion(s))                                                      [PASS]
+  float
+  float (1 assertion(s))                                                        [PASS]
+  string
+  string (1 assertion(s))                                                       [PASS]
+  boolean true
+  boolean true (1 assertion(s))                                                 [PASS]
+  boolean false
+  boolean false (1 assertion(s))                                                [PASS]
+  none
+  none (1 assertion(s))                                                         [PASS]
+  list literal
+  list literal (1 assertion(s))                                                 [PASS]
+  dict literal
+  dict literal (1 assertion(s))                                                 [PASS]
+  integer|abs
+  integer|abs (1 assertion(s))                                                  [PASS]
+  integer|float
+  integer|float (1 assertion(s))                                                [PASS]
+  integer|tojson
+  integer|tojson (1 assertion(s))                                               [PASS]
+  float|abs
+  float|abs (1 assertion(s))                                                    [PASS]
+  float|int
+  float|int (1 assertion(s))                                                    [PASS]
+  float|tojson
+  float|tojson (1 assertion(s))                                                 [PASS]
+  string|tojson
+  string|tojson (1 assertion(s))                                                [PASS]
+  boolean|int
+  boolean|int (1 assertion(s))                                                  [PASS]
+  boolean|float
+  boolean|float (1 assertion(s))                                                [PASS]
+  boolean|tojson
+  boolean|tojson (1 assertion(s))                                               [PASS]
+literals (18 assertion(s))                                                      [PASS]
+hexadecimal escapes
+  remove NUL from message content
+  remove NUL from message content (1 assertion(s))                              [PASS]
+  non-ASCII hex escape produces UTF-8
+  non-ASCII hex escape produces UTF-8 (1 assertion(s))                          [PASS]
+  consume exactly two hex digits
+  consume exactly two hex digits (1 assertion(s))                               [PASS]
+  escaped backslashes remain literal
+  escaped backslashes remain literal (1 assertion(s))                           [PASS]
+  reject "{{ '\\x' }}"
+  reject "{{ '\\x' }}" (1 assertion(s))                                         [PASS]
+  reject "{{ '\\x0' }}"
+  reject "{{ '\\x0' }}" (1 assertion(s))                                        [PASS]
+  reject "{{ '\\xG1' }}"
+  reject "{{ '\\xG1' }}" (1 assertion(s))                                       [PASS]
+  reject "{{ '\\x1G' }}"
+  reject "{{ '\\x1G' }}" (1 assertion(s))                                       [PASS]
+  reject "{{ '\\x"
+  reject "{{ '\\x" (1 assertion(s))                                             [PASS]
+  reject "{{ '\\x0"
+  reject "{{ '\\x0" (1 assertion(s))                                            [PASS]
+hexadecimal escapes (10 assertion(s))                                           [PASS]
+comments
+  inline comment
+  inline comment (1 assertion(s))                                               [PASS]
+  comment ignores code
+  comment ignores code (1 assertion(s))                                         [PASS]
+comments (2 assertion(s))                                                       [PASS]
+macros
+  simple macro
+  simple macro (1 assertion(s))                                                 [PASS]
+  macro default arg
+  macro default arg (1 assertion(s))                                            [PASS]
+  macro kwargs input
+  macro kwargs input (1 assertion(s))                                           [PASS]
+  macro with multiple args
+  macro with multiple args (1 assertion(s))                                     [PASS]
+  macro with kwarg out-of-order input
+  macro with kwarg out-of-order input (1 assertion(s))                          [PASS]
+macros (5 assertion(s))                                                         [PASS]
+namespace
+  namespace counter
+  namespace counter (1 assertion(s))                                            [PASS]
+namespace (1 assertion(s))                                                      [PASS]
+tests
+  is odd
+  is odd (1 assertion(s))                                                       [PASS]
+  is even
+  is even (1 assertion(s))                                                      [PASS]
+  is false
+  is false (1 assertion(s))                                                     [PASS]
+  is true
+  is true (1 assertion(s))                                                      [PASS]
+  string is false
+  string is false (1 assertion(s))                                              [PASS]
+  is divisibleby
+  is divisibleby (1 assertion(s))                                               [PASS]
+  is eq
+  is eq (1 assertion(s))                                                        [PASS]
+  is not equalto
+  is not equalto (1 assertion(s))                                               [PASS]
+  is ge
+  is ge (1 assertion(s))                                                        [PASS]
+  is gt
+  is gt (1 assertion(s))                                                        [PASS]
+  is greaterthan
+  is greaterthan (1 assertion(s))                                               [PASS]
+  is lt
+  is lt (1 assertion(s))                                                        [PASS]
+  is lessthan
+  is lessthan (1 assertion(s))                                                  [PASS]
+  is ne
+  is ne (1 assertion(s))                                                        [PASS]
+  is lower
+  is lower (1 assertion(s))                                                     [PASS]
+  is upper
+  is upper (1 assertion(s))                                                     [PASS]
+  is sameas
+    Skipped: NotImplemented: sameas test not implemented
+  is sameas                                                                     [PASS]
+  is boolean
+  is boolean (1 assertion(s))                                                   [PASS]
+  is callable
+  is callable (1 assertion(s))                                                  [PASS]
+  is escaped
+    Skipped: NotImplemented: escaped test not implemented
+  is escaped                                                                    [PASS]
+  is filter
+    Skipped: NotImplemented: filter test not implemented
+  is filter                                                                     [PASS]
+  is float
+  is float (1 assertion(s))                                                     [PASS]
+  is integer
+  is integer (1 assertion(s))                                                   [PASS]
+  is sequence
+  is sequence (1 assertion(s))                                                  [PASS]
+  is test
+  is test (1 assertion(s))                                                      [PASS]
+  is undefined
+  is undefined (1 assertion(s))                                                 [PASS]
+  is none
+  is none (1 assertion(s))                                                      [PASS]
+  is string
+  is string (1 assertion(s))                                                    [PASS]
+  is number
+  is number (1 assertion(s))                                                    [PASS]
+  is iterable
+  is iterable (1 assertion(s))                                                  [PASS]
+  is mapping
+  is mapping (1 assertion(s))                                                   [PASS]
+  undefined is sequence
+  undefined is sequence (1 assertion(s))                                        [PASS]
+  undefined is iterable
+  undefined is iterable (1 assertion(s))                                        [PASS]
+  is in (array, true)
+  is in (array, true) (1 assertion(s))                                          [PASS]
+  is in (array, false)
+  is in (array, false) (1 assertion(s))                                         [PASS]
+  is in (string)
+  is in (string) (1 assertion(s))                                               [PASS]
+  is in (object keys)
+  is in (object keys) (1 assertion(s))                                          [PASS]
+  reject with in test
+  reject with in test (1 assertion(s))                                          [PASS]
+  select with in test
+  select with in test (1 assertion(s))                                          [PASS]
+tests (36 assertion(s))                                                         [PASS]
+string methods
+  string.upper()
+  string.upper() (1 assertion(s))                                               [PASS]
+  string.lower()
+  string.lower() (1 assertion(s))                                               [PASS]
+  string.strip()
+  string.strip() (1 assertion(s))                                               [PASS]
+  string.lstrip()
+  string.lstrip() (1 assertion(s))                                              [PASS]
+  string.rstrip()
+  string.rstrip() (1 assertion(s))                                              [PASS]
+  string.title()
+  string.title() (1 assertion(s))                                               [PASS]
+  string.capitalize()
+  string.capitalize() (1 assertion(s))                                          [PASS]
+  string.startswith() true
+  string.startswith() true (1 assertion(s))                                     [PASS]
+  string.startswith() false
+  string.startswith() false (1 assertion(s))                                    [PASS]
+  string.endswith() true
+  string.endswith() true (1 assertion(s))                                       [PASS]
+  string.endswith() false
+  string.endswith() false (1 assertion(s))                                      [PASS]
+  string.split() with sep
+  string.split() with sep (1 assertion(s))                                      [PASS]
+  string.split() with maxsplit
+  string.split() with maxsplit (1 assertion(s))                                 [PASS]
+  string.rsplit() with sep
+  string.rsplit() with sep (1 assertion(s))                                     [PASS]
+  string.rsplit() with maxsplit
+  string.rsplit() with maxsplit (1 assertion(s))                                [PASS]
+  string.replace() basic
+  string.replace() basic (1 assertion(s))                                       [PASS]
+  string.replace() with count
+    Skipped: NotImplemented: String replace with count argument not implemented
+  string.replace() with count                                                   [PASS]
+  undefined|capitalize
+  undefined|capitalize (1 assertion(s))                                         [PASS]
+  undefined|title
+  undefined|title (1 assertion(s))                                              [PASS]
+  undefined|truncate
+  undefined|truncate (1 assertion(s))                                           [PASS]
+  undefined|upper
+  undefined|upper (1 assertion(s))                                              [PASS]
+  undefined|lower
+  undefined|lower (1 assertion(s))                                              [PASS]
+  undefined|replace
+  undefined|replace (1 assertion(s))                                            [PASS]
+  undefined|trim
+  undefined|trim (1 assertion(s))                                               [PASS]
+  undefined|wordcount
+  undefined|wordcount (1 assertion(s))                                          [PASS]
+string methods (24 assertion(s))                                                [PASS]
+array methods
+  array|selectattr by attribute
+  array|selectattr by attribute (1 assertion(s))                                [PASS]
+  array|selectattr with operator
+  array|selectattr with operator (1 assertion(s))                               [PASS]
+  array|tojson
+  array|tojson (1 assertion(s))                                                 [PASS]
+  array|tojson with strings
+  array|tojson with strings (1 assertion(s))                                    [PASS]
+  array|tojson nested
+  array|tojson nested (1 assertion(s))                                          [PASS]
+  array|last
+  array|last (1 assertion(s))                                                   [PASS]
+  array|last single element
+  array|last single element (1 assertion(s))                                    [PASS]
+  array|join with separator
+  array|join with separator (1 assertion(s))                                    [PASS]
+  array|join with custom separator
+  array|join with custom separator (1 assertion(s))                             [PASS]
+  array|join default separator
+  array|join default separator (1 assertion(s))                                 [PASS]
+  array|join attribute
+  array|join attribute (1 assertion(s))                                         [PASS]
+  array|join numeric attribute
+  array|join numeric attribute (1 assertion(s))                                 [PASS]
+  array.pop() last
+  array.pop() last (1 assertion(s))                                             [PASS]
+  array.pop() with index
+  array.pop() with index (1 assertion(s))                                       [PASS]
+  array.append()
+  array.append() (1 assertion(s))                                               [PASS]
+  array|map with attribute
+  array|map with attribute (1 assertion(s))                                     [PASS]
+  array|map with attribute default
+  array|map with attribute default (1 assertion(s))                             [PASS]
+  array|map without attribute default
+  array|map without attribute default (1 assertion(s))                          [PASS]
+  array|map with numeric attribute
+  array|map with numeric attribute (1 assertion(s))                             [PASS]
+  array|map with negative attribute
+  array|map with negative attribute (1 assertion(s))                            [PASS]
+  array|map with filter
+    Skipped: NotImplemented: map: filter-mapping not implemented
+  array|map with filter                                                         [PASS]
+  undefined|select
+  undefined|select (1 assertion(s))                                             [PASS]
+  undefined|selectattr
+  undefined|selectattr (1 assertion(s))                                         [PASS]
+  undefined|reject
+  undefined|reject (1 assertion(s))                                             [PASS]
+  undefined|rejectattr
+  undefined|rejectattr (1 assertion(s))                                         [PASS]
+  undefined|list
+  undefined|list (1 assertion(s))                                               [PASS]
+  undefined|string
+  undefined|string (1 assertion(s))                                             [PASS]
+  undefined|first
+  undefined|first (1 assertion(s))                                              [PASS]
+  undefined|last
+  undefined|last (1 assertion(s))                                               [PASS]
+  undefined|length
+  undefined|length (1 assertion(s))                                             [PASS]
+  undefined|join
+  undefined|join (1 assertion(s))                                               [PASS]
+  undefined|sort
+  undefined|sort (1 assertion(s))                                               [PASS]
+  undefined|reverse
+  undefined|reverse (1 assertion(s))                                            [PASS]
+  undefined|map
+  undefined|map (1 assertion(s))                                                [PASS]
+  undefined|min
+  undefined|min (1 assertion(s))                                                [PASS]
+  undefined|max
+  undefined|max (1 assertion(s))                                                [PASS]
+  undefined|unique
+  undefined|unique (1 assertion(s))                                             [PASS]
+  undefined|sum
+  undefined|sum (1 assertion(s))                                                [PASS]
+array methods (37 assertion(s))                                                 [PASS]
+object methods
+  object.get() existing key
+  object.get() existing key (1 assertion(s))                                    [PASS]
+  object.get() missing key
+  object.get() missing key (1 assertion(s))                                     [PASS]
+  object.get() missing key with default
+  object.get() missing key with default (1 assertion(s))                        [PASS]
+  object.items()
+  object.items() (1 assertion(s))                                               [PASS]
+  object.keys()
+  object.keys() (1 assertion(s))                                                [PASS]
+  object.values()
+  object.values() (1 assertion(s))                                              [PASS]
+  dictsort ascending by key
+  dictsort ascending by key (1 assertion(s))                                    [PASS]
+  dictsort descending by key
+  dictsort descending by key (1 assertion(s))                                   [PASS]
+  dictsort by value
+  dictsort by value (1 assertion(s))                                            [PASS]
+  dictsort case sensitive
+  dictsort case sensitive (1 assertion(s))                                      [PASS]
+  object|tojson
+  object|tojson (1 assertion(s))                                                [PASS]
+  recursive sorted JSON leaves input order unchanged
+  recursive sorted JSON leaves input order unchanged (1 assertion(s))           [PASS]
+  nested object|tojson
+  nested object|tojson (1 assertion(s))                                         [PASS]
+  array in object|tojson
+  array in object|tojson (1 assertion(s))                                       [PASS]
+  object attribute and key access
+  object attribute and key access (1 assertion(s))                              [PASS]
+  env should not have object methods
+  env should not have object methods (1 assertion(s))                           [PASS]
+  expression as object key
+  expression as object key (1 assertion(s))                                     [PASS]
+  numeric as object key (template: Seed-OSS)
+  numeric as object key (template: Seed-OSS) (1 assertion(s))                   [PASS]
+  undefined|items
+  undefined|items (1 assertion(s))                                              [PASS]
+object methods (19 assertion(s))                                                [PASS]
+hasher
+  state unchanged with empty input
+  state unchanged with empty input (1 assertion(s))                             [PASS]
+  different inputs produce different hashes
+  different inputs produce different hashes (1 assertion(s))                    [PASS]
+  same inputs produce same hashes
+  same inputs produce same hashes (1 assertion(s))                              [PASS]
+  property: update(a ~ b) == update(a).update(b)
+  property: update(a ~ b) == update(a).update(b) (8 assertion(s))               [PASS]
+  property: update(a ~ b) == update(a).update(b) with more update passes
+  property: update(a ~ b) == update(a).update(b) with more update passes (1 assertion(s)) [PASS]
+  property: non associativity of update
+  property: non associativity of update (8 assertion(s))                        [PASS]
+  property: different lengths produce different hashes (padding block size)
+  property: different lengths produce different hashes (padding block size) (16 assertion(s)) [PASS]
+hasher (36 assertion(s))                                                        [PASS]
+stats
+  stats
+  stats (10 assertion(s))                                                       [PASS]
+stats (10 assertion(s))                                                         [PASS]
+fuzzing
+  out of bound array access
+  out of bound array access (100 assertion(s))                                  [PASS]
+  non-existing variables
+  non-existing variables (100 assertion(s))                                     [PASS]
+  non-existing nested attributes
+  non-existing nested attributes (100 assertion(s))                             [PASS]
+  invalid filter arguments
+  invalid filter arguments (100 assertion(s))                                   [PASS]
+  chained filters on various types
+  chained filters on various types (100 assertion(s))                           [PASS]
+  invalid builtin calls
+  invalid builtin calls (100 assertion(s))                                      [PASS]
+  macro edge cases
+  macro edge cases (13 assertion(s))                                            [PASS]
+  empty and none operations
+  empty and none operations (9 assertion(s))                                    [PASS]
+  arithmetic edge cases
+  arithmetic edge cases (7 assertion(s))                                        [PASS]
+  deeply nested structures
+  deeply nested structures (20 assertion(s))                                    [PASS]
+  special characters in strings
+  special characters in strings (6 assertion(s))                                [PASS]
+  random template generation
+  random template generation (100 assertion(s))                                 [PASS]
+  malformed templates (should error, not crash)
+  malformed templates (should error, not crash) (166 assertion(s))              [PASS]
+  type coercion edge cases
+  type coercion edge cases (100 assertion(s))                                   [PASS]
+  fuzz builtin functions
+  fuzz builtin functions (100 assertion(s))                                     [PASS]
+  tojson ensure_ascii=true with invalid utf-8
+  tojson ensure_ascii=true with invalid utf-8 (1 assertion(s))                  [PASS]
+fuzzing (1122 assertion(s))                                                     [PASS]
+
+tests      : 318
+assertions : 1439
+failures   : 0
+exceptions : 0

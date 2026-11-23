@@ -27,7 +27,16 @@ var mode = flag.String("mode", "panel", "panel or needle")
 var size = flag.Int("size", 4096, "prefill or needle token count")
 var samples = flag.Int("samples", 6, "samples")
 var capMiB = flag.Int("cap-mib", 14750, "GPU memory cap")
+var fixturePath = flag.String("fixtures", "", "replay exact tokenized requests from JSON")
+var writeFixtures = flag.String("write-fixtures", "", "write tokenized requests without benchmarking")
 var client = &http.Client{Timeout: 15 * time.Minute}
+
+type fixture struct {
+	Label    string   `json:"label"`
+	Prompt   []any    `json:"prompt"`
+	Predict  int      `json:"predict"`
+	Expected []string `json:"expected,omitempty"`
+}
 
 func must(err error) {
 	if err != nil {
@@ -79,6 +88,11 @@ func prompt(n int, needle bool) ([]any, []string) {
 	return out, codes
 }
 func run(label string, p any, n int, expected []string) {
+	// Pass exact token IDs to make cold-prefill accounting comparable across engines.
+	if s, ok := p.(string); ok {
+		p = tokens(s)
+	}
+	inputTokens := len(p.([]any))
 	processes, err := exec.Command("nvidia-smi", "--query-compute-apps=process_name", "--format=csv,noheader").Output()
 	must(err)
 	processList := strings.Split(strings.TrimSpace(string(processes)), "\n")
@@ -197,14 +211,24 @@ func run(label string, p any, n int, expected []string) {
 		panic("missing final response")
 	}
 	timings := final["timings"].(map[string]any)
-	if timings["cache_n"] != float64(0) {
+	if cached, present := timings["cache_n"]; present && cached != float64(0) {
 		panic("unexpected cached prompt")
+	}
+	if timings["prompt_n"] != float64(inputTokens) {
+		panic(fmt.Sprintf("prompt processing mismatch: expected %d, got %v", inputTokens, timings["prompt_n"]))
 	}
 	ok := true
 	for _, code := range expected {
 		ok = ok && strings.Contains(content.String(), code)
 	}
 	record := map[string]any{"at": time.Now().UTC(), "tag": *tag, "case": label, "ttft_ms": ttft, "wall_s": wall, "timings": timings, "peak_vram_mib": peak, "output": content.String(), "output_sha256": fmt.Sprintf("%x", sha256.Sum256([]byte(content.String()))), "needle_pass": ok, "truncated": final["truncated"]}
+	// Both engines start the decode clock after the first token. Older ik servers
+	// divide by all predicted tokens; normalize that off-by-one without hiding raw data.
+	record["decode_tps_normalized"] = (timings["predicted_n"].(float64) - 1) * 1000 / timings["predicted_ms"].(float64)
+	record["input_tokens"] = inputTokens
+	inputJSON, err := json.Marshal(p)
+	must(err)
+	record["input_sha256"] = fmt.Sprintf("%x", sha256.Sum256(inputJSON))
 	must(json.NewEncoder(os.Stdout).Encode(record))
 	if !ok || final["truncated"] == true {
 		panic("quality gate failed")
@@ -217,18 +241,38 @@ func main() {
 	defer lock.Close()
 	must(syscall.Flock(int(lock.Fd()), syscall.LOCK_EX|syscall.LOCK_NB))
 	defer syscall.Flock(int(lock.Fd()), syscall.LOCK_UN)
-	if *mode == "needle" {
-		p, c := prompt(*size, true)
-		run("needle", p, 128, c)
+	if *fixturePath != "" {
+		data, err := os.ReadFile(*fixturePath)
+		must(err)
+		var cases []fixture
+		must(json.Unmarshal(data, &cases))
+		for _, c := range cases {
+			run(c.Label, c.Prompt, c.Predict, c.Expected)
+		}
 		return
 	}
-	run("warmup", chat("Explain why indexes speed up database queries."), 64, nil)
-	panel := []string{"Explain why indexes speed up database queries and when they hurt performance.", "Write a Go function that merges two sorted integer slices. Explain edge cases.", "Explain how a transformer KV cache speeds up autoregressive generation.", "Compare optimistic and pessimistic database locking with practical examples.", "Write a Rust function to find the first unique character in a string and explain it.", "Explain how TCP congestion control responds to packet loss and latency."}
-	for i := 0; i < *samples; i++ {
-		run(fmt.Sprintf("decode-%d", i), chat(panel[i%len(panel)]), 192, nil)
+	var cases []fixture
+	if *mode == "needle" {
+		p, c := prompt(*size, true)
+		cases = append(cases, fixture{"needle", p, 128, c})
+	} else {
+		cases = append(cases, fixture{"warmup", tokens(chat("Explain why indexes speed up database queries.")), 64, nil})
+		panel := []string{"Explain why indexes speed up database queries and when they hurt performance.", "Write a Go function that merges two sorted integer slices. Explain edge cases.", "Explain how a transformer KV cache speeds up autoregressive generation.", "Compare optimistic and pessimistic database locking with practical examples.", "Write a Rust function to find the first unique character in a string and explain it.", "Explain how TCP congestion control responds to packet loss and latency."}
+		for i := 0; i < *samples; i++ {
+			cases = append(cases, fixture{fmt.Sprintf("decode-%d", i), tokens(chat(panel[i%len(panel)])), 192, nil})
+		}
+		p, _ := prompt(*size, false)
+		for i := 0; i < 3; i++ {
+			cases = append(cases, fixture{fmt.Sprintf("prefill-%d-%d", *size, i), p, 64, nil})
+		}
 	}
-	p, _ := prompt(*size, false)
-	for i := 0; i < 3; i++ {
-		run(fmt.Sprintf("prefill-%d-%d", *size, i), p, 64, nil)
+	if *writeFixtures != "" {
+		data, err := json.Marshal(cases)
+		must(err)
+		must(os.WriteFile(*writeFixtures, append(data, '\n'), 0644))
+		return
+	}
+	for _, c := range cases {
+		run(c.Label, c.Prompt, c.Predict, c.Expected)
 	}
 }

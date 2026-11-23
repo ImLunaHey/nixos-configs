@@ -1,0 +1,36 @@
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA GeForce RTX 5070 Ti, compute capability 12.0, VMM: yes, VRAM: 15839 MiB
+~ggml_backend_cuda_context: have 11 graphs
+backend CPU
+  hs=128 nh=24/8 kv=256 nb=1 n_rel=1025 rand=0 mode=0 f16: nmse 4.021e-06 max_abs 1.152e-03 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=0 f16: nmse 2.090e-05 max_abs 9.518e-04 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=0 q8_0: nmse 7.604e-13 max_abs 1.639e-07 OK
+  hs=128 nh=24/8 kv=512 nb=3 n_rel=65 rand=1 mode=0 f16: nmse 5.851e-06 max_abs 1.322e-03 OK
+  hs=128 nh=24/8 kv=512 nb=64 n_rel=1025 rand=0 mode=0 f16: nmse 8.091e-06 max_abs 1.469e-03 OK
+  hs=128 nh=24/8 kv=512 nb=77 n_rel=1025 rand=0 mode=0 q8_0: nmse 2.541e-13 max_abs 3.129e-07 OK
+  hs=128 nh=24/8 kv=1536 nb=512 n_rel=1025 rand=0 mode=0 f16: nmse 1.968e-05 max_abs 1.686e-03 OK
+  hs=128 nh=24/6 kv=512 nb=32 n_rel=129 rand=1 mode=0 f16: nmse 7.508e-06 max_abs 1.660e-03 OK
+  hs=128 nh=24/3 kv=512 nb=8 n_rel=129 rand=0 mode=0 f16: nmse 3.034e-06 max_abs 1.315e-03 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=1 q8_0: nmse 8.815e-13 max_abs 1.565e-07 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=2 f16: nmse 2.120e-05 max_abs 9.872e-04 OK
+  hs=128 nh=24/8 kv=512 nb=3 n_rel=65 rand=0 mode=1 f16: nmse 1.500e-06 max_abs 8.871e-04 OK
+  hs=128 nh=24/8 kv=512 nb=77 n_rel=1025 rand=0 mode=1 q8_0: nmse 2.440e-13 max_abs 2.608e-07 OK
+  hs=128 nh=24/8 kv=1536 nb=512 n_rel=1025 rand=0 mode=2 f16: nmse 1.971e-05 max_abs 1.669e-03 OK
+  hs=128 nh=24/6 kv=512 nb=32 n_rel=129 rand=0 mode=1 f16: nmse 3.078e-06 max_abs 1.353e-03 OK
+backend CUDA0
+  hs=128 nh=24/8 kv=256 nb=1 n_rel=1025 rand=0 mode=0 f16: nmse 5.375e-14 max_abs 1.043e-07 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=0 f16: nmse 3.137e-08 max_abs 2.289e-05 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=0 q8_0: nmse 4.081e-09 max_abs 1.308e-05 OK
+  hs=128 nh=24/8 kv=512 nb=3 n_rel=65 rand=1 mode=0 f16: nmse 6.153e-14 max_abs 1.043e-07 OK
+  hs=128 nh=24/8 kv=512 nb=64 n_rel=1025 rand=0 mode=0 f16: nmse 2.609e-07 max_abs 1.574e-04 OK
+  hs=128 nh=24/8 kv=512 nb=77 n_rel=1025 rand=0 mode=0 q8_0: nmse 1.758e-06 max_abs 4.210e-04 OK
+  hs=128 nh=24/8 kv=1536 nb=512 n_rel=1025 rand=0 mode=0 f16: nmse 2.632e-07 max_abs 1.156e-04 OK
+  hs=128 nh=24/6 kv=512 nb=32 n_rel=129 rand=1 mode=0 f16: nmse 2.608e-07 max_abs 1.766e-04 OK
+  hs=128 nh=24/3 kv=512 nb=8 n_rel=129 rand=0 mode=0 f16: nmse 2.354e-07 max_abs 3.028e-04 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=1 q8_0: nmse 4.569e-09 max_abs 1.184e-05 OK
+  hs=128 nh=24/8 kv=4096 nb=1 n_rel=1025 rand=0 mode=2 f16: nmse 3.113e-08 max_abs 2.214e-05 OK
+  hs=128 nh=24/8 kv=512 nb=3 n_rel=65 rand=0 mode=1 f16: nmse 3.505e-14 max_abs 1.192e-07 OK
+  hs=128 nh=24/8 kv=512 nb=77 n_rel=1025 rand=0 mode=1 q8_0: nmse 1.762e-06 max_abs 4.067e-04 OK
+  hs=128 nh=24/8 kv=1536 nb=512 n_rel=1025 rand=0 mode=2 f16: nmse 2.647e-07 max_abs 1.176e-04 OK
+  hs=128 nh=24/6 kv=512 nb=32 n_rel=129 rand=0 mode=1 f16: nmse 2.475e-07 max_abs 3.159e-04 OK
+30 passed, 0 failed

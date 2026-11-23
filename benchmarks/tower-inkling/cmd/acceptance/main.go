@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -13,6 +14,8 @@ import (
 )
 
 func main() {
+	base := flag.String("url", "http://127.0.0.1:8080", "server")
+	flag.Parse()
 	client := &http.Client{Timeout: 2 * time.Minute}
 	call := func(name string, messages []any, extra map[string]any) map[string]any {
 		body := map[string]any{"model": "inkling-2-mini-abliterated", "messages": messages, "temperature": 0, "seed": 42, "max_tokens": 512, "reasoning_effort": "low"}
@@ -21,7 +24,7 @@ func main() {
 		}
 		b, _ := json.Marshal(body)
 		start := time.Now()
-		r, e := client.Post("http://127.0.0.1:8080/v1/chat/completions", "application/json", bytes.NewReader(b))
+		r, e := client.Post(*base+"/v1/chat/completions", "application/json", bytes.NewReader(b))
 		if e != nil {
 			panic(e)
 		}

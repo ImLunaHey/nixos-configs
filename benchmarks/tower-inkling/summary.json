@@ -1,20 +1,27 @@
 {
+  "units": {
+    "decode": "tokens/s",
+    "prefill": "tokens/s",
+    "ttft": "seconds",
+    "vram": "MiB"
+  },
   "baseline": {
     "decode": 77.14110373946238,
     "prefill": 1020.5775160339047,
     "ttft": 4.014730999999999,
     "vram": 14158
   },
-  "candidate": {
-    "decode": 76.97654081996043,
-    "prefill": 1184.2123903425397,
-    "ttft": 3.462165,
+  "first_pass_control": {
+    "decode": 77.16998718460232,
+    "prefill": 1187.828240500419,
+    "ttft": 3.451654,
     "vram": 14556
   },
   "deployed": {
-    "decode": 77.05639388412712,
-    "prefill": 1182.851312759922,
-    "ttft": 3.4638069999999996,
-    "vram": 14556
-  }
+    "decode": 127.37929755812274,
+    "prefill": 2855.758403954556,
+    "ttft": 1.436051,
+    "vram": 14166
+  },
+  "full_context_peak_vram_mib": 14232
 }
