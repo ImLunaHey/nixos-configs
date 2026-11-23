@@ -10,6 +10,16 @@
     interface = "enp7s0";
     title = "Homelab";
     featuredHost = "lake";
+    # Physical bays face the front, left to right. Slot 1 is the SSD sled.
+    # Enclosure wiring documented in nixos-configs PR #61: ATA -> physical slot.
+    driveSlots.lake = {
+      "6".slot = 2;
+      "5".slot = 3;
+      "4".slot = 4;
+      "3".slot = 5;
+      "2".slot = 6;
+      "1".slot = 7;
+    };
     hostOrder = [ "tower" "lake" "nova" "gateway" "pulsar" "comet" "gilbert" "void" ];
     compactHosts = [ "gateway" ];
     alertHosts = [ "tower" "lake" "nova" "pulsar" "comet" ];
