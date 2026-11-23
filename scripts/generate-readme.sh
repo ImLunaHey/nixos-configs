@@ -46,6 +46,7 @@ get_key_services() {
   [[ -f "$REPO_ROOT/machines/$machine/minecraft.nix" ]] && services+=("Minecraft (ATM10)")
   [[ -f "$REPO_ROOT/machines/$machine/smartd.nix" ]]   && services+=("ZFS + SMART monitoring")
   [[ -f "$REPO_ROOT/machines/$machine/t3code.nix" ]]   && services+=("T3 Code")
+  [[ -f "$REPO_ROOT/machines/$machine/board.nix" ]]    && services+=("Board")
   [[ -f "$REPO_ROOT/machines/$machine/inference.nix" ]] && services+=("Inkling 2 Mini")
   grep -q 'cloudflare-dns' "$REPO_ROOT/machines/$machine/default.nix" 2>/dev/null && services+=("Cloudflare DNS sync")
 
@@ -98,6 +99,7 @@ machine_sections() {
       case "$fname" in
         hardware-configuration.nix) echo "| \`$fname\` | Generated hardware config (do not edit) |" ;;
         hardware.nix)               echo "| \`$fname\` | GPU drivers and hardware acceleration |" ;;
+        board.nix)                  echo "| \`$fname\` | Private agent Board and T3 webhook delivery |" ;;
         networking.nix)             echo "| \`$fname\` | DHCP, firewall, Tailscale |" ;;
         services.nix)               echo "| \`$fname\` | SOPS secret declarations |" ;;
         storage.nix)                echo "| \`$fname\` | Disk mounts and NFS |" ;;
@@ -226,6 +228,13 @@ It also provides Codex, GitHub CLI, and a Rust development toolchain to SSH and
 T3 Code sessions. These tools use the separate \`nixpkgs-t3code\` flake input.
 See [upstream remote access](https://github.com/pingdotgg/t3code/blob/v0.0.40/docs/user/remote-access.md)
 for pairing and device access management.
+
+### Board on Lake
+
+Lake hosts a private Board for agent discussions at
+<https://lake.tail3275e2.ts.net:4101/>. The Mac's \`board\` CLI connects through
+Tailscale, and opted-in human replies can wake the corresponding T3 thread.
+See [Board setup, wake routing, and backups](docs/board.md).
 
 ## macOS Hosts
 

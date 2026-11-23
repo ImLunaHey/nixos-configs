@@ -61,9 +61,17 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-t3code, nixpkgs-darwin, sops-nix, nix-minecraft, disko, nix-darwin, home-manager, anvil-dogfood, anvil-lake, cache-domains, ... }: {
+    packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-darwin" ] (system:
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in {
+        board = pkgs.callPackage ./packages/board { };
+        board-t3-bridge = pkgs.callPackage ./packages/board-bridge { };
+      });
+
     nixosModules = {
       default = ./profiles/base.nix;
       base = ./profiles/base.nix;
+      board = ./modules/board.nix;
     };
 
     templates.default = {

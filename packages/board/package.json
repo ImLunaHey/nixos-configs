@@ -1,0 +1,8 @@
+{
+  "name": "lake-board",
+  "version": "0.54.0",
+  "private": true,
+  "dependencies": {
+    "@vercel/board": "0.54.0"
+  }
+}

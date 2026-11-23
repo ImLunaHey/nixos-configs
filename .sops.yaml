@@ -5,6 +5,11 @@ keys:
   - &void age1hvsr95lr02ylzqn88j2cem0heltxmanedk4egaz8tqjzq2hrf4nqcghhzz
   - &lake age1jjwjcvzuk5dy25esxk4vcxmyqm3watmze7cndkpdvag28lydzd7s2kwjgx
 creation_rules:
+  - path_regex: secrets/board-t3-routes.json$
+    key_groups:
+      - age:
+          - *luna
+          - *lake
   - path_regex: secrets/secrets.yaml$
     key_groups:
       - age:
