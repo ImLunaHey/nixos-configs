@@ -5,14 +5,14 @@
   # Slot 1 is the SSD/NVMe sled; slots 2-7 are the six SATA HDD bays.
   # Match the serial on the drive label before removal; /dev/sdX can change.
   #
-  # Slot | Serial         | Model                     | ATA  | Mapping
+  # Slot | Serial         | Model                     | Mapping
   # 1    | SSD/NVMe sled; individual SSD positions unverified
-  # 2    | WD-WX12D462V2CD | WDC WD20EFPX-68C4TN0, 2 TB | ata6 | Confirmed
-  # 3    | WD-WXB2D36DNCA4 | WDC WD20EFPX-68C4TN0, 2 TB | ata5 | Confirmed
-  # 4    | WD-WXB2D36HV3J4 | WDC WD20EFPX-68C4TN0, 2 TB | ata4 | Confirmed
-  # 5    | WD-WXB2D36HV154 | WDC WD20EFPX-68C4TN0, 2 TB | ata3 | Confirmed
-  # 6    | WD-WXB2D36HVT23 | WDC WD20EFPX-68C4TN0, 2 TB | ata2 | Confirmed
-  # 7    | WD-WXB2D36HVTNA | WDC WD20EFPX-68C4TN0, 2 TB | ata1 | Confirmed
+  # 2    | WD-WX12D462V2CD | WDC WD20EFPX-68C4TN0, 2 TB | Confirmed
+  # 3    | WD-WXB2D36DNCA4 | WDC WD20EFPX-68C4TN0, 2 TB | Confirmed
+  # 4    | WD-WXB2D36HV3J4 | WDC WD20EFPX-68C4TN0, 2 TB | Confirmed
+  # 5    | WD-WXB2D36HV154 | WDC WD20EFPX-68C4TN0, 2 TB | Confirmed
+  # 6    | WD-WXB2D36HVT23 | WDC WD20EFPX-68C4TN0, 2 TB | Confirmed
+  # 7    | WD-WXB2D36HVTNA | WDC WD20EFPX-68C4TN0, 2 TB | Confirmed
   # Owner confirmed replacements in slot 2 (previously JP2930HQ3NWEWH),
   # slot 3 (JP2940HD09MAJC), slot 4 (W9AML1H5), slot 5 (959SN05NS),
   # slot 6 (JP2930HQ3NW7WH), and slot 7 (JP2911HQ3JV4KH).
