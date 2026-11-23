@@ -83,3 +83,17 @@ vector/registry-run.json. No registry-policy exception is used.
 Temporary override removed; default 32K/q8 service healthy after final gates.
 No NVIDIA Xid errors observed. Do not delete the source branch while upstream
 recipe pins its pre-merge commit. No additional power/driver/model changes.
+
+## Production activation
+
+After the user requested making 128K Tower's default, the full NixOS system
+was built and activated with the exact qualified server, q4 K/V, batch1024,
+ub224 and INKLING_Q4_VEC=1. The only /etc differences were Inkling's service
+and Codex's configuration/model catalog. Codex now advertises131072 tokens
+and auto-compacts at98304 (the same75% policy as before).
+
+Verified one131072-token slot; chat/reasoning/tool round-trip checks passed
+on the activated service. Active, zero automatic restarts, no temporary
+systemd overrides. The system profile and boot generation now retain128K.
+See vector/production-acceptance.jsonl. Prior restoration notes above describe
+experiment cleanup; production is now128K/q4 at the user's explicit request.
