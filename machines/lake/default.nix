@@ -25,6 +25,9 @@
   boot.zfs.forceImportRoot = false;
   boot.zfs.extraPools = [ "storage" ];
 
+  # Claim the extra capacity after replacing pool drives with larger disks.
+  services.zfs.expandOnBoot = [ "storage" ];
+
   services.zfs.autoScrub = {
     enable = true;
     interval = "weekly";
