@@ -1,5 +1,5 @@
 # Adapted from croffasia/itsaplan v1.13.0 docker-compose.yml (AGPL-3.0).
-# Images only; credentials and public URLs come from the SOPS environment file.
+# Images only; credentials come from SOPS. Public origins are declared here.
 name: itsaplan
 
 services:
@@ -104,8 +104,8 @@ services:
       APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?set APP_ENCRYPTION_KEY in .env}
       # Public origins, each entered once. API_URL is the api origin (auth handler,
       # email links); APP_URL is the web origin (CORS, passkey, email links).
-      API_URL: ${API_URL:?public origin of the api, e.g. https://api.example.com}
-      APP_URL: ${APP_URL:?public origin of the web app, e.g. https://app.example.com}
+      API_URL: https://itsaplan.flaked.org/api
+      APP_URL: https://itsaplan.flaked.org
       # Set COOKIE_DOMAIN only to override the parent domain derived from
       # APP_URL (multi-label TLDs, deep subdomains).
       COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
@@ -206,7 +206,7 @@ services:
       PORT: 3001
       HOSTNAME: 0.0.0.0
       # The api origin the browser uses.
-      API_URL: ${API_URL:?public origin of the api, e.g. https://api.example.com}
+      API_URL: https://itsaplan.flaked.org/api
       # Where web itself reaches the api: it streams avatars and attachments from
       # there (/media) so they are served from the web origin.
       SERVICE_URL_API: http://api:3000

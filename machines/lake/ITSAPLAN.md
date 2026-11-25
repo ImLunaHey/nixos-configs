@@ -1,19 +1,31 @@
 # It's a Plan on Lake
 
 After deployment, Community v1.13.0 is available privately at
-**https://lake.tail3275e2.ts.net:4201** over Tailscale. The first registered account
+**https://itsaplan.flaked.org** over Tailscale or NetBird. The first registered account
 becomes admin: register Luna first, then set registration to invite-only or closed
-in God mode. Access follows existing tailnet ACLs.
+in God mode. Access follows existing VPN access policies.
 
 ## Operations
 
 Deploy through the repository's usual Lake deployment process after merging.
-Check `systemctl status itsaplan itsaplan-router itsaplan-proxy` and
+Check `systemctl status itsaplan itsaplan-router` on Lake, `systemctl status caddy`
+on Nova, and
 `journalctl -u itsaplan -b`. Restart with `systemctl restart itsaplan`.
 
 Caddy routes `/api/*` with the prefix stripped and forwards MCP OAuth discovery.
-Tailscale provides HTTPS on port 4201. The other ports (4200, 4202, 4203) bind only
-to loopback. Board and Lancache keep their existing ports.
+Nova terminates HTTPS with Cloudflare DNS-challenge certificates and proxies
+requests to Lake over NetBird. Nova's Cloudflare DNS sync creates the domain's
+Tailscale A record; `infrastructure/netbird-dns.nix` supplies its NetBird override.
+Lake's router listens on loopback and its NetBird address at port 4200, accepting
+only Nova or local requests. Container ports 4202/4203 stay on loopback. The old
+Tailscale port-4201 endpoint is removed; Board and Lancache keep their ports.
+
+Deploy both Lake and Nova and apply the NetBird DNS manifest with the existing
+`scripts/sync-netbird-dns.py` workflow. Until Nova is deployed, the domain will
+not be served. Public origins are declared in `itsaplan-compose.yaml`; they take
+precedence over the old URL entries in the encrypted environment file. Existing
+users must sign in again on the new hostname; update any configured OAuth
+callback URLs and MCP clients to use it.
 
 The separate PostgreSQL 17 container, attachments, and pre-migration SQL dumps
 use `/mnt/storage/itsaplan`, on the `storage/itsaplan` ZFS dataset. Migrations
