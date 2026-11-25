@@ -2,6 +2,7 @@
 let name = config.networking.hostName; in {
   services.fleet-monitor = {
     enable = true;
+    processes.enable = true;
     mode = "agent";
     inherit name;
     interface = if name == "pulsar" then "en1" else "en0";

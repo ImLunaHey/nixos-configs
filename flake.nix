@@ -2,7 +2,7 @@
   description = "Luna's Nix configurations (NixOS servers + macOS/nix-darwin)";
   inputs = {
     fleet-monitor = {
-      url = "github:ImLunaHey/fleet-monitor/c6a767775b9efc93f9927b423d69feb18fc692be";
+      url = "github:ImLunaHey/fleet-monitor/v0.5.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -85,11 +85,6 @@
         specialArgs.t3codePkgs = nixpkgs-t3code.legacyPackages.x86_64-linux;
         modules = [
           inputs.fleet-monitor.nixosModules.default ./profiles/base.nix ./machines/tower
-          # Build the pinned LAN/mobile update until it has prebuilt release assets.
-          {
-            services.fleet-monitor.package = inputs.fleet-monitor.packages.x86_64-linux.collector-source;
-            services.fleet-monitor.dashboardPackage = inputs.fleet-monitor.packages.x86_64-linux.dashboard-source;
-          }
         ];
       };
 

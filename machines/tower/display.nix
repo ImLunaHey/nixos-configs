@@ -5,6 +5,7 @@
   '';
   services.fleet-monitor = {
     enable = true;
+    processes.enable = true;
     mode = "dashboard";
     name = "tower";
     listenAddress = "0.0.0.0";

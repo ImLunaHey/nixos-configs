@@ -20,6 +20,7 @@ in {
     '';
     services.fleet-monitor = {
       enable = true;
+      processes.enable = true;
       mode = "agent";
       listenAddress = cfg.bind;
       interface = cfg.interface;

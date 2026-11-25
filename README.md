@@ -275,7 +275,7 @@ Normal maintenance timers (backups, monitoring, garbage collection) remain enabl
 
 | Input | Source |
 |-------|--------|
-| `inputs` | github:ImLunaHey/fleet-monitor/c6a767775b9efc93f9927b423d69feb18fc692be |
+| `inputs` | github:ImLunaHey/fleet-monitor/v0.5.0 |
 
 ## Scripts
 
