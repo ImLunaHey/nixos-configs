@@ -163,6 +163,14 @@ func run(label string, p any, n int, expected []string) {
 	req.Header.Set("Content-Type", "application/json")
 	start := time.Now()
 	resp, e := client.Do(req)
+	if e != nil {
+		cancel()
+		<-done
+		mu.Lock()
+		failure := map[string]any{"at": time.Now().UTC(), "tag": *tag, "case": label, "error": e.Error(), "violation": violation, "peak_vram_mib": peak}
+		mu.Unlock()
+		must(json.NewEncoder(os.Stdout).Encode(failure))
+	}
 	must(e)
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
@@ -197,6 +205,7 @@ func run(label string, p any, n int, expected []string) {
 	cancel()
 	<-done
 	if scanErr != nil {
+		must(json.NewEncoder(os.Stdout).Encode(map[string]any{"at": time.Now().UTC(), "tag": *tag, "case": label, "error": scanErr.Error(), "violation": violation, "peak_vram_mib": peak, "wall_s": wall}))
 		panic(scanErr)
 	}
 	powerAfter, err := exec.Command("nvidia-smi", "--query-gpu=power.limit", "--format=csv,noheader,nounits").Output()

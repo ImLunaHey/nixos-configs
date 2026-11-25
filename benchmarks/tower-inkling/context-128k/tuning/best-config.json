@@ -1,0 +1,14 @@
+{
+  "context": 131072,
+  "parallel": 1,
+  "batch": 1024,
+  "ubatch": 224,
+  "cache_k": "q4_0",
+  "cache_v": "q4_0",
+  "swa_compress": true,
+  "env": {
+    "INKLING_Q4_VEC": "1"
+  },
+  "memory_cap_mib": 14750,
+  "power_limit_w": 300
+}

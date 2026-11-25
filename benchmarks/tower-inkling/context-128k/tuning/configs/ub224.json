@@ -1,0 +1,14 @@
+{
+  "tag": "ub224",
+  "source_commit": "3d4450eb893ead81311a3bce2d809277a1932b66",
+  "ctx": 131072,
+  "parallel": 1,
+  "cache_k": "q4_0",
+  "cache_v": "q4_0",
+  "batch": 1024,
+  "ubatch": 224,
+  "ctx_checkpoints": 32,
+  "power_limit_w": 300,
+  "memory_cap_mib": 14750,
+  "fixture": "same frozen short panel plus 130816-token three-needle prompt"
+}

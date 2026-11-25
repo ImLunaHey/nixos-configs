@@ -5,7 +5,7 @@ in pkgs.cudaPackages_12_8.backendStdenv.mkDerivation {
   pname = "inkling-ik-server";
   version = "46b11f422d42-compat1";
   src = kernels.src;
-  patches = [ ./server-compat.patch ];
+  patches = [ ./server-compat.patch ./q4-kv-test.patch ];
   nativeBuildInputs = [ pkgs.cmake pkgs.ninja pkgs.patchelf ];
   postPatch = ''
     substituteInPlace CMakeLists.txt \
@@ -17,11 +17,11 @@ in pkgs.cudaPackages_12_8.backendStdenv.mkDerivation {
   '';
   NIX_LDFLAGS = "-rpath-link ${pkgs.cudaPackages_12_8.cuda_cudart}/lib/stubs";
   cmakeFlags = [ "-DLLAMA_CURL=OFF" "-DLLAMA_BUILD_TESTS=ON" ];
-  ninjaFlags = [ "llama-server" "test-jinja" ];
+  ninjaFlags = [ "llama-server" "test-jinja" "test-fa-relbias" ];
   enableParallelBuilding = true;
   installPhase = ''
     mkdir -p $out/bin $out/lib
-    cp bin/llama-server bin/test-jinja $out/bin/
+    cp bin/llama-server bin/test-jinja bin/test-fa-relbias $out/bin/
     find . -name '*.so*' -type f -exec cp {} $out/lib/ \;
     for binary in $out/bin/* $out/lib/*; do
       patchelf --set-rpath "$out/lib:${kernels}/lib:${pkgs.lib.makeLibraryPath [ pkgs.cudaPackages_12_8.backendStdenv.cc.cc.lib ]}" "$binary"

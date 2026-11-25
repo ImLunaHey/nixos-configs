@@ -9,11 +9,13 @@ in cuda.backendStdenv.mkDerivation {
     url = "https://github.com/Mcniiby/ik_llama.cpp-mcniiby/archive/46b11f422d42ce4eb7cf8d92386cf36f60a1af86.tar.gz";
     sha256 = "1xbp9wp2s7zcak8pc844869cgpjdi50dzzcxpk6kwiq79hj5pimf";
   };
+  patches = [ ./q4-vector.patch ];
   nativeBuildInputs = [ pkgs.cmake pkgs.ninja pkgs.patchelf cuda.cuda_nvcc ];
   buildInputs = [ cuda.cuda_cudart cuda.libcublas ];
   cmakeFlags = [
     "-DGGML_CUDA=ON" "-DCMAKE_CUDA_ARCHITECTURES=120" "-DLLAMA_CURL=OFF"
     "-DGGML_NATIVE=OFF" "-DGGML_IQK_FA_ALL_QUANTS=OFF" "-DGGML_CUDA_FA_ALL_QUANTS=OFF"
+    "-DGGML_CUDA_DEV_QUANTS_KV_TYPES=F16;Q8_0;Q4_0"
     "-DGGML_CUDA_DEV_QUANTS=ON" "-DLLAMA_BUILD_TESTS=ON"
     "-DGGML_CUDA_DEV_QUANTS_TYPES=F32;F16;BF16;Q8_0;Q4_0;IQ4_NL;IQ3_S"
   ];
