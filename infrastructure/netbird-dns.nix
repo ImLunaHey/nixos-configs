@@ -11,6 +11,6 @@ in {
   novaIPv4 = nova;
   services = map service [
     "jellyfin" "matrix" "pihole" "status" "s3" "romm" "immich"
-    "watchstate" "s3-console"
+    "watchstate" "s3-console" "itsaplan"
   ];
 }

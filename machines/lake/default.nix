@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./anvil.nix
     ./board.nix
+    ./itsaplan.nix
     ./cache.nix
     ./kache.nix
     ./lancache.nix
@@ -24,6 +25,9 @@
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs.forceImportRoot = false;
   boot.zfs.extraPools = [ "storage" ];
+
+  # Claim the extra capacity after replacing pool drives with larger disks.
+  services.zfs.expandOnBoot = [ "storage" ];
 
   services.zfs.autoScrub = {
     enable = true;
