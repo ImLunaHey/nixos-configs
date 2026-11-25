@@ -30,6 +30,20 @@ in
       plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
       hash = "sha256-QSiwKqKvSxhksWBF4/MlBOpyXba5xOQ2sRwA0R7399E=";
     };
+    virtualHosts."itsaplan.flaked.org" = {
+      extraConfig = ''
+        bind 100.106.184.73 ${privateDNS.novaIPv4}
+        tls {
+          dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+          resolvers 1.1.1.1
+        }
+        header Alt-Svc "clear"
+        reverse_proxy http://${(import ../../infrastructure/netbird-access.nix).peers.lake.ip}:4200 {
+          # Send one trusted client address for the API authentication rate limit.
+          header_up X-Forwarded-For {client_ip}
+        }
+      '';
+    };
     virtualHosts."matrix.flaked.org" = {
       extraConfig = ''
         bind 100.106.184.73 ${privateDNS.novaIPv4}

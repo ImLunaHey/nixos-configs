@@ -302,6 +302,7 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 
 **Managed records (nova):**
 
+- `itsaplan.flaked.org`
 - `matrix.flaked.org`
 - `jellyfin.flaked.org`
 - `pihole.flaked.org`

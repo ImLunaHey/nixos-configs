@@ -1,5 +1,6 @@
 { config, pkgs, ... }:
 let
+  peers = (import ../../infrastructure/netbird-access.nix).peers;
   root = "/mnt/storage/itsaplan";
   dataset = "storage/itsaplan";
   compose = "${pkgs.docker-compose}/bin/docker-compose --project-name itsaplan --env-file ${config.sops.secrets.itsaplan_env.path} --file ${./itsaplan-compose.yaml}";
@@ -8,19 +9,29 @@ let
       admin off
       auto_https off
       servers {
-        trusted_proxies static 127.0.0.1/32 ::1/128
+        trusted_proxies static ${peers.nova.ip}/32
+        trusted_proxies_strict
       }
     }
-    http://127.0.0.1:4200 {
+    http://:4200 {
+      bind 127.0.0.1 ${peers.lake.ip}
+      @denied not remote_ip 127.0.0.1 ${peers.nova.ip}
+      respond @denied "Forbidden" 403
       handle_path /api/* {
-        reverse_proxy 127.0.0.1:4202
+        reverse_proxy 127.0.0.1:4202 {
+          header_up X-Forwarded-For {client_ip}
+        }
       }
       @discovery path /.well-known/oauth-authorization-server* /.well-known/oauth-protected-resource* /.well-known/openid-configuration*
       handle @discovery {
-        reverse_proxy 127.0.0.1:4202
+        reverse_proxy 127.0.0.1:4202 {
+          header_up X-Forwarded-For {client_ip}
+        }
       }
       handle {
-        reverse_proxy 127.0.0.1:4203
+        reverse_proxy 127.0.0.1:4203 {
+          header_up X-Forwarded-For {client_ip}
+        }
       }
     }
   '';
@@ -82,8 +93,8 @@ in
   systemd.services.itsaplan-router = {
     description = "Local routing for It's a Plan web, API and MCP";
     wantedBy = [ "multi-user.target" ];
-    after = [ "itsaplan.service" ];
-    wants = [ "itsaplan.service" ];
+    after = [ "itsaplan.service" "netbird.service" ];
+    wants = [ "itsaplan.service" "netbird.service" ];
     serviceConfig = {
       DynamicUser = true;
       ExecStart = "${pkgs.caddy}/bin/caddy run --config ${proxyConfig} --adapter caddyfile";
@@ -92,18 +103,6 @@ in
       ProtectHome = true;
       PrivateTmp = true;
       NoNewPrivileges = true;
-    };
-  };
-
-  systemd.services.itsaplan-proxy = {
-    description = "Private Tailscale HTTPS for It's a Plan";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "itsaplan-router.service" "tailscale-autoauth.service" ];
-    wants = [ "itsaplan-router.service" "tailscale-autoauth.service" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.tailscale}/bin/tailscale serve --https=4201 http://127.0.0.1:4200";
-      Restart = "always";
-      RestartSec = 5;
     };
   };
 
