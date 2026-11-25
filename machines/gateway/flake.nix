@@ -5,7 +5,18 @@
   outputs = inputs@{ nixpkgs, ... }: {
     nixosConfigurations.gateway = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      modules = [ inputs.fleet-monitor.nixosModules.default ./configuration.nix ];
+      modules = [
+        inputs.fleet-monitor.nixosModules.default
+        # Fleet Monitor v0.5 uses the newer Cage convenience option. Declare its
+        # equivalent on 26.05 even with kiosk disabled: Nix checks option names
+        # inside disabled mkIf branches too.
+        ({ lib, ... }: {
+          imports = [ (lib.mkAliasOptionModule
+            [ "services" "cage" "restartIfChanged" ]
+            [ "systemd" "services" "cage-tty1" "restartIfChanged" ]) ];
+        })
+        ./configuration.nix
+      ];
     };
   };
 }
