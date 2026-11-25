@@ -74,8 +74,8 @@ in
   systemd.services.itsaplan = {
     description = "It's a Plan Community container stack";
     wantedBy = [ "multi-user.target" ];
-    requires = [ "docker.service" "itsaplan-storage.service" "sops-install-secrets.service" ];
-    after = [ "docker.service" "itsaplan-storage.service" "sops-install-secrets.service" "network-online.target" ];
+    requires = [ "docker.service" "itsaplan-storage.service" ];
+    after = [ "docker.service" "itsaplan-storage.service" "network-online.target" ];
     wants = [ "network-online.target" ];
     unitConfig.RequiresMountsFor = [ root ];
     serviceConfig = {
