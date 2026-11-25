@@ -2,7 +2,7 @@
   description = "Luna's Nix configurations (NixOS servers + macOS/nix-darwin)";
   inputs = {
     fleet-monitor = {
-      url = "github:ImLunaHey/fleet-monitor";
+      url = "github:ImLunaHey/fleet-monitor/v0.5.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -83,7 +83,9 @@
       tower = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs.t3codePkgs = nixpkgs-t3code.legacyPackages.x86_64-linux;
-        modules = [ inputs.fleet-monitor.nixosModules.default ./profiles/base.nix ./machines/tower ];
+        modules = [
+          inputs.fleet-monitor.nixosModules.default ./profiles/base.nix ./machines/tower
+        ];
       };
 
       nova = nixpkgs.lib.nixosSystem {

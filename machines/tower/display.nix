@@ -5,8 +5,12 @@
   '';
   services.fleet-monitor = {
     enable = true;
+    processes.enable = true;
     mode = "dashboard";
     name = "tower";
+    listenAddress = "0.0.0.0";
+    allowedClients = [ "127.0.0.1" "::1" "10.0.0.0/24" ];
+    publicUrl = "http://10.0.0.161:8099/";
     interface = "enp7s0";
     title = "Homelab";
     featuredHost = "lake";
@@ -39,7 +43,7 @@
       nova = "http://10.0.0.178:8099/api/metrics";
       gateway = "http://10.0.0.46:8099/api/peers/gateway";
       pulsar = "http://10.0.0.107:8099/api/metrics";
-      comet = "http://10.0.0.21:8099/api/metrics";
+      comet = "http://10.0.0.127:8099/api/metrics";
       gilbert = "http://100.115.201.122:8099/api/metrics";
       void = "http://100.94.41.124:8099/api/metrics";
     };

@@ -70,11 +70,16 @@ Online badges are green; card backgrounds stay neutral charcoal.
 Graphs label the two-minute time window and percentage or throughput scale.
 GPU memory has a dedicated used/total meter, with the memory type explicit.
 The lower rows show disk free space, physical-device read/write rates and IOPS;
-RAM usage appears only once. Low disk space, ZFS drive state, errors and high
+The memory headline remains used/total. Top-three CPU and RSS process lists
+are always visible, with PID labels and five-second sampling. ZFS ARC is shown
+separately as kernel cache alongside available RAM and swap; process RSS totals
+are not added together or subtracted from the memory headline. Low disk space, ZFS drive state, errors and high
 drive activity use restrained status colours, with a rebuild progress bar.
 
 The implementation lives in [ImLunaHey/fleet-monitor](https://github.com/ImLunaHey/fleet-monitor),
-pinned by this repository's flake lock. Its public NixOS module supplies the Go
+pinned to v0.5.0 by this repository's flake lock. Nix downloads the published
+collector binaries and single-file HTML with fixed hashes; host rebuilds do not
+compile the dashboard or collector. Its public NixOS module supplies the Go
 agent, React/Tailwind dashboard, TanStack Query polling, TanStack Table storage
 tables, and optional Cage/Chromium kiosk. This repository contains only host
 configuration and source-specific firewall policy.
@@ -86,8 +91,12 @@ including Gateway's independent flake. Tower's display settings are in
 the upstream repository, run its Go/component tests and Nix package builds,
 push, then update the pinned `fleet-monitor` input here before deploying.
 
-`fleet-monitor.service` on Tower binds only `127.0.0.1:8099` and polls fixed
-private endpoints with independent timeouts. Lake/Nova bind their LAN addresses
+`fleet-monitor.service` on Tower serves the dashboard at `http://10.0.0.161:8099/`
+and polls fixed private endpoints with independent timeouts. Its QR code opens
+that address on phones and tablets, with responsive cards and scrollable ZFS
+tables. It binds IPv4 interfaces but accepts only loopback and `10.0.0.0/24`
+clients; TCP 8099 is opened only on `enp7s0`. Reserve Tower’s DHCP address so
+the link remains valid. No WAN forwarding is configured. Lake/Nova bind their LAN addresses
 and retain source-specific firewall rules allowing Tower; Macs use the source
 allowlist in the agent. Addresses must remain stable. There is no separate API
 key. Gateway binds its NetBird address and accepts Lake, but its Lake-to-Gateway
@@ -101,15 +110,19 @@ Comet shows battery charge/charging state. Mac disk activity resolves APFS to
 the physical SSD. CPU/GPU percentage-axis labels are intentionally smaller than
 main values; all graphs label the two-minute time window.
 
-Lake's ZFS panel reports scan/pool health, raw used/total, SATA port numbers,
+Lake's ZFS panel reports scan/pool health, raw used/total, physical drive slots,
 capacity, temperatures, read/write rates, IOPS, busy time and errors. The old and
-new replacement members share a port number. Drive temperatures come from the
+new replacement members share a physical slot. Drive temperatures come from the
 existing SMART sensor service. Dataset totals include currently available
 shared space; no storage configuration is changed.
 
 Macs currently run upstream's standalone per-user LaunchAgent, installed with
 `fleet-monitor/scripts/install-macos-agent.sh`. The old bootstrap plist was
 moved out of LaunchAgents; the new label is `org.fleet-monitor.agent`.
+Use the hash-verified v0.5.0 Darwin release binary and set `METRICS_PROCESSES=1`
+when running that installer. The declarative NixOS and Darwin agents use
+`services.fleet-monitor.processes.enable = true`. Updating the Nix input alone
+does not update the Macs' standalone LaunchAgents.
 Before adopting the nix-darwin-managed agent, remove the standalone plist to
 avoid duplicate labels. The nix-darwin module was evaluated independently;
 full host adoption still depends on the existing private Anvil input.
