@@ -100,7 +100,6 @@ nixos-configs/
 | `default.nix` | Imports all machine modules |
 | `display.nix` | |
 | `hardware-configuration.nix` | Generated hardware config (do not edit) |
-| `itsaplan.nix` | |
 | `kache.nix` | |
 | `lancache.nix` | |
 | `monitoring.nix` | |
@@ -302,7 +301,6 @@ The `cloudflare-dns` module reads `services.caddy.virtualHosts` at build time an
 
 **Managed records (nova):**
 
-- `itsaplan.flaked.org`
 - `matrix.flaked.org`
 - `jellyfin.flaked.org`
 - `pihole.flaked.org`
