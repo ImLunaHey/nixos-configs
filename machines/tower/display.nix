@@ -43,7 +43,7 @@
       nova = "http://10.0.0.178:8099/api/metrics";
       gateway = "http://10.0.0.46:8099/api/peers/gateway";
       pulsar = "http://10.0.0.107:8099/api/metrics";
-      comet = "http://10.0.0.127:8099/api/metrics";
+      comet = "http://10.0.0.21:8099/api/metrics";
       gilbert = "http://100.115.201.122:8099/api/metrics";
       void = "http://100.94.41.124:8099/api/metrics";
     };
