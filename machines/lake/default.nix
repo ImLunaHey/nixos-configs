@@ -4,7 +4,6 @@
     ./hardware-configuration.nix
     ./anvil.nix
     ./board.nix
-    ./itsaplan.nix
     ./cache.nix
     ./kache.nix
     ./lancache.nix
